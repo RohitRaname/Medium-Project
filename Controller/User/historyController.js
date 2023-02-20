@@ -10,7 +10,6 @@ const topLevelBucketController = require('../userBucketController/topLevelList')
 
 // if blog already exist then update ts of blog so we get blog at latest history at top 
 exports.saveBlogInHistory = tryCatch(async (userId, blog) => {
-  console.log('history',  blog);
   await topLevelBucketController.addItemToList(
     History,
     userId,

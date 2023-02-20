@@ -75,7 +75,7 @@ const UserSchema = new mongoose.Schema(
     recentGenreIgnore:[String],
 
     keepMeSignedIn: { type: Boolean, default: false },
-    recordHistory: { type: Boolean, default: false },
+  
 
     recentBlogs: [
       {
@@ -95,7 +95,6 @@ const UserSchema = new mongoose.Schema(
     count: {
       following: { type: Number, default: 0 },
       followers: { type: Number, default: 0 },
-      cartItems: { type: Number, default: 0}
     },
 
   },

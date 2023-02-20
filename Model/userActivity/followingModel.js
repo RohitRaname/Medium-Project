@@ -19,7 +19,7 @@ const FollowingSchema = new mongoose.Schema({
       name: String,
       avatar: String,
       bio:String,
-      followers: { type: Number, default: 0 },
+      followersCount: { type: Number, default: 0 },
     },
   ],
   // this will be fast to fill so no need it to be here

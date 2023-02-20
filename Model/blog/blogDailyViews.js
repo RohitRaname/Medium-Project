@@ -5,11 +5,8 @@ const mongoose = require('mongoose');
 // 1000 -> 50
 
 const BlogDailyViewsSchema = new mongoose.Schema({
-  author: {
-    _id: mongoose.Schema.Types.ObjectId,
-    avatar: { type: String, default: 'default.png' },
-    name: String,
-  },
+  userId:mongoose.Schema.Types.ObjectId,
+  year:Number,
 
   summary: [
     {

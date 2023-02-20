@@ -8,7 +8,6 @@ const cors = require('cors');
              
 // controller -----------------------------------------
 const GlobalErrorHandler = require('./Controller/global_error_handler');
-// const productVariantsCreate = require('./product_variants_create');
 
 
  

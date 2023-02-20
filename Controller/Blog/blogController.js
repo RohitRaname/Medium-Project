@@ -135,7 +135,7 @@ exports.getFilterBlogs = tryCatch(async (userId, getBlogsAfterTs) => {
 
   const blogs = [];
 
-  const getBlogs = async (queryTs, genreIgnore) => {
+  const getRightBlogs = async (queryTs, genreIgnore) => {
     const docs = await Blog.find({
       ts: { $lt: queryTs },
       genre: { $nin: genreIgnore },
@@ -148,6 +148,7 @@ exports.getFilterBlogs = tryCatch(async (userId, getBlogsAfterTs) => {
       })
       .limit(10)
       .exec();
+
     // if(!docs.length===0) return new Error('no more docs')
     return docs;
   };
@@ -159,7 +160,7 @@ exports.getFilterBlogs = tryCatch(async (userId, getBlogsAfterTs) => {
       : false;
 
   while (blogs.length < 10) {
-    const getDocs = await getBlogs(ts, userActivity.genreIgnore);
+    const getDocs = await getRightBlogs(ts, userActivity.genreIgnore);
 
     if (getDocs.length === 0 || blogs.length > 10) break;
 
@@ -178,6 +179,8 @@ exports.getFilterBlogs = tryCatch(async (userId, getBlogsAfterTs) => {
 
     // check and set if i muted the blog author
   });
+
+  console.log(blogs)
 
   return blogs;
 });
