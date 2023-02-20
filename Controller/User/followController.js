@@ -11,8 +11,8 @@ const topLevelBucketController = require('../userBucketController/topLevelList')
 const userController = require('./userController');
 
 // Model
-const Follower = require('../../Model/user/followersModel');
-const Following = require('../../Model/user/followingModel');
+const Follower = require('../../Model/userActivity/followersModel');
+const Following = require('../../Model/userActivity/followingModel');
 const User = require('../../Model/user/userModel');
 
 // firstUser follow secondUser

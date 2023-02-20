@@ -2,12 +2,11 @@ const catchAsync = require('../../utils/catchAsync');
 const tryCatch = require('../../utils/tryCatch');
 const send = require('../../utils/sendJSON');
 
-const followerController = require('../User/followController');
+const followerController = require('../../Model/userActivity/followersModel');
 
 // Model
-const Notification = require('../../Model/user/notificationModel');
-const UserActivity = require('../../Model/user/userActivityModel');
-const userController = require('./userController');
+const Notification = require('../../Model/userActivity/notificationModel');
+
 
 // CONTROLLER
 const topLevelBucketController = require('../userBucketController/topLevelList');

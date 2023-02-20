@@ -3,7 +3,7 @@ const tryCatch = require('../../utils/tryCatch');
 const send = require('../../utils/sendJSON');
 
 // Model
-const History = require('../../Model/user/historyModel');
+const History = require('../../Model/userActivity/historyModel');
 
 // CONTROLLER
 const topLevelBucketController = require('../userBucketController/topLevelList');
