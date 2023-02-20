@@ -49,8 +49,22 @@ const UserActivitySchema = new mongoose.Schema({
         thumbnail: String,
         photos: [String],
       },
+      active:{type:Boolean,default:false},
+      ts:{type:Date,default:new Date()},
+
+      count:{
+        like:{type:Number,default:0},
+        comment:{type:Number,default:0},
+        views:{type:Number,default:0},
+      }
     },
   ],
+
+  genreBlogsWrite:[String],
+  genreFollow:[String],
+  genreIgnore:[String],
+  
+  
 
   likeBlogs: [{ _id: mongoose.Schema.Types.ObjectId }],
   bookmarkBlogs: [{ _id: mongoose.Schema.Types.ObjectId }],
