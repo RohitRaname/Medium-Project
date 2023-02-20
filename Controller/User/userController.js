@@ -74,7 +74,7 @@ exports.resizeImages = async (req, res, next) => {
 
   if (cover_pic) {
     const filename = `user-${req.user.id}-${Date.now()}.png`;
-    req.body['profile.cover_pic'] = filename;
+    req.body['profile.coverPic'] = filename;
 
     img_promise.push(save_img(cover_pic[0], [1200, 1080], filename));
   }
