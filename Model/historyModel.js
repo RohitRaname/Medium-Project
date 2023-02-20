@@ -15,6 +15,7 @@ const HistorySchema = new mongoose.Schema({
 
   history: [
     {
+      authorId:String,
       _id: String,
       title: String,
       text: String,
