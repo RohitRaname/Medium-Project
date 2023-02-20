@@ -14,7 +14,6 @@ const CommentSchema = new mongoose.Schema({
   parentId: mongoose.Schema.Types.ObjectId,
   ancestorIds: [String],
 
-
   text: String,
   active: { type: Boolean, default: false },
   
@@ -23,10 +22,9 @@ const CommentSchema = new mongoose.Schema({
       bookmark: { type: Number, default: 0 },
       replyTo: { type: Number, default: 0 },
   },
-  
 
   ts: { type: Date, default: new Date() },
-  
+
 });
 
 const Comment = mongoose.model('comment', CommentSchema);

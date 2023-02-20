@@ -46,10 +46,6 @@ const UserSchema = new mongoose.Schema(
       default: 'user',
     },
 
-    // normllaize read too much write rarely
-
-    // thousand of id in a user is not a good thing
-
     passwordChangedAt: Date,
     tokenHash: String,
     tokenExpiresIn: Date,
@@ -68,17 +64,15 @@ const UserSchema = new mongoose.Schema(
       fullName: String,
       avatar: { type: String },
       // info
-      bio: { type: String, default: '' },
+      bio: { type: String},
       birth: Date,
       pic: { type: String, default: 'default.png' },
-      coverPic: { type: String, default: 'default_cover.png' },
+      coverPic: { type: String, default: 'defaultCover.png' },
     },
 
     recentGenreBlogsWrite:[String],
     recentGenreFollow:[String],
     recentGenreIgnore:[String],
-
-
 
     keepMeSignedIn: { type: Boolean, default: false },
     recordHistory: { type: Boolean, default: false },
@@ -97,13 +91,13 @@ const UserSchema = new mongoose.Schema(
         ts:{type:Date,default:new Date()}
       },
     ],
-  
 
     count: {
       following: { type: Number, default: 0 },
       followers: { type: Number, default: 0 },
       cartItems: { type: Number, default: 0}
     },
+
   },
   {
     toObject: { virtual: true },
