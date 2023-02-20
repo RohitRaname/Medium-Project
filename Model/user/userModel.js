@@ -71,42 +71,12 @@ const UserSchema = new mongoose.Schema(
       bio: { type: String, default: '' },
       birth: Date,
       pic: { type: String, default: 'default.png' },
-      cover_pic: { type: String, default: 'default_cover.png' },
+      coverPic: { type: String, default: 'default_cover.png' },
     },
 
-    // rate according to US DOLLAR conversion
-    currency: { symbol: String, code: String, rate: Number },
-    country_flag: String,
-
-    address: [
-      {
-        addressType: String,
-        setAsDefaultAddress: { type: Boolean, default: false },
-        district: String,
-        state: String,
-        country: String,
-        zipcode: String,
-        building: String,
-        area: String,
-        phoneNumber: Number,
-      },
-    ],
-    languages: [String],
-
-    wishlists: [
-      {
-        _id: { type: mongoose.Schema.Types.ObjectId },
-        name: String,
-
-        // max 3
-        items: [{ _id: mongoose.Schema.Types.ObjectId, thumbnail: String }],
-      },
-    ],
-
-    // max 4
-    history: [
-      { _id: mongoose.Schema.Types.ObjectId, title: String, thumbnail: String },
-    ],
+    recentGenreBlogsWrite:[String],
+    recentGenreFollow:[String],
+    recentGenreIgnore:[String],
 
     // max 5
     following: [
@@ -120,19 +90,25 @@ const UserSchema = new mongoose.Schema(
     keepMeSignedIn: { type: Boolean, default: false },
     recordHistory: { type: Boolean, default: false },
 
-    reviews: [
+    recentBlogs: [
       {
-        content: { title: String, text: String },
-        item: { type: mongoose.Schema.Types.ObjectId, ref: 'product' },
-        count: { helpful: Number, default: 0 },
-        rating: Number,
-        ts: Date,
+        genre: String,
+        access: String,
+        content: {
+          title: String,
+          text: String,
+          thumbnail: String,
+          photos: [String],
+        },
+        
+        ts:{type:Date,default:new Date()}
       },
     ],
+  
 
     count: {
-      helpful: { type: Number, default: 0 },
-      reviews: { type: Number, default: 0 },
+      following: { type: Number, default: 0 },
+      followers: { type: Number, default: 0 },
       cartItems: { type: Number, default: 0}
     },
   },
