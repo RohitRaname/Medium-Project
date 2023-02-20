@@ -15,10 +15,11 @@ const HistorySchema = new mongoose.Schema({
 
   history: [
     {
-      authorId: mongoose.Schema.Types.ObjectId,
       _id: String,
       title: String,
       text: String,
+      ts:{type:Date,default:new Date()},
+      thumbnail:String
     },
   ],
 
