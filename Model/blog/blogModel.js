@@ -31,7 +31,10 @@ const BlogSchema = new mongoose.Schema({
 
   // this will be fast to fill so no need it to be here
 });
-
+BlogSchema.pre(/^find/, function (next) {
+  this.find({ active: { $ne: false } });
+  next();
+});
 const Blog = mongoose.model('blog', BlogSchema);
 
 module.exports = Blog;
