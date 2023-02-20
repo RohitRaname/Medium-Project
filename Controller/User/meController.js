@@ -7,10 +7,18 @@ const UserActivity = require('../../Model/user/userActivityModel');
 
 // CONTROLLER
 const topLevelBucketController = require('../userBucketController/topLevelList');
+const globalBlogController = require('../Blog/blogController');
 
 // add item means => likeBlogs(only id),bookmarkBlogs(only id),comments(comment body)
 exports.addUserActivityItemAndUpdateCountInBlog = tryCatch(
-  async (userId, blogId, activityItem,userActivityField, countField, action) => {
+  async (
+    userId,
+    blogId,
+    activityItem,
+    userActivityField,
+    countField,
+    action
+  ) => {
     let updateUserActivity;
     if (countField !== 'views') {
       updateUserActivity =
