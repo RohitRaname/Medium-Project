@@ -78,14 +78,7 @@ const UserSchema = new mongoose.Schema(
     recentGenreFollow:[String],
     recentGenreIgnore:[String],
 
-    // max 5
-    following: [
-      {
-        _id: mongoose.Schema.Types.ObjectId,
-        name: String,
-        pic: { type: String, default: 'default.png' },
-      },
-    ],
+
 
     keepMeSignedIn: { type: Boolean, default: false },
     recordHistory: { type: Boolean, default: false },
@@ -100,7 +93,7 @@ const UserSchema = new mongoose.Schema(
           thumbnail: String,
           photos: [String],
         },
-        
+
         ts:{type:Date,default:new Date()}
       },
     ],

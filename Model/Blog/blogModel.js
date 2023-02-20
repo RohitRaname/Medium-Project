@@ -24,6 +24,7 @@ const BlogSchema = new mongoose.Schema({
 
   count: {
     like: { type: Number, default: 0 },
+    bookmark:{type:Number,default:0},
     comment: { type: Number, default: 0 },
     views: { type: Number, default: 0 },
   },

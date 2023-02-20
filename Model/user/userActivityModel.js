@@ -12,14 +12,29 @@ const UserActivitySchema = new mongoose.Schema({
 
   // this limit if for top level items => review,wishlists
   limit: { type: Number, default: 50 },
-
+  blockedUsers: [
+    {
+      _id: mongoose.Schema.Types.ObjectId,
+      name: String,
+      avatar: String,
+      bio:String
+    },
+  ],
+  mutedUsers: [
+    {
+      _id: mongoose.Schema.Types.ObjectId,
+      name: String,
+      avatar: String,
+      bio:String
+    },
+  ],
   following: [
     {
       _id: mongoose.Schema.Types.ObjectId,
       name: String,
       avatar: String,
-      pic: { type: String, default: 'default.png' },
-      following: { type: Number, default: 0 },
+      followers: { type: Number, default: 0 },
+      bio:String
     },
   ],
   followers: [
@@ -27,8 +42,8 @@ const UserActivitySchema = new mongoose.Schema({
       _id: mongoose.Schema.Types.ObjectId,
       name: String,
       avatar: String,
-      pic: { type: String, default: 'default.png' },
-      following: { type: Number, default: 0 },
+      followers: { type: Number, default: 0 },
+      bio:String
     },
   ],
   history: [
@@ -55,6 +70,7 @@ const UserActivitySchema = new mongoose.Schema({
       count:{
         like:{type:Number,default:0},
         comment:{type:Number,default:0},
+        bookmark:{type:Number,default:0},
         views:{type:Number,default:0},
       }
     },
