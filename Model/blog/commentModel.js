@@ -28,5 +28,8 @@ const CommentSchema = new mongoose.Schema({
 });
 
 const Comment = mongoose.model('comment', CommentSchema);
-
+CommentSchema.pre(/^find/, function (next) {
+  this.find({ active: { $ne: false } });
+  next();
+});
 module.exports = Comment;
