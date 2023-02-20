@@ -1,0 +1,57 @@
+.review-filter-dropdowns
+
+    // sort & filter dropdown
+    .positionel.dropdown(data-dropdown-type='select-options-dropdown' data-positionel-name='sort-by-top-reviews' data-positionel-type='dropdown' data-active='false' data-position-type='absolute' data-load-spinner='false' data-animation='fade' data-pointer-position='none' data-position='cover' data-delay-hide='false' data-show-event='click' data-static='false' data-has-defined-class='false' data-child-positionel='false' data-set-positionbtn-width='true' data-change-positionbtn-text='true')
+        .overlay.overlay-t
+        .positionel-container(style='max-height: unset;max-width: 25rem;width: 100%;overflow-y: auto;')
+            .positionel-content
+                // list
+                ul.list(data-text-wrap='')
+                    li.list-item(data-value='sort=-rating' data-active='true')
+                        p Top reviews
+                    li.list-item(data-value='sort=-ts' data-active='false')
+                        p Most recent
+
+    // filter-by-text-and-photos
+    .positionel.dropdown(data-dropdown-type='select-options-dropdown' data-positionel-name='filter-by-text-and-photos' data-positionel-type='dropdown' data-active='false' data-position-type='absolute' data-load-spinner='false' data-animation='fade' data-pointer-position='none' data-position='cover' data-delay-hide='false' data-show-event='click' data-static='false' data-has-defined-class='false' data-child-positionel='false' data-set-positionbtn-width='false' data-change-positionbtn-text='true')
+        .overlay.overlay-t
+        .positionel-container(style='width: auto')
+            .positionel-content
+                // list
+                ul.list(data-text-wrap='' data-query='filter')
+                    li.list-item(data-value='' data-active='true')
+                        p All text,image reviews
+                    li.list-item(data-value='content.photos[gt]=[]' data-active='false')
+                        p Image reviews
+    
+    // filter-by-variants
+    .positionel.dropdown(data-dropdown-type='select-options-dropdown' data-positionel-name='filter-by-variants' data-positionel-type='dropdown' data-active='false' data-position-type='absolute' data-load-spinner='false' data-animation='fade' data-pointer-position='none' data-position='cover' data-delay-hide='false' data-show-event='click' data-static='false' data-has-defined-class='false' data-child-positionel='false' data-set-positionbtn-width='false' data-change-positionbtn-text='true')
+        .overlay.overlay-t
+        .positionel-container(style='width: auto')
+            .positionel-content
+                // list
+                ul.list(data-text-wrap='' data-query='filter')
+                    li.list-item(data-value=`modelId=${product.modelId}` data-active='true')
+                        p All formats
+                    li.list-item(data-value=`modelId=${product.modelId}&product._id=${product._id}` data-active='false')
+                        p= `Show only reviews for ${product.title}`
+
+    // filter-by-ratings
+    .positionel.dropdown(data-dropdown-type='select-options-dropdown' data-positionel-name='filter-by-ratings' data-positionel-type='dropdown' data-active='false' data-position-type='absolute' data-load-spinner='false' data-animation='fade' data-pointer-position='none' data-position='cover' data-delay-hide='false' data-show-event='click' data-static='false' data-has-defined-class='false' data-child-positionel='false' data-set-positionbtn-width='true' data-change-positionbtn-text='true')
+        .overlay.overlay-t
+        .positionel-container(style='max-height: unset; overflow-y: auto;')
+            .positionel-content
+                // list
+                ul.list(data-text-wrap='' data-query='filter')
+                    li.list-item(data-value='' data-active='true')
+                        p All stars
+                    li.list-item(data-value='rating=5' data-active='false')
+                        p 5 star only
+                    li.list-item(data-value='rating=4' data-active='false')
+                        p 4 star only
+                    li.list-item(data-value='rating=3' data-active='false')
+                        p 3 star only
+                    li.list-item(data-value='rating=2' data-active='false')
+                        p 2 star only
+                    li.list-item(data-value='rating=1' data-active='false')
+                        p 1 star only

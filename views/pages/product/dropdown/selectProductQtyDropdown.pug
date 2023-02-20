@@ -1,0 +1,25 @@
+
+.dropdown.positionel(data-positionel-type='dropdown' data-positionel-name='select-product-qty-dropdown' 
+data-active='false' 
+data-pointer-position='none' 
+data-position='bottom' 
+data-animation='fade' 
+data-show-event='click' 
+data-delay-hide='false' 
+data-load-spinner='false' 
+
+data-static='false' 
+data-has-defined-class='false'  
+data-child-positionel='false'
+data-position-type="absolute"
+data-set-positionbtn-width="true"
+data-change-positionbtn-text='true'
+)
+    .positionel-container
+        // trigger btn-> when click hide content will show
+        .positionel-content
+
+            ul.list(data-dropdown)
+                each num in [1,2,3,4,5,6,7,8,9,10]
+                    li.list-item.list-item-sm= num
+

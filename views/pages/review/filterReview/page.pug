@@ -1,0 +1,167 @@
+extends ../../common_page 
+include ../../../mixins/ratingIcons
+include ../../../mixins/ratingChart
+
+
+
+block section 
+    section.section-review.p-lw
+        .route.f-sm.f-ab.mg-sm
+            a.default-color.hover-primary(href=product.url)= product.title
+            i.fa.fa-angle-right.default-color.icon-lw
+            p.primary Customer reviews
+
+        .review-container.mg-md-all
+            // rating chart and product overview
+            .review-product-overview.f-sm
+                // rating chart
+                .product-ratings-overview.mg-b-lg(data-scroll-event-race='')
+                    h.h-5.mg-0 Customer reviews
+                    // rating text
+                    .product-rating-text.mg-sm
+                        // icons
+                        .f-sm.f-ab.mg-b-sl
+                            .f-sl.product-rating-icons
+                                +ratingIcons(product.rating.value)
+                            p.pt=` ${product.rating.value} out of 5`
+                        p.t-md=`${product.rating.count} global ratings`
+
+                    // rating in chart table
+                    .product-rating-chart(data-race='true')
+                        +ratingChart(product.rating,true)
+                // product overview
+                .review-product
+                    .review-product-info.f-sm.f-ac.mg-10
+                        img.img-sm(src=product.thumbnail alt='')
+                        // item details
+                        .wishlistCurrent-item-details
+                            // title
+                            a.hover-primary.blue.s-6.s-m.trunc-text(href='' style='max-width: 40rem')= product.title
+                            // brand
+                            p.mg-sm
+                                | by 
+                                span.blue Apple
+                            // size & color
+                            .box-with-v-line.f-size-sm
+                                div
+                                    | Size: 
+                                    span= product.curVariant.size
+                                div
+                                    | Colour: 
+                                    span= product.curVariant.color.name
+                    a.btn-outline.btn-md(href=`/review/create-review/${product._id}`) Write a review
+            .line-dim
+            // search review
+            .review-search.f-sm
+                .common-search-input
+                    i.fa.fa-search
+                    input.search-review-input(type='text width-80' placeholder='Search customer reviews')
+                button.btn-black.search-review-btn Search
+            // reviews
+            #review-list.modal.review-list-modal.container-80.mg-sm-all(data-static='true' data-modal-type='window' data-load-spinner='true' data-hide-spinner='true')
+                // sort and filter reviews options
+                .review-filter-options.f-md
+                    // sort by
+                    div
+                        p.h-8 SORT BY
+                        button.btn-old.btn-md.r-bg.trunc-text(style='width: 17rem' data-positionel-btn='' data-positionel-name='sort-by-top-reviews')
+                            p Top reviews
+                            i.fa.fa-angle-down
+                    // filter by stars
+                    div
+                        p.h-8 FILTER
+                        button.btn-old.btn-md.r-bg.trunc-text(style='width: 19rem' data-positionel-btn='' data-positionel-name='filter-by-ratings')
+                            p All stars
+                            i.fa.fa-angle-down
+                    // filter by variant
+                    div
+                        p.h-8.hide &nbsp;
+                        button.btn-old.btn-md.r-bg.trunc-text(style='width: 19rem' data-positionel-btn='' data-positionel-name='filter-by-variants')
+                            p All formats
+                            i.fa.fa-angle-down
+                    // text or photo review
+                    div
+                        p.h-8.hide &nbsp;
+                        button.btn-old.btn-md.r-bg.trunc-text(style='width: 17rem' data-positionel-btn='' data-positionel-name='filter-by-text-and-photos')
+                            p All text,image reviews
+                            i.fa.fa-angle-down
+                // filter total reviews load
+                .review-filter-query-and-count.mg-sm-lw.hidden
+                    h.h-8.light FILTERED BY
+                    // queryStr and clear-filter-btn
+                    .f-sm
+                        button.btn-inline-span(data-action='clear-review-filter')
+                            | Clear filter
+                        .review-filter-count
+                            p 2 total ratings, 1 with review
+                .line-dim
+                // windows
+                .modal-windows
+                    .spinner
+                    .modal-window(data-window='reviews' data-active='true' data-url=`products/modelId/${product.modelId}/reviews` data-filter-query='' data-search-query="" data-limit='10' data-page='0' data-load-docs-till-page=productReviewTotalPage)
+                        // reviews
+                        ul.modal-list.reviews-list.mg-md
+                            h6.h-6.mg-sm Top reviews from
+                            each review in product.reviews
+                                .review.mg-b-md(data-data=review)
+
+                                    // author | rating | review-title | review-date | product-spec
+                                    .review-header
+                                        a.f-sm.f-ac.mg-b-sl.pointer(href=`/profile/${review.author._id}`)
+                                            img.img-sl.round.review-author-img(src=`/img/users/${review.author.pic}` alt='')
+                                            p.pt-md.review-author-name rohit
+                                        // rating | review-title
+                                        a.f-sm.f-ab.pointer(href=`/reviews/${review._id}`)
+                                            .f-sl.product-rating-icons
+                                                +ratingIcons(review.rating)
+                                            p.s-9.s-d.hover-primary= review.content.title
+                                        // date-of-review
+                                        div
+                                            p.t-md.review-postat
+                                                | Reviewed in
+                                                span.review-author-country.letter-s= `${review.author.country} ${new Intl.DateTimeFormat('en-US').format(date)} `
+                                        // about-product
+                                        .f-sm.review-product-details.mg-b-sl
+                                            p.t-md
+                                                | Colour: 
+                                                span.letter-s= review.product.color
+                                            |                         |
+                                            p.t-md
+                                                | Size name: 
+                                                span.letter-s= review.product.size
+                                            |                         |
+                                            p.pt-md.primary.w-600 Verified Purchase
+                                    // review-text | review-img | review-stats
+                                    footer.review-footer
+                                        // review-text
+                                        .review-text-box.pt-md
+                                            p.mg-b-sl= review.content.text
+                                        // review-imgs
+                                        .review-imgs.mg-b-sl.f-lw
+                                            each photo in review.content.photos
+                                                img.img-lw.r-sm.review-img(src=`/img/reviews/${photo}` alt='')
+                                        // review-helpful-count
+                                        .review-helpful-box
+                                            p.t-sm.mg-b-sm
+                                                span.review-helpful-count(data-value='')= `${review.count.helful} found this helpful`
+                                            // review-btns
+                                            .f-sm.f-ab
+                                                button.btn-outline.review-helpful-btn(data-url=`products/${review.modelId}/reviews/${review.product._id}/count/increase?field=helpful` data-need-login-user='')
+                                                    | Helpful
+                                                .dim |
+                                                button.btn-text-dull(data-need-login-user='')
+                                                    | Report abuse
+
+
+                        .modal-page-btns.f-sl.f-jc
+                            button.btn-page(data-action='prev' data-active='false')
+                                i.fa.fa-angle-left
+                                span Previous page
+                            button.btn-page(data-action='next' data-active='true')
+                                span Next page
+                                i.fa.fa-angle-right
+
+
+block more_positionels 
+    include ./dropdown/reviewFilterDropdowns 
+    include ../../product/modal/review_photos_gallery

@@ -1,0 +1,130 @@
+extends ../../common_page 
+
+block section 
+    section.section-checkout(data-shopping-cart-id=cart._id)
+        .checkout
+            .checkout-container.container.p-md
+                .checkout-left.mg-md-all
+                    // set delievery address
+                    .checkout-step.mg-sm-lw(data-step-window='address' data-step-set='false' data-data={shipping:{name:userData.profile.name,address:userData.fullAddress}})
+                        .checkout-step-window(data-window='set-info')
+                            .f-space
+                                .f-md
+                                    h.h-6.primary 1
+                                    h.h-6.primary(data-checkout-step-title='') Select delivery address
+                                .f-lw.f-ab
+                                    // 
+                                    button.btn-inline-span(data-action='change-step-window')
+                                        | Close
+                                    i.fa.fa-times.icon-sm
+                            // option to select
+                            .checkout-step-options
+                                div
+                                .border-box.border-light.p-0
+                                    .p-sm.mg-lw-all
+                                        // header
+                                        .f
+                                            h6.h-6 Your address
+                                        .line-dim
+                                        // location
+                                        each userAddress in userAllAddress
+                                            .bg-primary-fade.border-primary-fade.r-md.p-lw.f-sl
+                                                button.btn-checkbox(data-action="set-address" data-type='circle' data-active=`${userAddress.setAsDefaultAddress===true}` data-address='' data-data={shipping:{name:userData.profile.name,address:`${userAddress.state},${userAddress.country},${userAddress.zipcode}`}})
+                                                p(style='transform: translateY(-0.3rem)')
+                                                    span.w-600= userData.name
+                                                    span= `${userAddress.state},${userAddress.country},${userAddress.zipcode}`
+                                        // add new address
+                                        .f-sl.f-ab
+                                            i.fa.fa-plus
+                                            a.btn-inline-span(href="/me/address/add" target="_blank")
+                                                | Add a new address
+                                    // button
+
+
+                                    .bg-dark.p-lw.border-t-l
+                                        button.btn-primary-light.btn-md.w-600(data-action='use-set-address')
+                                            | Use this address
+                        
+                        .checkout-step-window.hidden.f-as.f-bg(data-window='preview-set-info')
+                            h.h-6 1
+                            h.h-6 Delivery address
+                            .checkout-step-preview-content.hidden.f-as.f-bg
+                                // selected options
+                                .checkout-step-selected-option.mg-sl-all
+                                    p Rohit
+                                    p Rohit
+                                    p Rohit
+                                button.btn-inline-span(data-action='change-step-window')
+                                    | Change
+                    .line-dim
+                    // payment address
+                    .checkout-step.mg-sm-lw(data-step-window='address' data-step-set='false' data-data='{"payment":{"method":"Cash On Delivery"}}')
+                        .checkout-step-window(data-window='set-info')
+                            .f-bg.f-ab
+                                .f-md
+                                    h.h-6.primary 2
+                                    h.h-6.primary(data-checkout-step-title='') payment method
+                                p Cash On Delivery/Pay On Delivery
+                    .line-dim
+                    // review items and delivery
+                    // set delievery address
+                    .checkout-step.mg-sm-lw(data-step-window='address' data-step-set='false')
+                        .checkout-step-window(data-window='set-info')
+                            .f-space
+                                .f-md
+                                    h.h-6.primary 3
+                                    h.h-6.primary(data-checkout-step-title='') Reviews items and delivery
+                            // option to select
+                            .checkout-step-options
+                                .f-md
+                                    .border-box.border-light.p-0.width-full
+                                        .p-sm.mg-lw-all
+                                            // header
+                                            .f
+                                                h6.h-7
+                                                    | Delivery Date:
+                                                    span.letter-s.green= deliveryDate
+                                            // items
+                                            .checkout-items.width-40
+                                                each cartItem in cart.items
+                                                    //- cart item
+                                                    .item.checkout-item.f(data-data={_id:cartItem._id,price:cartItem.price,qty:cartItem.qty})
+                                                        img.img-sm.trans-lw(src=cartItem.thumbnail alt='')
+                                                        .checkout-item-details
+                                                            h.h-9= cartItem.title
+                                                            h.h-9.primary= cartItem.convertPrice
+                                                            button.btn-dropdown.btn-lw(data-positionel-name='update-cart-item-qty-dropdown' data-positionel-btn='' data-data={_id:cartItem._id})
+                                                                | Qty: 
+                                                                span(data-value='')= cartItem.qty
+                                                                i.fa.fa-angle-down.icon-lw
+                    .border-light.r-sm.f-md.p-md.f-ac
+                        button.btn-primary-light.r-bg(data-action='order' data-total-amount=summary.totalAmount)
+                            | Place your order
+                        div
+                            p.s-6.primary
+                                | Order Total: 
+                                span= userData.currency.symbol
+                                span(data-checkout-total-amount='')= summary.totalAmountConvert
+                            p.t-lw
+                                | By placing your order, you aggree to Amazon&apos;s privacy notice
+                                | and conditions of use
+                .checkout-right
+                    .border-box.mg-ms-sl
+                        button.btn-primary-light.btn-100(data-action='order' data-total-amount=summary.totalAmount)
+                            | Place your order
+                        p.center.t-lw
+                            | By placing your order, you aggree to Amazon&apos;s privacy notice and conditions of use.
+                        .line-dim
+                        .checkout-order-summary.mg-sl-all
+                            h.h-6.checkout-order-total.primary.f-space.p-v-sl
+                                span Order Total:
+                                p
+                                    span= userData.currency.symbol
+                                    span(data-checkout-total-amount='')= summary.totalAmountConvert
+
+
+block row 
+
+
+block more_positionels 
+    include ./dropdown/updateCheckoutItemQty

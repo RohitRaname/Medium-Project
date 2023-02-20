@@ -1,0 +1,41 @@
+extends ../../common_page 
+
+
+block section 
+    section.section-manage-address
+        .address
+            .address-container.container.mg-b-sm-all
+                // route
+                .route.f-sm.f-ab
+                    a.default-color.hover-primary(href='/me/account') Your Account
+                    i.fa.fa-angle-right.default-color.icon-lw
+                    p.primary Your Addresses
+                h.h-4.h-l.mg-md Your Addresses
+                // address-boxs
+                .address-boxs.f.f-sm
+                    // add-address
+                    a.address-box.address-add-box(href='/account/address/add')
+                        i.fa.fa-plus.fade
+                        h5.h-5.light Add address
+
+
+                    // already added
+                    each address in addresses
+                        .address-box.address-set-box.border-box.f-col.f-as(data-id=address._id)
+                            h.h-8(data-name='')= userData.name
+                            div.dark.mg-sl-all
+                                p(data-district)= address.district
+                                p(data-city)= address.city
+                                p(data-state)= address.state
+                                p(data-country)= address.country
+                                p(data-zipcode)= address.zipcode
+                            .address-btns.f-sm.f-ac.mg-t
+                                button.btn-inline-span(data-action='edit' data-positionel-btn data-positionel-name="update-address" data-data={_id:address._id})
+                                    | Edit
+                                .line-v-md
+                                button.btn-inline-span(data-action='remove' data-url=`users/me/address/${address._id}`)
+                                    | Remove
+
+
+block more_positionels
+    include ./form/updateAddressForm

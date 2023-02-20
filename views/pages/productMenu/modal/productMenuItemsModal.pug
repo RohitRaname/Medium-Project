@@ -1,0 +1,77 @@
+include ../../../mixins/ratingIcons
+
+.productMenu-items-modal.modal(data-static='true' data-modal-type='window' data-error=`${docs.length===0}` data-load-spinner='true' data-hide-spinner='true')
+
+    .modal-error
+        if(docs.length===0)
+            p.pt-bg(data-title='')= `No results found for ${ searchWord}`
+            p(data-text='') Please search products related iphone 
+    .modal-windows
+        .spinner
+
+        // modal page btns should be of modal-windows
+        // to update the pagination btns according to window
+
+
+        .modal-window(data-window='productMenu-items' data-active=`${docs.length==0?false:true}` data-url='products/menu' data-filter-query='' data-search-query=searchWord data-limit='10' data-page='0' data-sort='' data-load-docs-till-page=summary.totalPage)
+            h7.h-6.h-m.mg-sl RESULTS
+
+            .productMenu-items.modal-list.mg-bg
+                each doc in docs 
+                    - const {convertPrice,price,rating,thumbnail,title,url,variantByColors,_id,color} = doc
+                    - const finalPrice = convertPrice ? convertPrice : price;
+
+
+                    .productMenu-item.p-v-sm.f-lw
+                        // thumbnail
+                        a.productMenu-item-img-box.img-box-hg(href=url)
+                            img(src=`${thumbnail}` alt='')
+
+                        //- details
+                        div.productMenu-item-details.mg-lw-all
+                            a.s-6.s-l.hover-primary(href=url)= title
+                            // ratings and count
+                            .productMenu-item-rating-stats.f-lw.f-ab
+                                .f.product-rating-icons
+                                    +ratingIcons(rating.value)
+                                    i.fa.fa-angle-down.dim.icon-lw(aria-hidden='true')
+                                a.btn-inline(href=`${url}#section-review`)= rating.count
+
+                            // price
+                            .productMenu-item-price
+                                // price
+                                .f-sm
+                                    span.product-price-discount.h-4.h-0.w-300.primary.trans-sl= `0%`
+                                    p.product-price-current.f.f-as
+                                        span= finalPrice.unit
+                                        span.h-4.h-m.h-0.trans-sl.inline= finalPrice.value
+
+                            .productMenu-item-more-details.mg-sm-all
+                                p.t-md.mg-lw Save extra with No Cost EMI
+                                p FREE Delievery by Amazon
+
+                                // color-variant
+                                .productMenu-item-variants.f-sm
+                                    each colorVariant,i in variantByColors
+                                        a.productMenu-item-variant-color(href=`${title.split(' ').join('-')}/${colorVariant.variant_id}#section-review` data-active=`${color===colorVariant.color}`)
+                                            img(src=colorVariant.color_img style='height:100%;width:100%;')
+
+
+
+            .modal-page-btns.f
+                button.btn-page(data-action='prev' data-active='false')
+                    i.fa.fa-angle-left(aria-hidden='true')
+                    span Previous
+                .line-v
+                // page number btns
+                .modal-page-numbers-btns.f
+
+                    -const pageArr= new Array(summary.totalPage).fill('*').map((el,i)=>i)
+
+                    each page in pageArr
+                        button.btn-page(data-page-number-btn='' data-set-page=page data='' data-active=`${page===0}`)
+                            span=page+1
+                .line-v
+                button.btn-page(data-action='next' data-active=`${summary.totalPage>1}`)
+                    span Next
+                    i.fa.fa-angle-right(aria-hidden='true')

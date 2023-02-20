@@ -1,0 +1,32 @@
+extends ../base
+
+block form
+    form.form(data-type='verify-account' data-error='false' onsubmit='return false;' data-clear-inputs-when-hide='true' data-static='true' data-multi-formdata='false' )
+        // hidden-fields
+        input.hidden(type='text' name='email' value=email)
+        .form-container
+            h.h-5.h-m.mg-md Verify email address
+            div
+                span=`To verify your email,we&apos;ve sent a One Time Password (OTP) to ${email}`
+                    
+                span.letter-s
+                    | (
+                    a.btn-inline-span(href='/auth/signup/create-account') Change
+                    | )
+            .form-group(data-error='false' data-required='true')
+                h.h-9 Enter OTP
+                input(type='text' name='token' data-input='' maxlength='20')
+                .form-error
+                    p OTP is required
+            p
+            button.btn-g.btn-100.mg-b-md(data-action='submit')
+                | Create your Amazon account
+            .center
+                button.btn-inline-span.letter-s(data-action='resend-OTP')
+                    | Resend OTP
+            p
+                | By creating an account or logging in, you agree to
+                | Amazon&rsquo;s
+                span.btn-inline-span.letter-s Conditions of Use
+                |             and
+                span.btn-inline-span.letter-s  Privacy Policy. 

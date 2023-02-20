@@ -1,0 +1,22 @@
+.positionel.dropdown(data-dropdown-type='select-options-dropdown' data-positionel-name='wishlist-filter-&-sort-dropdown' data-positionel-type='dropdown' data-active='false' data-position-type='absolute' data-load-spinner='false' data-animation='fade' data-pointer-position='none' data-position='cover' data-delay-hide='false' data-show-event='click' data-static='false' data-has-defined-class='true' data-child-positionel='false' data-set-positionbtn-width='false' data-url=`users/me/wishlists/${curWishlistId}`)
+    .overlay.overlay-t
+    .positionel-container(style="max-height: unset;overflow-y: auto;")
+        .positionel-content
+            // list
+            .list(data-text-wrap='')
+                .semi-list(data-action='filter')
+                    h.h-8.p-h-lw Filter:
+                    .list-item(data-value='unpurchased' data-active='false')
+                        p Unpurchased
+                    .list-item(data-value='purchased' data-active='false')
+                        p Purchased
+                    .list-item(data-value='all' data-active='true')
+                        p All items
+                .semi-list(data-action='sort')
+                    h.h-8.p-h-lw Sorts:
+                    .list-item(data-value='default' data-active='true')
+                        p Default
+                    .list-item(data-value='-price' data-active='false')
+                        p Price (high to low)
+                    .list-item(data-value='price' data-active='false')
+                        p Price (low to high)

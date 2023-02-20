@@ -1,0 +1,62 @@
+extends ../common_page 
+include ../../mixins/ratingIcons
+
+block section 
+  
+
+    // section browsing
+    section.section-history
+        .container.mg-b-sm-all
+            -const {totalPage,limit,skip,maxSkip,docsLeft}=query
+
+
+            header.mg-lw-all
+                // title and show-optionsBtn
+                .history-header.f.f-space.p-lw
+                    h4.h-4.h-l Your Browsing History
+                    .history-show-options-btn.f-md.btn-inline(data-active='false')
+                        h.h-7.h-l Manage history 
+                        i.icon-bg.fa.fa-angle-down(aria-hidden='true')  
+
+                .history-options.hidden
+                    .line-dim
+                    .f-sm.f-ac.p-lw
+                        h.h-8.h-l Manage history
+                        .line-v
+          
+                        btn.btn-outline.btn-md(data-action='remove-all-history-items' data-url="users/me/history/remove-all")
+                            | Remove all items from view
+                        .line-v
+                        .history-on-off-btn-box.f-sm
+                            h.h-9.h-l
+                                span Turn Browsing History on/off
+                            button.history-on-off-btn(data-active=`${userRecordHistory}` data-url="users/me")
+                .history-record-items-hint(class=`${userRecordHistory?"hidden":""}`)
+                    .line-dim
+                    .p-lw
+                        | Your Recently Viewed Items is currently turned off on this
+                        | account.
+
+
+
+                .grid(
+                    data-url=`users/me/history?limit=${limit}&sort=-ts`
+                    data-page='0'
+                    data-limit=limit 
+                    data-skip=skip 
+                    data-docs-left=`${docsLeft}` 
+                    data-max-skip=maxSkip
+                    )
+
+                    .grid-container
+                        each item in items
+                            -const {_id,title,thumbnail,rating}=item
+                            a.grid-item
+                                .img-box-hg.pointer
+                                    img(src=thumbnail)
+                                p.col-title.mg-sl.t-sm.blue.capitalize.hover-color-primary= title
+                                .f-lw.f-ac.mg-b-sl
+                                    .product-rating-icons.f.f-ab
+                                        +ratingIcons(rating.value)
+                                    p.t-sm.hover-color-primary= rating.count
+                                button.btn-outline.btn-lw(data-action='remove' data-url=`users/me/history/${_id}`) Remove from view

@@ -1,0 +1,32 @@
+include ../mixins/dynamicRow
+
+mixin productAndHistoryRow(optionalProductTitle,optionalProductId)
+    .suggestions  
+        .row-spinner(data-show-spinner="true" data-spinner-size="md")
+            +dynamicRow({
+                "rowItemType": "suggested-item",
+                "rowItemMinWidth":170,
+                "rowBtnType": "round",
+
+                    },
+                    {
+                        "url": `products/suggest/type/different/title/${optionalProductTitle || "Apple iPhone 14 Plus 128 GB midnight"}/modelId/${optionalProductId || '63bc126fb63b0ed0704a10e1'}`,
+
+                        "totalDocsLoad": 38,
+                        "title":"Suggested items",
+                        "limit": 6
+                    })
+
+            if(userData)
+                +dynamicRow({
+                    "rowItemType": "item-with-sm-img",
+                    "rowItemMinWidth":110,
+                    "rowBtnType": "round"
+                        },
+                        {
+                            "url": `users/me/history`,
+
+                            "totalDocsLoad": 50,
+                            "limit": 6,
+                            "title":"Your Browsing history"
+                        }) 

@@ -1,0 +1,164 @@
+extends ../common_page 
+include ../../mixins/ratingIcons
+
+
+block section 
+    - const user = otherUser
+    - const userProfile= otherUser.profile
+    section(class=`section-${page} bg-fade`)
+        .userProfile.container-100.mg-c
+            header.mg-lw.border-light.r-sm.bg-light
+                .userProfile-cover-pic(style='position:relative')
+                    if(userProfile.cover_pic)
+
+                        img(src=`/img/users/${userProfile.cover_pic}` alt=''
+                            data-input-id="cover_pic"
+                        )
+                    if(page==="my-profile")
+                        input#cover_pic.hidden(type='file' name='cover_pic' data-img-set="false")
+                        img.pointer(
+                            src='//d1k8kvpjaf8geh.cloudfront.net/gp/profile/assets/camera-desktop-4aba2c5ff428bad7bee93a2e61a2ad5128cbdd58b770618a1fd108abca1e2f31.png' 
+                            data-positionel-btn='' data-positionel-name='set-userprofile-imgs' data-input-id='cover_pic' 
+                            data-img-set=`${userProfile.cover_pic!=="default_cover.png"?true:false}`
+
+                            style='\
+                            position: absolute;\
+                            bottom: 1.6rem;\
+                            right: 1.6rem;\
+                            height: 3.6rem;\
+                            width: 4.5rem;\
+                        ')
+
+                .userProfile-preview.f.f-md.p-lw
+                    .userProfile-pic(style='position: relative')
+                        img.img-round(src=`/img/users/${userProfile.pic}` alt='' data-input-id="pic")
+
+                        if(page==="my-profile")
+                            input#pic.hidden(type='file' name='pic')
+                            img.pointer(
+                                src='//d1k8kvpjaf8geh.cloudfront.net/gp/profile/assets/camera-desktop-4aba2c5ff428bad7bee93a2e61a2ad5128cbdd58b770618a1fd108abca1e2f31.png' 
+                            data-positionel-btn='' data-positionel-name='set-userprofile-imgs' 
+                            data-img-set=`${userProfile.pic!=="default.png"?true:false}`
+                            data-input-id='pic' 
+                            style='\
+                                position: absolute;\
+                                bottom: 2.2rem;\
+                                left: 43%;\
+                                height: 3.6rem;\
+                                width: 4.5rem;\
+                                border: unset;\
+                                ') 
+                    div
+                        h.h-4.h-m.mg-0= userProfile.name
+
+                        div.mg-hg
+                            if(userProfile.address.country) 
+                                p= userProfile.address.country
+
+                    
+                        if(page!=="other-user-profile")
+                            if(meFollowProfileUser)
+                                button.btn-g.mg-t.link( 
+                                    data-url=`users/me/following/unfollow/${user._id}` 
+                                    data-method='patch' 
+                                    data-data={_id:user._id,name:user.name,pic:user.pic} data-change-text-to="+Follow" 
+                                    data-change-url-to=`users/me/following/follow/${user._id}` 
+                                    data-need-login-user
+
+                                    )
+                                    = "Following"
+                            else
+                                button.btn-g.mg-t.link( 
+                                    data-url=`users/me/following/follow/${user._id}` 
+                                    data-method='patch' 
+                                    data-data={_id:user._id,name:user.name,pic:user.profile.pic} data-change-text-to="Following" 
+                                    data-change-url-to=`users/me/following/unfollow/${user._id}` 
+                                    data-need-login-user)
+                                    = "+Follow" 
+
+                .userProfile-container
+                    // left
+                    .userProfile-left.mg-lw-all
+
+                        // check your profile
+                        .userProfile-update-your-profile.p-sm.border-light.r-sm.bg-light
+                            .right
+                                i.fa.fa-times.pointer(data-action='hide-update-your-profile=box' aria-hidden='true')
+                            p.mg-md
+                                | Have you checked out your Public Profile yet? Make sure that
+                                | it is up to date!
+                            .center
+                                a.btn-inline-span.border-light.r-sm.bg-dim(href='/profile/me') View your public profile
+
+                        // following users
+                        .userProfile-following.p-sm.border-light.r-sm.bg-dim
+                            h.h-9.mg-sm Following
+                            .f-sm.f-ac
+                                each followingUser in user.following
+                                    a(href=`/profile/${followingUser._id}`)
+                                        img.img-round.userProfile-following-userPic(src=`/img/users/${followingUser.pic}`)
+
+                        // about
+                        .userProfile-about.p-sm.border-light.r-sm.bg-dim
+                            h.h-9 About
+
+                    // right
+                    .userProfile-right.mg-lw-all
+                        // review helpful vote count
+                        .userProfile-helpfulVote.p-sm.border-light.r-sm.bg-light
+                            h.h-9.mg-sm Impact
+                            .f-sm.f-ac
+                                .userProfile-helpfulVote-icon-box
+                                    i.fas.fa-thumbs-up.primary-light.icon-bg(aria-hidden='true')
+                                h.s-4.h-m= user.count.helpful
+                        // review  count
+                        .userProfile-review-activity.border-light.r-sm.bg-light
+                            .p-sm
+                                h.h-9.mg-sm Community activity
+                                h.h-4.h-m.mg-0.userProfile-review-count= user.count.reviews
+                                p.w-300.mg-md Reviews
+                            .line
+
+                        .userProfile-reviews.mg-lw
+                            each review in user.reviews
+
+                                .review.mg-b-md.bg-light.border-light.r-md
+                                    .review-header
+                                        // user
+                                        .f-sm.f-ac.mg-b-sl.p-lw
+                                            img.img-sl.round.review-author-img(src=`/img/users/${user.pic}` alt='')
+                                            p.pt-md.review-author-name= user.name
+                                            p.light.f-size-sm.f.f-ac
+                                                span  reviewed a product 
+                                                span.dot-m
+                                                span= new Intl.DateTimeFormat('en-US').format(review.ts)
+                                        .line-dim
+
+                                        // rating | review-title
+                                        .p-lw.mg-sl-all
+                                            a.f-sm.f-ab.pointer(href=`${review._id}`)
+                                                .f.product-rating-icons
+                                                    +ratingIcons(review.rating)
+                                                p.s-10.s-d.primary Verifed purchase
+
+                                            // title
+                                            p.s-9= review.content.title
+                                            p.mg-sm= review.content.text
+
+                                            // about-product
+                                            a.p-lw.border-light.f-sm.f-ac.pointer.mg-sm(href=`/${review.item.title.split(" ").join('-')}/${review.item._id}`)
+                                                img.img-lw(src=review.item.assets.thumbnail alt='')
+                                                div
+                                                    p.hover-color-primary= review.item.title
+                                                    .f-lw.f-ab
+                                                        .f.product-rating-icons
+                                                            +ratingIcons(review.item.rating.value)
+                                                        p.pt-lw= review.item.rating.count
+                                            //- p.userProfile-review-heplfulVote.t-sm
+                                            //-     span 19
+                                            //-     |  helpful votes
+
+block more_positionels 
+    if(page==="my-profile")
+        include ./modal/setUserProfileCoverImgModal
+        include ./tooltip/setUserProfileImgsTooltip

@@ -1,0 +1,70 @@
+
+//- data render initial using pug not making req 
+mixin staticRow(cssOptions,contentData)
+    -const {rowItemType}=cssOptions;
+
+
+    //- grid item (4 items in box =>  2x2)
+    if(rowItemType==="grid-item")
+        // Items in grid
+        .row(
+            data-row-type='static'
+            data-row-item-type='grid-item' 
+            data-row-scroll="false" 
+            
+            )
+            .row-container
+                // items
+                .row-main-content
+                    .row-content
+                        each colData in contentData
+                            -const {cssOptions,data}=colData
+                            -const {redirectLink}=cssOptions
+                            -const {docs,title,redirectLinkText,redirectLinkUrl}=data;
+
+                            if(docs.length>0)
+                                .col(data-contains-redirect-link=`${redirectLink?true:false}`)
+
+                                    .col-content
+                                        h.col-title-item.h-6= title
+                                        each doc in docs
+                                            -const {_id,title,thumbnail}=doc
+                                            a.col-item(href=`/${title.split(' ').join("-")}/${_id}`)
+                                                .img-box-md
+                                                    img(src=thumbnail alt=title)
+                                                p.pt-sm 2021 Apple MacBook Pro
+
+                                        if(redirectLink)
+                                            .col-btn-item
+                                                a(href=redirectLinkUrl).btn-inline-span= redirectLinkText
+
+
+    //- row (items in x-axis)
+    if(rowItemType==='item-with-bg-img')
+        -const {rowBtnType}=cssOptions
+        -const {page,lastPage,title,docs}=contentData;
+        .row(data-row-type='static' data-row-item-type='item-with-bg-img' data-row-btn-type=rowBtnType data-row-scroll='true' data-page=page data-load-docs-till-page=lastPage)
+            // heading and btn
+            .f-sm.f-sb
+                h.h-6.mg-b-sm= title
+            .row-container
+                // buttons
+                div
+                    // button-left
+                    .row-btn-box
+                        button(data-direction='left' data-active='false' data-focus='false')
+                            i.fa.fa-angle-left(aria-hidden='true')
+                    // button-right
+                    .row-btn-box
+                        button(data-direction='right' data-active='true' data-focus='false')
+                            i.fa.fa-angle-right(aria-hidden='true')
+                // items
+                .row-main-content
+                    .row-content
+                        each doc in docs
+                            .col
+                                -const {_id,title,thumbnail}=doc;
+                                a.col-content(href=`/${title.split(' ').join("-")}/${_id}`)
+                                    .img-box-bg
+                                        img(src=thumbnail alt=title)
+                

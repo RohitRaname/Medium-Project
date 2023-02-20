@@ -1,0 +1,32 @@
+extends ../base
+
+block form
+    form.form.mg-b-sm-all.mg-b-md(data-type='login-enter-email' data-error='false' onsubmit='return false;' data-clear-inputs-when-hide='true' data-static='true')
+        .form-container
+            h.h-4.h-m Sign in
+            .form-group(data-error='false' data-required='true')
+                h.h-9 Email
+                input(type='text' name='email' data-input='')
+                .form-error
+                    i.fas.fa-exclamation
+                    p Email is invalid
+
+            button.btn-g.btn-100.mg-b-md(data-action="submit") Continue
+
+            p.mg-b-bg
+                | By conitinuing, you agree to Amazon&apos;s
+                a.btn-inline-span(href='/') Conditions of Use
+                |             and 
+                a.btn-inline-span(href='/') Privacy Notice
+            a.btn-inline-span(href='/') Need help?
+
+
+    // new user
+    .register-user
+        .f-lw.f-ac.mg-b-md
+            .line
+            span.t-sm.wrap.w-600 New to Amazon
+            .line
+        a(href="/auth/signup/create-account")
+            button.btn-old.btn-100
+                p.center Create your Amazon account

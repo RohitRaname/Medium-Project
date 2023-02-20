@@ -1,0 +1,24 @@
+
+mixin ratingChart(rating)
+    -const {one_star:one,two_star:two,three_star:three,four_star:four,five_star:five}=rating.count_by_star
+        each star in [5,4,3,2,1]
+            -let count;
+  
+            if(star === 5) 
+                -count= five
+            else if(star === 4) 
+                -count= four
+         
+            else if(star === 3) 
+                -count= three
+            else if(star === 2)
+                -count= two
+            else if(star===1)
+                -count= one
+
+            -const percentage= Math.floor((count/rating.count)*100) || 0
+            .product-rating-chart-box.f-md.f-ac.mg-b-lw
+                p.product-rating-star.pt-md.blue.hover-primary=`${star} star`
+                .progressbar
+                    .progressbar-track-line(style=`width:${percentage}%;`)
+                p.product-rating-percent.pt-md.blue.hover-primary=` ${percentage} %`

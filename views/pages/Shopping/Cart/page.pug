@@ -1,0 +1,106 @@
+extends ../../common_page 
+
+block section 
+    section.section-cart.bg-dim
+        .cart
+            .cart-container.container.p-bg.mg-sm-all
+                .cart-left.bg-light.p-sm
+                    // unselect cart option
+                    header.mg-sm
+                        .f-space
+                            div
+                                h.h-4.h-m.h-0  Shopping Cart 
+
+                                if(docs.length>0)
+                                    .select-unselect-all-items
+                                        button.btn-inline-span.hidden(data-action='select-all-items')
+                                            | Select all items
+                                        button.btn-inline-span(data-action='unselect-all-items')
+                                            | Deselect all items
+                            div
+                                .mg-bg
+                                p.t-md Price
+                    .line-dim
+                    .cart-items.list.p-v-md-all(data-border-bottom='')
+
+                        if(docs.length===0) 
+                            div.center.pt Please add items to cart.
+
+                        each item in docs
+                            .cart-item.item(data-data={_id:item._id,qty:item.qty,title:item.title,price:item.price.value,thumbnail:item.thumbnail} data-active='true')
+                                // when cart item deleted then show delete message
+                                .cart-item-container
+                                    // unselect cart-item
+                                    .f.f-ac
+                                        button.btn-checkbox(data-active='true' data-action='select-item')
+                                            i.fa.fa-check
+                                    .img-box-bg
+                                        img(src=item.thumbnail alt='')
+                                    // item details
+                                    .cart-item-details.mg-lw-all
+                                        a(href=`/${item.title.split(' ').join('-')}/${item._id}`).h-5.h-l.trunc-text(style='max-width: 30rem')= item.title
+                                        p.t-sm.green In stock
+                                        .cart-item-features.mg-sl-all
+                                            .f-sl.f-ab
+                                                h.w-600.f-size-sm Size:
+                                                p.pt-sm.letter-s= item.size
+                                            .f-sl.f-ab
+                                                h.w-600.f-size-sm Colour:
+                                                p.pt-sm.letter-s= item.color 
+
+                                        .cart-item-options.box-with-v-line
+                                            div(data-action='update-cart-item-qty' data-positionel-btn='' data-positionel-name='update-cart-item-qty-dropdown' data-data={_id:item._id})
+                                                button.btn-dropdown.r-md.btn-md
+                                                    span Qty:
+                                                    span.letter-s(data-value='')= item.qty
+                                                    i.fa.fa-angle-down.icon-sm.dark
+                                            button.btn-inline(data-action='delete-item' data-data={_id:item._id,title:item.title,qty:item.qty})
+                                                | Delete
+                                            button.btn-inline.f-size-sm.cart-item-add-to-list.wrap(data-positionel-btn='' data-positionel-name='add-product-to-wishlist-dropdown' data-data={_id:item._id,title:item.title,thumbnail:item.thumbnail} data-action='add-item-to-list')
+                                                | Add to list
+                                            a(href=`/menu?q=${item.title.split(' ').join('+')}`).btn-inline.f-size-sm.wrap
+                                                | See more like this
+                                    // price
+                                    .cart-item-price
+                                        h.h-6.wrap= `${item.convertPrice.unit}${item.convertPrice.value}`
+                
+                .cart-right.mg-md-all
+                    .cart-items-buy.bg-light.p-sm.p-b-bg
+                        // total cart items price
+                        p.h-6.h-l.mg-sm.f
+                            | Subtotal (
+                            span(data-cart-items-count='')= summary.count
+                            | )
+                            span :
+                            span(data-currency-unit='')= userData.currency.symbol 
+                            span.h-6(data-cart-total-price='')= summary.totalAmount
+
+                        button(class=`btn-primary-light btn-100 ${docs.length===0? "btn-disabled":""}` data-action='checkout')
+                            | Proceed to Buy
+
+
+                    //- // suggested items
+                    //- aside.mg-sm-all.bg-light.p-sm.border-light.r-md.p-b-bg
+                    //-     h.h-5 Explore more items
+                    //-     a.f-sm.f-as(href='/products/63bc126fb63b0ed0704a10fa')
+                    //-         .img-box-sm
+                    //-             img(src='https://m.media-amazon.com/images/I/619f09kK7tL._SX679_.jpg' alt='Apple iPhone 14 256 GB midnight')
+                    //-         div
+                    //-             p.t-sm.blue.capitalize.hover-color-primary
+                    //-                 | Apple iPhone 14 256 GB midnight
+                    //-             .f-lw.f-ac.mg-b-sl
+                    //-                 .product-rating-icons.f.f-ab
+                    //-                     i.fa.fa-star-o.icon-sm(aria-hidden='true')
+                    //-                     i.fa.fa-star-o.icon-sm(aria-hidden='true')
+                    //-                     i.fa.fa-star-o.icon-sm(aria-hidden='true')
+                    //-                     i.fa.fa-star-o.icon-sm(aria-hidden='true')
+                    //-                     i.fa.fa-star-o.icon-sm(aria-hidden='true')
+                    //-                 p.t-sm.hover-color-primary 0
+                    //-             .card-price.f-0.f-as
+                    //-                 p.pt-sl &#x20B9;
+                    //-                 span.pt.move-word-up 106145.65
+
+
+block more_positionels 
+    include ./dropdown/updateCartItemQtyDropdown
+    include ../../product/dropdown/wishlistDropdown

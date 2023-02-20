@@ -1,0 +1,35 @@
+if(userData)
+
+    .positionel.modal(data-positionel-type='modal' data-positionel-name='choose-user-location' data-active='false' data-animation='scale-from-center' data-pointer-position='none' data-position='fixed' data-delay-hide='false' data-show-event='click' data-static='false' data-has-defined-class='true' data-child-positionel='false' data-has-child-positionel='true' data-width='sm' data-form='true' data-hide-form-after-submit='true' data-load-spinner='true' data-hide-spinner='true' data-query= {'url':`users/me/address/${userData.address._id}`,method:"get",manual:false})
+        .overlay
+        .positionel-container.modal-container.container-100
+            // header
+            header.modal-header
+                p.s-8 Choose your location
+                button.btn-icon.positionel-closebtn
+                    i.fa.fa-times(aria-hidden='true')
+            footer.modal-footer
+                .spinner.hide
+                // first-content
+                .positionel-content.mg-b-sm-all(data-active='true')
+                    p.t-sm
+                        | Select a delivery location to see product availability and delivery
+                        | options
+                    // address
+                    .border-box-primary.modal-location-box
+                        span.model-location-username.w-600 Rohit
+                        span.letter-s(data-value)
+                            | Rohit Hno 68 Gali No.3 nearik Girls Inter College Lala Mohammadpur
+                            | Road, MEERUT UTTAR PRADESH 250001
+                    a.btn-inline-span(href='/account/address')
+                        | Add an address or pick-up point
+                    .dash-box.f-size-lw
+                        p or enter an Indian pincode
+                    form.form.f-sm.f-as(data-error='false' onsubmit='return false;' data-clear-inputs-when-hide='true' data-data='{}' data-submit-automatic='true' data-url=`users/me/address/${userData.address._id}/update-zipcode` data-method='patch')
+                        .form-group.f-flex-1(data-error='false' data-required='true')
+                            input(type='text' maxlength='6' name='zipcode' data-manually-check='true' data-input='')
+                            .form-error
+                                i.fa.fa-exclamation-circle(aria-hidden='true')
+                                p Please enter a valid pincode
+                        // modal-btns
+                        button.btn-outline.btn-md(data-action='submit') Apply

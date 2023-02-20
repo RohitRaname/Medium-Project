@@ -1,0 +1,36 @@
+
+
+
+if(productData)
+    // product ratings hovercard
+    .hovercard.positionel(data-positionel-name='product-ratings-overview' data-positionel-type='hovercard' data-active='false' data-pointer-position='center' data-position='bottom' data-delay-hide='true'  data-static='false' data-has-defined-class='true' data-hide-by='default' data-animation='fade' data-show-event='mouseover' data-child-positionel='false'
+    data-position-type="absolute"
+
+    data-load-spinner='true' 
+    data-hide-spinner="false"
+
+
+    data-query={url:`products/${productData._id}?fields=rating`,method:"get",manual:false}
+    )
+        .overlay.overlay-t
+        .hovercard-container.positionel-container.r-md.p-sm.p-b-md
+            .positionel-square
+            .spinner
+            .positionel-content
+                .product-ratings-overview.mg-b-sm-all
+                    // rating text
+                    .product-rating-text
+                        // icons
+                        .f-sm.f-ac.mg-b-sl
+                            .f-sl.product-rating-icons
+                                +ratingIcons(rating.value)
+                            p.s-6.h-m=`${rating.value} out of 5`
+                        p.t-md=`${rating.count} global ratings`
+                        
+                    // rating in chart table
+                    .product-rating-chart.mg-b-lw(data-race='false')
+                        +ratingChart(rating)
+                    .line.mg-b-md
+                    a.btn-inline.f(href=`/review/${productData._id}`)
+                        p See all customer review
+                        i.fa.fa-angle-right

@@ -1,0 +1,22 @@
+extends ../base_template/_base
+include ../mixins/product&historyRow
+
+
+block section 
+    
+
+block positionels
+    include ../components/dropdown/choose_language
+    include ../components/dropdown/search_products
+    include ../components/dropdown/user_account_options
+    include ../components/form/changeUserLocationForm
+    include ../components/hovercard/product_ratings_overview
+
+    block more_positionels
+
+
+block row 
+    +productAndHistoryRow()
+
+
+

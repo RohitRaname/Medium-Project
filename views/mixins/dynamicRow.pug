@@ -1,0 +1,48 @@
+
+//- row in which dynamically render load docs(making req) 
+mixin dynamicRow(cssOptions,queryOptions)
+    -const {rowItemType,rowItemMinWidth,rowBtnType}=cssOptions;
+    -const {url,totalDocsLoad,limit,sort,title}=queryOptions;
+        .row(
+            data-row-item-type=rowItemType    
+            data-row-type="dynamic-load"
+            data-row-btn-type=rowBtnType
+            data-row-item-min-width=rowItemMinWidth
+            
+            data-initial-docs-load='false' 
+            data-url=url 
+            data-page='' 
+
+            data-total-docs-load=totalDocsLoad
+            data-max-docs-limit-acc-to-user-device=""
+
+            data-limit=limit
+            data-page-loaded=''
+            data-sort=sort
+        )
+            // heading and btn
+            .f-sm.f-sb
+                if(title==="Your Browsing history")
+                    div.f-sm.f-ab
+                        h.h-6.mg-b-sm.row-title=title
+                        a(href="/me/history").btn-inline-span View or edit your browsing history 
+                else
+                    h.h-6.mg-b-sm.row-title=title
+
+                p.t-md.row-page
+                    | Page 
+                    span(data-value='') 1
+                    |  of 
+                    span.row-last-page.letter-s= totalDocsLoad
+            .row-container
+                // button-left
+                .row-btn-box
+                    button(data-direction='left')
+                        i.fa.fa-angle-left
+                // items
+                .row-main-content
+                    .row-content
+                // button-right
+                .row-btn-box
+                    button(data-direction='right')
+                        i.fa.fa-angle-right

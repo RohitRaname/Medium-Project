@@ -1,0 +1,51 @@
+// navigation
+nav.nav(data-active='false')
+    .overlay
+    .nav-list
+        .list-item.nav-my-account.f.f-sb.f-ac
+            
+            li(data-link='/me/account' data-need-login-user data-hover='false')
+                .f-lw
+                    i.fa.fa-user-circle.nav-user-icon
+                    h.h-7.w-700.h-0= `Hello,${userData && userData.profile.name || "New User"}`
+            button.btn-icon(data-action='close-nav' style="background:black")
+                i.fa.fa-times
+        // trending
+        .list
+            p.list-title Trending
+            a.list-item(href='/menu?q=iphone&sort=-rating.count')
+                p Best sellers
+            a.list-item(href='/menu?q=iphone&sort=-_id')
+                p New releases
+            a.list-item(href='/menu?q=iphone')
+                p Movers and Shakers
+        .line.mg-b-lw.mg-t-lw
+        // settings
+        .list
+            p.list-title Help &amp; Settings
+            li.list-item(data-link='/me/account'  data-need-login-user)
+                p Your Account
+            li.list-item(data-link='/me/account' data-need-login-user)
+                p Customer Service
+                
+            if(userData)
+                a.list-item(href='/logout')
+                    p Sign Out
+            else 
+                a.list-item(href='/auth/login/0')
+                    p Log In
+
+// shortcut-navigation
+.shortcut-navigation.f
+    .nav-btn-box.border.f(data-nav-btn='')
+        button.nav-btn
+            p.nav-btn-line
+            p.nav-btn-line
+            p.nav-btn-line
+        h.h-9.h-0 All
+    li.border(data-link='/me/orders' data-need-login-user)
+        h.h-9.h-0  Buy again 
+    a.border(href='/menu?q=iphone')
+        h.h-9.h-0  Heath,Household &amp; Personal Care 
+    li.border(data-link='/me/orders' data-need-login-user)
+        h.h-9.h-0  Orders 

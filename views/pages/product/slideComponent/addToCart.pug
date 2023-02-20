@@ -1,0 +1,30 @@
+//- addToCart
+.addToCart(data-component='slide' data-hook-id='add-to-cart' data-active='false')
+    .overlay
+    .addToCart-container.p-bg.row-spinner(data-show-spinner='true' data-spinner-size='md' data-hide-manual='true')
+        button.btn-icon(data-action='close')
+            i.fa.fa-times.icon-hg.light
+        .addToCart-content.f-bg
+            // product preview
+            .addToCart-product-preview
+                .f-sm.f-ac
+                    button.btn-icon.round.btn-icon-lw.bg-green
+                        i.fas.fa-check.icon-lw.white
+                    h.s-6 Added to cart
+                .center
+                    img.img-lw(src=productData.thumbnail alt='')
+            // price and checkout
+            div
+                .addToCart-price.f.f-ab.mg-lw
+                    h.s-7 Cart subtotal
+                    p.w-500
+                        | (
+                        span(data-item-count='') 13
+                        |  items):
+                    h.letter-s.s-7.primary(data-item-price='') Rs.4,93,795
+                .f-lw
+                    a.btn-outline.btn-bg(href='/me/cart') Cart
+                    button.btn-primary-light.btn-bg(data-action="checkout-all-items" data-click-effect)
+                        | Proceed to checkout (
+                        span(data-item-count='') 17
+                        |  items)

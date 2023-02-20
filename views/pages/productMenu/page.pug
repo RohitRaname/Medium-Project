@@ -1,0 +1,139 @@
+extends ../common_page 
+include ../../mixins/ratingIcons
+
+block section
+
+
+
+  section.section-productMenu
+    .productMenu
+      .productMenu-container
+
+        if(docs.length>0)
+
+          // result count
+          header.productMenu-header.f.f-space.container-120
+            // result count
+            .productMenu-summary
+              span(data-docs-range='')= summary.docsRange
+              |               of
+              span(data-total-docs='').letter-s= summary.count
+              |               results for
+              span.primary.w-700(data-search-word='').letter-s= `"${summary.searchWord}"`
+            button.btn-dropdown.btn-lw(data-positionel-btn='' data-positionel-name='productMenu-sort-dropdown')
+              | Sort by: 
+              span.f-size-lw.letter-s(data-value='') Featured
+              i.fa.fa-angle-down.icon-md(aria-hidden='true')
+          .line.shadow-m
+
+
+          .productMenu-content.container-120
+
+            // filter by ratings,price,features
+            .productMenu-filter
+              .productMenu-filter-container.mg-md-all
+                // ratings
+                .f-col.f-as.productMenu-filter-by-ratings.mg-sl-all.productMenu-filter-by(data-set-text-color='')
+                  h.h-8 Customer Reviews
+
+                  each rating in [4,3,2,1]
+                    // 5
+                    li.hover-color-primary.f-sl.f-ab(data-active='false' data-filter=`rating.value[gte]=${rating}`)
+                      .f.product-rating-icons
+                        +ratingIcons(rating)
+                      span.f-size-sm &amp; Up
+
+                // price
+                .f-col.f-as.productMenu-filter-by-price.mg-sl-all.productMenu-filter-by(data-set-text-color='')
+                  h.h-8 Price
+
+                  -const priceRangeArr= categoryByPrice.range
+                  -const firstPriceRange= priceRangeArr.slice(0,1)[0];
+                  -const lastPriceRange= priceRangeArr.slice(-1)[0];
+                  -const priceSymbol= categoryByPrice.symbol
+
+
+                  - const userCurrencyRate= userData && userData.currency.rate || 1
+                  - const userCurrencySymbol= userData && userData.currency.symbol || "$"
+
+
+
+                  //- below price range
+                  li.f-sl.f-ab(data-active='false' data-filter=`price.value[lt]=${userData? Math.floor(firstPriceRange/userCurrencyRate): firstPriceRange}`)
+                    span.hover-color-primary.letter-s
+                      | Under 
+                      span(data-value='')= `${priceSymbol}${firstPriceRange}`
+
+
+                  //- mid price range
+                  each priceRange,i in priceRangeArr
+                    if(i!==priceRangeArr.length-1) 
+                      li.f-sl.f-ab(data-active='false' data-filter=`price.value[gte]=${userData? Math.floor(priceRangeArr[i]/userCurrencyRate) : priceRangeArr[i]}&price.value[lte]=${userData?  Math.floor(priceRangeArr[i+1]/userCurrencyRate):priceRangeArr[i+1]}`)
+                        span.hover-color-primary
+                          span.letter-s(data-value='')= `${priceSymbol}${priceRangeArr[i]} - ${priceSymbol}${priceRangeArr[i+1]}`
+
+                  //- above price range
+                  li.f-sl.f-ab.mg-sm(data-active='false' data-filter=`price.value[gte]=${userData? Math.floor(lastPriceRange/userCurrencyRate):lastPriceRange}`)
+                    span.hover-color-primary Over
+                      span.letter-s(data-value='')= `${priceSymbol}${lastPriceRange}`
+
+                  //- set price range manually
+                  .productMenu-set-price-range.f-sl
+                    input.t-md(type='text' name='price.value[gte]' data-min-price='' placeholder=`${categoryByPrice.symbol}Min`)
+                    input.t-md(type='text' name='price.value[lt]' placeholder=`${categoryByPrice.symbol}Max` data-max-price='')
+                    button.btn-outline.btn-md.r-md(data-action='set-price-range')
+                      | Go
+
+                // colour
+                .f-col.f-as.productMenu-filter-by-color.mg-sl-all.productMenu-filter-by
+                  h.h-8.grid-full Colour
+
+                  div.f-sl
+                    each colorVariant in categoryByColor
+                      -const {color,colorImg}= colorVariant
+                      li.f-sl.f-ab(data-active='false' data-filter=`curVariant.color.name=${color}`)
+                        button.btn-checkbox.btn-checkbox-bg.r-0( data-active='false' style="overflow:hidden")
+                          img(style="height:100%;width:100%;transform:scale(2.5)" src=colorImg)
+                          i.fa.fa-check(aria-hidden='true' style="position:absolute;")
+
+                // Storage Size
+                .f-col.f-as.productMenu-filter-by-height.mg-sl-all.productMenu-filter-by
+                  h.h-8.grid-full Storage Size
+
+
+                  each size in categoryBySize
+                    li.f-sl.f-ab(data-active='false' data-filter=`curVariant.size=${size}`)
+                      button.btn-checkbox.btn-checkbox-bg(data-active='false')
+                        i.fa.fa-check(aria-hidden='true')
+                      span.hover-color-primary.letter-s= size 
+
+                // screen height
+                .f-col.f-as.productMenu-filter-by-height.mg-sl-all.productMenu-filter-by
+                  h.h-8.grid-full Screen Height
+
+                  each screenHeight in categoryByScreenHeight
+                    li.f-sl.f-ab(data-active='false' data-filter=`specs.name=height&specs.value=${screenHeight}`)
+                      button.btn-checkbox.btn-checkbox-bg(data-active='false')
+                        i.fa.fa-check(aria-hidden='true')
+                      span.hover-color-primary.letter-s= screenHeight.split('-').join(' ')
+
+                // availability
+                .f-col.f-as.productMenu-filter-by-stock.mg-sl-all.productMenu-filter-by
+                  h.h-8.grid-full Availability
+                  li.f-sl.f-ab(data-active='false' data-filter='stock[gt]=0')
+                    button.btn-checkbox.btn-checkbox-bg(data-active='false')
+                      i.fa.fa-check(aria-hidden='true')
+                    span.hover-color-primary.letter-s
+                      | Exclude Out of Stock
+
+            // items
+            include ./modal/productMenuItemsModal
+
+        else 
+          .container-90.mg-c.container
+            p.pt-bg(data-title='')= `No results found for ${ searchWord}`
+            p(data-text='') Please search products related iphone 
+
+            
+block more_positionels 
+  include ./dropdown/sortProductMenuItemsDropdown

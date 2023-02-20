@@ -1,0 +1,19 @@
+.bg-secondary-fade.createReview-change-username
+    form.form.createReview-change-username-form.f-sm.f-c.container-90.p-lw.mg-c(data-static='true' data-has-defined-class='true' data-error='false' onsubmit='return false;' data-clear-inputs-when-hide='true' data-data='{}' data-submit-automatic='true' data-url='users/me' data-method='patch' data-multi-formdata='false')
+        img.img-avatar.img-avatar-sm(src='../../img/users/default.png' alt='' data-reset="false")
+        // edit review text
+        .f-sm.f-ac.createReview-user-box
+            p.t-md.createReview-user-name= user.name
+            button.btn-inline-span.f-size-md(data-action='show-inputs')
+                | Edit
+        // edit review inputs
+        .createReview-edit-inputs.hidden
+            .form-group.f-sm.f-ab(data-error='false' data-required='true')
+                input.width-16(type='text' maxLength="20" value=user.name name='name' placeholder=user.name data-input='' autocomplete='off' )
+                button.btn-primary-light.btn-md(data-action='submit')
+                    | Submit
+                button.btn-outline.btn-md(data-action='cancel')
+                    | Cancel
+                .form-error
+                    i.fa.fa-exclamation-circle
+                    p Please enter a public profile name

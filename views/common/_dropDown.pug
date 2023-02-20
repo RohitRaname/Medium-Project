@@ -1,0 +1,5 @@
+
+mixin dropDown(arr,height="") 
+    ul.dropDown-list(data-active='false' data-height=`${height}`)
+        each el in arr
+            li.dropDown-item= el

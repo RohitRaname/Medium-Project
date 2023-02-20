@@ -1,0 +1,89 @@
+form.form.createReview-form.container.container-90(data-error='false' onsubmit='return false;'
+data-clear-inputs-when-hide='true'
+data-static='true'
+data-has-defined-class='false' 
+data-data=reviewSubmitData 
+data-submit-automatic='true' 
+data-url=`products/modelId/${product.model._id}/reviews` data-method='post' 
+data-multi-formdata='true'
+data-redirect-to=`/${product.title.split(' ').join('-')}/${product._id}`
+)
+    .form-container
+        h.h-5 Create Review
+        // product details
+        .f-md.f-as.mg-b-sl
+            img.img-lw.trans-lw(src=product.assets.thumbnail alt='' data-reset='false')
+            p.pt-md= product.title
+        .line-dim
+        // rating
+        .form-group.mg-b-sm-all(data-error='false' data-required='true' data-value-set='false')
+            .form-group-content
+                label.h-7.mg-b-sm(for='rating') Overall rating
+                .product-rating-icons
+                    i.product-rating-icon.fa.fa-star-o.icon-hg.pointer(data-index='0')
+                    i.product-rating-icon.fa.fa-star-o.icon-hg.pointer(data-index='1')
+                    i.product-rating-icon.fa.fa-star-o.icon-hg.pointer(data-index='2')
+                    i.product-rating-icon.fa.fa-star-o.icon-hg.pointer(data-index='3')
+                    i.product-rating-icon.fa.fa-star-o.icon-hg.pointer(data-index='4')
+            .form-group-inputs
+                input#rating.hidden(type='text' data-manually-check='true' data-input='' name='rating' )
+                .form-error
+                    i.fa.fa-exclamation-circle
+                    p Please select a star rating
+            .form-clearbtn Clear
+        .line-dim
+        // title
+        .form-group.mg-b-sm-all(data-error='false' data-required='true')
+            .form-group-content
+                label.h-7(for='title') Add a headline
+            .form-group-inputs
+                input#title(type='text' name='content_title' data-input='' data-border='primary' placeholder="What's most important to know?" maxLength="50")
+                .form-error
+                    i.fa.fa-exclamation-circle
+                    p Please enter your headine.
+        .line
+        // photo
+        .form-group.mg-b-sm-all(data-error='false' data-required='false' data-field='photo')
+            // display content
+            .form-group-content
+                h.s-6 Add a photo or video
+                p.t-md
+                    | Shoppers find images and videos more helpful than text
+                    | alone.
+                .f-sm
+                    // to add photo label
+                    label.form-upload-photo(for='photo-1')
+                        i.fa.fa-plus
+                    // preview imgs
+                    .form-preview-upload-photos.f-sm
+                        // photo set
+                        .form-preview-upload-photo.hidden(data-input-id='photo-1')
+                            button.btn-icon.btn-icon-lw.round(data-action='remove-upload-photo')
+                                i.fa.fa-close
+                            img(src='' alt='')
+            // input box
+            .form-group-inputs
+                input#photo-1.hidden(type='file' name='content_photos' accept='image/*' data-max-photo='1' data-input='')
+                .form-error
+                    i.fa.fa-exclamation-circle
+                    p Please add photo.
+        .line
+        // review
+        .form-group.mg-b-sm-all(data-error='false' data-required='true' data-field='review')
+            .form-group-content
+                h.h-7 Add a written review
+            .form-group-inputs
+                textarea(data-border='primary' name='content_text' data-input='' data-manually-check='true' minlength='50' placeholder='What did you like or dislike? What did you  use this product for?')
+                .form-error(data-type='insufficient-words')
+                    i.fa.fa-exclamation-circle
+                    p
+                        | More words required: 
+                        span(data-value='') undefined
+                .form-error(data-type='no-value')
+                    i.fa.fa-exclamation-circle
+                    p Please write review
+        .line
+        // modal-btns
+        .form-btns
+            button.btn-primary-light.btn-md(data-action='submit')
+                | Submit

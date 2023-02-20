@@ -1,0 +1,38 @@
+// product-img-overview-modal
+.positionel.modal(data-positionel-type='modal' data-modal-type='gallery' data-positionel-name='product-overview-imgs' data-active='false' data-load-spinner='false' data-animation='translate-fade' data-pointer-position='none' data-position='fixed' data-show-event='click' data-delay-hide='false' data-static='false' data-has-defined-class='true' data-child-positionel='false')
+    .overlay
+    .positionel-container.modal-container
+        .modal-tabs
+            button.btn-icon.positionel-closebtn
+                i.fa.fa-times
+            button.btn-tab(data-window='product-overview' data-active='true')
+                | Images
+        .positionel-content
+            .modal-content
+                .modal-window(data-window='product-overview')
+                    .modal-gallery-container
+                        .modal-gallery
+                            // product-cur-img
+                            .modal-gallery-cur-photo-container
+                                .modal-gallery-cur-photo-box
+                                    img.modal-gallery-cur-photo(src=thumbnail alt=title)
+                            // product info | product imgs
+                            .modal-gallery-content
+                                // info
+                                .modal-gallery-text.mg-b-sm-all.mg-b-sm
+                                    h.h-6.h-l= title
+                                    p.t-md
+                                        | Colour: 
+                                        span.letter-s= curVariant.color.name
+                                    p.t-md
+                                        | Size name: 
+                                        span.letter-s= curVariant.size
+                                    p.t-md
+                                        | Patterm name: 
+                                        span.letter-s= name
+                                // preview imgs
+                                .grid-4.gap-lw.modal-gallery-related-photos(style="grid-template-columns: repeat(auto-fit, 5rem);")
+                                    each img,i in product_imgs
+                                        .box(data-outline='' data-active=`${i===0}`)
+                                            img(src=img alt='')
+                          

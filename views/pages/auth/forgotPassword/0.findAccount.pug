@@ -1,0 +1,12 @@
+extends ../base
+block form
+    form.form.mg-b-sm-all.mg-b-md(data-type='forgot-password-find-account' data-error='false' onsubmit='return false;' data-clear-inputs-when-hide='true' data-static="true")
+        .form-container
+            h.h-4.h-m Password assistance
+            p
+            | Enter the email address or mobile phone number associated with your
+            | Amazon account.
+            .form-group(data-error='false' data-required='true')
+                h.h-9 Email
+                input(type='text' name='email' data-input='')
+            button.btn-g.btn-100.mg-b-md(data-action="submit") Continue

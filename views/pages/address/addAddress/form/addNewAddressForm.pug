@@ -1,0 +1,400 @@
+
+form.form(data-error='false' onsubmit='return false;' data-clear-inputs-when-hide='true' data-data='{}' data-submit-automatic='true' data-url='users/me/address' data-method='post' data-static='true' data-redirect-to='/account/address' data-input-shadow='secondary' data-input-border='secondary')
+    .form-container.container-60
+        h.h-4 Add a new address
+        // country
+        .form-group.form-dropdown-group(data-error='false' data-required='true' data-field='country')
+            .form-group-content
+                label(for='country') Country/Region
+                // content
+                .form-dropdown-input.f-sm(data-positionel-btn='' data-positionel-name='select-country')
+                    p.form-label Country:
+                    .form-dropdown-arrowbox.f-col.f-sl
+                        i.fa.fa-caret-up
+                        i.fa.fa-caret-down
+                // dropdown
+                .positionel.dropdown(data-dropdown-type='select-options-dropdown' data-positionel-name='select-country' data-positionel-type='dropdown' data-active='false' data-position-type='absolute' data-load-spinner='false' data-animation='fade' data-pointer-position='none' data-position='bottom' data-delay-hide='false' data-show-event='click' data-static='false' data-has-defined-class='false' data-child-positionel='true' data-set-positionbtn-width='true')
+                    .overlay.overlay-t
+                    .positionel-container(style='max-height: 60rem')
+                        .positionel-content
+                            // list
+                            ul.list
+                                li.list-item(value='0') Albania
+                                li.list-item(value='1') Algeria
+                                li.list-item(value='2') American Samoa
+                                li.list-item(value='3') Andorra
+                                li.list-item(value='4') Angola
+                                li.list-item(value='5') Anguilla
+                                li.list-item(value='6') Antarctica
+                                li.list-item(value='7')
+                                    | Antigua and Barbuda
+                                li.list-item(value='8') Argentina
+                                li.list-item(value='9') Armenia
+                                li.list-item(value='10') Aruba
+                                li.list-item(value='11') Australia
+                                li.list-item(value='12') Austria
+                                li.list-item(value='13') Azerbaijan
+                                li.list-item(value='14') Bahamas, The
+                                li.list-item(value='15') Bahrain
+                                li.list-item(value='16') Bangladesh
+                                li.list-item(value='17') Barbados
+                                li.list-item(value='18') Belarus
+                                li.list-item(value='19') Belgium
+                                li.list-item(value='20') Belize
+                                li.list-item(value='21') Benin
+                                li.list-item(value='22') Bermuda
+                                li.list-item(value='23') Bhutan
+                                li.list-item(value='24') Bolivia
+                                li.list-item(value='25')
+                                    | Bonaire, Saint Eustatius and Saba
+                                li.list-item(value='26')
+                                    | Bosnia and Herzegovina
+                                li.list-item(value='27') Botswana
+                                li.list-item(value='28') Brazil
+                                li.list-item(value='29')
+                                    | British Indian Ocean Territory
+                                li.list-item(value='30')
+                                    | Brunei Darussalam
+                                li.list-item(value='31') Bulgaria
+                                li.list-item(value='32') Burkina Faso
+                                li.list-item(value='33') Burundi
+                                li.list-item(value='34') Cambodia
+                                li.list-item(value='35') Cameroon
+                                li.list-item(value='36') Canada
+                                li.list-item(value='37') Canary Islands
+                                li.list-item(value='38') Cape Verde
+                                li.list-item(value='39') Cayman Islands
+                                li.list-item(value='40')
+                                    | Central African Republic
+                                li.list-item(value='41') Chad
+                                li.list-item(value='42') Chile
+                                li.list-item(value='43') Christmas Island
+                                li.list-item(value='44')
+                                    | Cocos (Keeling) Islands
+                                li.list-item(value='45') Colombia
+                                li.list-item(value='46') Comoros
+                                li.list-item(value='47') Congo
+                                li.list-item(value='48')
+                                    | Congo, Democratic Republic of
+                                li.list-item(value='49') Cook Islands
+                                li.list-item(value='50') Costa Rica
+                                li.list-item(value='51') Croatia
+                                li.list-item(value='52') Cura&ccedil;ao
+                                li.list-item(value='53') Cyprus
+                                li.list-item(value='54') Czech Republic
+                                li.list-item(value='55') Denmark
+                                li.list-item(value='56') Djibouti
+                                li.list-item(value='57')
+                                    | Dominica, Commonwealth of
+                                li.list-item(value='58')
+                                    | Dominican Republic
+                                li.list-item(value='59') East Timor
+                                li.list-item(value='60') Ecuador
+                                li.list-item(value='61') Egypt
+                                li.list-item(value='62') El Salvador
+                                li.list-item(value='63')
+                                    | Equatorial Guinea
+                                li.list-item(value='64') Eritrea
+                                li.list-item(value='65') Estonia
+                                li.list-item(value='66') Ethiopia
+                                li.list-item(value='67') Falkland Islands
+                                li.list-item(value='68') Faroe Islands
+                                li.list-item(value='69') Fiji
+                                li.list-item(value='70') Finland
+                                li.list-item(value='71') France
+                                li.list-item(value='72') French Guiana
+                                li.list-item(value='73') French Polynesia
+                                li.list-item(value='74')
+                                    | French Southern Territories
+                                li.list-item(value='75') Gabon
+                                li.list-item(value='76') Gambia, The
+                                li.list-item(value='77') Georgia
+                                li.list-item(value='78') Germany
+                                li.list-item(value='79') Ghana
+                                li.list-item(value='80') Gibraltar
+                                li.list-item(value='81') Greece
+                                li.list-item(value='82') Greenland
+                                li.list-item(value='83') Grenada
+                                li.list-item(value='84') Guadeloupe
+                                li.list-item(value='85') Guam
+                                li.list-item(value='86') Guatemala
+                                li.list-item(value='87') Guinea
+                                li.list-item(value='88') Guinea-Bissau
+                                li.list-item(value='89') Guyana
+                                li.list-item(value='90') Haiti
+                                li.list-item(value='91') Holy See
+                                li.list-item(value='92') Honduras
+                                li.list-item(value='93') Hong Kong
+                                li.list-item(value='94') Hungary
+                                li.list-item(value='95') Iceland
+                                li.list-item(value='96' selected='selected')
+                                    | India
+                                li.list-item(value='97') Indonesia
+                                li.list-item(value='98')
+                                    | Ireland, Republic of
+                                li.list-item(value='99') Israel
+                                li.list-item(value='100') Italy
+                                li.list-item(value='101')
+                                    | Ivory Coast (C&ocirc;te D&apos;ivoire)
+                                li.list-item(value='102') Jamaica
+                                li.list-item(value='103') Japan
+                                li.list-item(value='104') Jordan
+                                li.list-item(value='105') Kazakhstan
+                                li.list-item(value='106') Kenya
+                                li.list-item(value='107') Kiribati
+                                li.list-item(value='108')
+                                    | Korea, Republic of
+                                li.list-item(value='109') Kosovo
+                                li.list-item(value='110') Kuwait
+                                li.list-item(value='111') Kyrgyzstan
+                                li.list-item(value='112')
+                                    | Lao, People&apos;s Democratic Republic
+                                li.list-item(value='113') Latvia
+                                li.list-item(value='114') Lebanon
+                                li.list-item(value='115') Lesotho
+                                li.list-item(value='116') Liberia
+                                li.list-item(value='117') Libya
+                                li.list-item(value='118') Liechtenstein
+                                li.list-item(value='119') Lithuania
+                                li.list-item(value='120') Luxembourg
+                                li.list-item(value='121') Macao
+                                li.list-item(value='122')
+                                    | Macedonia, The Former Yugoslav Republic of
+                                li.list-item(value='123') Madagascar
+                                li.list-item(value='124') Malawi
+                                li.list-item(value='125') Malaysia
+                                li.list-item(value='126') Maldives
+                                li.list-item(value='127') Mali
+                                li.list-item(value='128') Malta
+                                li.list-item(value='129')
+                                    | Marshall Islands
+                                li.list-item(value='130') Martinique
+                                li.list-item(value='131') Mauritania
+                                li.list-item(value='132') Mauritius
+                                li.list-item(value='133') Mayotte
+                                li.list-item(value='134') Mexico
+                                li.list-item(value='135')
+                                    | Micronesia, Federated States of
+                                li.list-item(value='136')
+                                    | Moldova, Republic of
+                                li.list-item(value='137') Monaco
+                                li.list-item(value='138') Mongolia
+                                li.list-item(value='139') Montserrat
+                                li.list-item(value='140') Morocco
+                                li.list-item(value='141') Mozambique
+                                li.list-item(value='142') Myanmar
+                                li.list-item(value='143') Namibia
+                                li.list-item(value='144') Nauru
+                                li.list-item(value='145') Nepal
+                                li.list-item(value='146') Netherlands
+                                li.list-item(value='147')
+                                    | Netherlands Antilles
+                                li.list-item(value='148') New Caledonia
+                                li.list-item(value='149') New Zealand
+                                li.list-item(value='150') Nicaragua
+                                li.list-item(value='151') Niger
+                                li.list-item(value='152') Nigeria
+                                li.list-item(value='153') Niue
+                                li.list-item(value='154') Norfolk Island
+                                li.list-item(value='155')
+                                    | Northern Mariana Islands
+                                li.list-item(value='156') Norway
+                                li.list-item(value='157') Oman
+                                li.list-item(value='158') Pakistan
+                                li.list-item(value='159') Palau
+                                li.list-item(value='160') Panama
+                                li.list-item(value='161')
+                                    | Papua New Guinea
+                                li.list-item(value='162') Paraguay
+                                li.list-item(value='163') Peru
+                                li.list-item(value='164') Philippines
+                                li.list-item(value='165') Poland
+                                li.list-item(value='166') Portugal
+                                li.list-item(value='167') Puerto Rico
+                                li.list-item(value='168') Qatar
+                                li.list-item(value='169') Reunion
+                                li.list-item(value='170') Romania
+                                li.list-item(value='171')
+                                    | Russian Federation
+                                li.list-item(value='172') Rwanda
+                                li.list-item(value='173')
+                                    | Saint Kitts and Nevis
+                                li.list-item(value='174') Saint Lucia
+                                li.list-item(value='175')
+                                    | Saint Pierre and Miquelon
+                                li.list-item(value='176')
+                                    | Saint Vincent and the Grenadines
+                                li.list-item(value='177') Samoa
+                                li.list-item(value='178') San Marino
+                                li.list-item(value='179')
+                                    | Sao Tome and Principe
+                                li.list-item(value='180') Saudi Arabia
+                                li.list-item(value='181') Senegal
+                                li.list-item(value='182')
+                                    | Serbia and Montenegro
+                                li.list-item(value='183') Seychelles
+                                li.list-item(value='184') Sierra Leone
+                                li.list-item(value='185') Singapore
+                                li.list-item(value='186') Sint Maarten
+                                li.list-item(value='187') Slovakia
+                                li.list-item(value='188') Slovenia
+                                li.list-item(value='189') Solomon Islands
+                                li.list-item(value='190') Somalia
+                                li.list-item(value='191') South Africa
+                                li.list-item(value='192')
+                                    | South Georgia and the South Sandwich Islands
+                                li.list-item(value='193') South Sudan
+                                li.list-item(value='194') Spain
+                                li.list-item(value='195') Sri Lanka
+                                li.list-item(value='196') Suriname
+                                li.list-item(value='197')
+                                    | Svalbard and Jan Mayen
+                                li.list-item(value='198') Swaziland
+                                li.list-item(value='199') Sweden
+                                li.list-item(value='200') Switzerland
+                                li.list-item(value='201') Taiwan
+                                li.list-item(value='202') Tajikistan
+                                li.list-item(value='203')
+                                    | Tanzania, United Republic of
+                                li.list-item(value='204') Thailand
+                                li.list-item(value='205') Togo
+                                li.list-item(value='206') Tonga
+                                li.list-item(value='207')
+                                    | Trinidad and Tobago
+                                li.list-item(value='208') Tunisia
+                                li.list-item(value='209') Turkey
+                                li.list-item(value='210') Turkmenistan
+                                li.list-item(value='211')
+                                    | Turks and Caicos Islands
+                                li.list-item(value='212') Tuvalu
+                                li.list-item(value='213') Uganda
+                                li.list-item(value='214') Ukraine
+                                li.list-item(value='215')
+                                    | United Arab Emirates
+                                li.list-item(value='216') United Kingdom
+                                li.list-item(value='217') United States
+                                li.list-item(value='218')
+                                    | United States Minor Outlying Islands
+                                li.list-item(value='219') Uruguay
+                                li.list-item(value='220') Uzbekistan
+                                li.list-item(value='221') Vanuatu
+                                li.list-item(value='222') Venezuela
+                                li.list-item(value='223') Vietnam
+                                li.list-item(value='224')
+                                    | Virgin Islands, British
+                                li.list-item(value='225')
+                                    | Virgin Islands, US
+                                li.list-item(value='226')
+                                    | Wallis and Futuna
+                                li.list-item(value='227') Western Sahara
+                                li.list-item(value='228') Yemen
+                                li.list-item(value='229') Zambia
+                                li.list-item(value='230') Zimbabwe
+            // input
+            .form-inputs
+                input.hidden(type='text' name='country' data-input='' data-dropdown-input='')
+            .form-error
+                i.fa.fa-exclamation-circle(aria-hidden='true')
+                p Country is required
+        // fullname
+        .form-group(data-error='false' data-required='true')
+            label(for='fullName') Full name
+            input#fullName(type='text' maxlength='30' name='fullName' data-input='')
+            .form-error
+                i.fa.fa-exclamation-circle(aria-hidden='true')
+                p Please enter a name
+        // phone
+        .form-group(data-error='false' data-required='true')
+            label(for='phoneNumber') Mobile number
+            input#phoneNumber(type='number' maxlength='30' name='phoneNumber' data-input='')
+            .form-error
+                i.fa.fa-exclamation-circle(aria-hidden='true')
+                p
+                    | Please enter a phone number so we can call if there are any
+                    | issues with delivery.
+        // zipcode
+        .form-group(data-error='false' data-required='true')
+            label(for='zipcode') zipcode
+            input#zipcode(type='text' maxlength='6' name='zipcode' data-input='')
+            .form-error
+                i.fa.fa-exclamation-circle(aria-hidden='true')
+                p
+                    | Please enter a phone number so we can call if there are any
+                    | issues with delivery.
+        // building
+        .form-group(data-error='false' data-required='true')
+            label(for='building') Flat, House no., Building, Company, Apartment
+            input#building(type='text' maxlength='40' name='building' data-input='')
+            .form-error
+                i.fa.fa-exclamation-circle(aria-hidden='true')
+                p Please enter an address.
+        // Area, Street, Sector, Village
+        .form-group(data-error='false' data-required='true')
+            label(for='area') Area, Street, Sector, Village
+            input#area(type='text' maxlength='50' name='area' data-input='')
+            .form-error
+                i.fa.fa-exclamation-circle(aria-hidden='true')
+                p Please enter an address.
+        // landmark
+        .form-group(data-error='false' data-required='false')
+            label(for='landmark') Area, Street, Sector, Village
+            input#landmark(type='text' maxlength='30' name='landmark' data-input='')
+            .form-error
+                i.fa.fa-exclamation-circle(aria-hidden='true')
+                p Please enter an address.
+        // town-city | state
+        .f-lw
+            .form-group(data-error='false' data-required='true')
+                label(for='city') Town/City
+                input#city(type='text' maxlength='30' name='city' data-input='')
+                .form-error
+                    i.fa.fa-exclamation-circle(aria-hidden='true')
+                    p Please enter a city name.
+            .form-group(data-error='false' data-required='true')
+                label(for='state') State
+                input#state(type='text' maxlength='30' name='state' data-input='')
+                .form-error
+                    i.fa.fa-exclamation-circle(aria-hidden='true')
+                    p Please enter a state, region or province.
+        // checkbox default address
+        .form-group.form-checkbox-group(data-error='false' data-required='false')
+            .form-group-content
+                label(for='setDefaultAddress')
+                    button.btn-checkbox(data-active='false')
+                        i.fas.fa-check
+                p Make this my default address
+            input#setAsDefaultAddress(type='text' maxlength='30' name='setAsDefaultAddress' data-input='')
+            .form-error
+                i.fa.fa-exclamation-circle(aria-hidden='true')
+                p Please enter an address.
+        // address type
+        // country
+        .form-group.form-dropdown-group(data-error='false' data-required='true' data-field='addressType')
+            .form-group-content
+                label(for='addressType') Address Type
+                // content
+                .form-dropdown-input.f-sm(data-positionel-btn='' data-positionel-name='select-addressType')
+                    p.form-label Select an Address Type
+                    .form-dropdown-arrowbox.f-col.f-sl
+                        i.fa.fa-caret-up
+                        i.fa.fa-caret-down
+                .positionel.dropdown(data-dropdown-type='select-options-dropdown' data-positionel-name='select-addressType' data-positionel-type='dropdown' data-active='false' data-position-type='absolute' data-load-spinner='false' data-animation='fade' data-pointer-position='none' data-position='bottom' data-delay-hide='false' data-show-event='click' data-static='false' data-has-defined-class='false' data-child-positionel='true' data-set-positionbtn-width='true')
+                    .overlay.overlay-t
+                    .positionel-container
+                        .positionel-content
+                            // list
+                            ul.list
+                                li.list-item Home(7 am - 9 pm delivery)
+                                li.list-item
+                                    | Office/Commercial(10 AM - 6 PM delivery)
+                                li.list-item Albania
+            // input
+            .form-inputs
+                input.hidden(type='text' maxlength='5' name='addressType' data-input='')
+            .form-error
+                i.fa.fa-exclamation-circle(aria-hidden='true')
+                p Address Type is required.
+        // modal-btns
+        .form-btns.f-js
+            button.btn-primary-light.btn(data-action='submit')
+                | Add address

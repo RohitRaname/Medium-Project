@@ -1,0 +1,44 @@
+// user-options-dropdown
+.dropdown.positionel(data-positionel-name='user-options' data-active='false' data-positionel-type='dropdown' data-pointer-position='right' data-position='right' data-delay-hide='false' data-load-spinner='false' data-static='false' data-has-defined-class='true' data-hide-by='default' data-animation='fade' data-show-event='mouseover' data-child-positionel='false' )
+    .overlay
+    .dropdown-container.positionel-container(style="right:unset !important")
+        .positionel-square
+        .positionel-content
+            // grid
+            .dropdown-grid
+                // buy again product
+                //- .p-sm.hovercard-product-box
+                    //- h.h-7.h-0 Buy it again
+                    //- p.blue.pt-md.mg-b-lw.hover-primary View All &amp; Manage
+                    //- .f-sm.f-as(data-col='2')
+                    //-     img.img-lw(src='../../img/products/1.jpg' alt='')
+                    //-     div
+                    //-         p.pt-sm.blue.hover-color-red.w-500
+                    //-             | Chewers Oven Baked Milk Puppu Dog Treat
+                    //-         p.red.pt-sm.w-500 $30
+                    //-         button.btn-primary.btn-sm Add to Cart
+                    //- ul.list.p-sm(data-col='1' data-hover-underline='true')
+                    //-     h.h-8.h-0 Your Lists
+                    //-     li.list-item(href='/me/wishlist')
+                    //-         p Your Account
+                    //-     li.list-item(href='/discover')
+                    //-         p Discover Your Style
+                ul.list.p-sm(data-col='1' data-hover-underline='true')
+                    h.h-8.h-0 Your Account
+                    a.list-item(href='/me/account')
+                        p Your Account
+                    //- li.list-item(href='/orders')
+                    //-     p Discover Your Style
+                    a.list-item(href='/me/orders')
+                        p Your Orders
+
+                    if(userData && userData.wishlists.length>0)
+                        a.list-item(href=`/me/wishlists/${userData.wishlists[0]._id}`)
+                            p Your Wishlist
+                    //- li.list-item(href='/recommendation')
+                    //-     p Your Recommendations
+                    .line-dim
+                    a.list-item(href='/auth/login/0')
+                        p Switch Accounts
+                    a.list-item(href='/logout')
+                        p Sign Out

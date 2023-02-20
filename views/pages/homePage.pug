@@ -1,0 +1,113 @@
+extends ./common_page
+include ../mixins/staticRow
+include ../mixins/dynamicRow
+
+block section
+    section.section-home
+
+        .slider(data-index='1')
+            button.slider-btn(data-btn='left')
+            button.slider-btn(data-btn='right')
+            .slider-imgs
+                img.slider-img(src='../../img/amazon/hero_4.jpg')
+                img.slider-img(src='../../img/amazon/hero_2.jpg')
+                img.slider-img(src='../../img/amazon/hero_3.jpg')
+                img.slider-img(src='../../img/amazon/hero_4.jpg')
+                img.slider-img(src='../../img/amazon/hero_5.jpg')
+
+
+
+        .home-container.container-130.container
+
+            //////////////////////////////////
+            //- GRID ITEMS 
+            //////////////////////////////////
+            //- add-to-cart-items
+            +staticRow(
+                {rowItemType:"grid-item"},
+                [
+                {   
+                    cssOptions:{rowItemType:"grid-item",redirectLink:true},
+                    data:{
+                        docs:historyItems,
+                        title:"Pick up where you left off",
+                        redirectLinkText:"View your browsing history",
+                        redirectLinkUrl:`${userData ?"/me/history":"/me/history"}`
+                    },
+                },
+                {   
+                    cssOptions:{rowItemType:"grid-item",redirectLink:true},
+                    data:{
+                        docs:addToCartItems,
+                        title:"Keep shopping for",
+                        redirectLinkText:'See more',
+                        redirectLinkUrl:`${userData ?"/me/orders":"/menu?q=iphone"}`
+                    },
+                },
+                {
+                    cssOptions:{rowItemType:"grid-item",redirectLink:true},
+                    data:{
+                        docs:orderItems,
+                        title:"Buy Again",
+                        redirectLinkText:'See more',
+                        redirectLinkUrl:`${userData ?"/me/orders":"/menu?q=iphone"}`
+                }}])
+
+
+            //////////////////////////////////
+            //- Row ITEMS 
+            //////////////////////////////////
+            //- row 1
+            +staticRow({rowItemType:"item-with-bg-img",rowBtnType:"square"},{
+                page:0,
+                lastPage:4,
+                docs:row1,
+                title:"Explore more from across the store",
+            })
+            //- row 2
+            +staticRow({rowItemType:"item-with-bg-img",rowBtnType:"square"},{
+                page:0,
+                lastPage:4,
+                docs:row2,
+                title:"Related to items you've viewed",
+            })
+            //- row 1
+            +staticRow({rowItemType:"item-with-bg-img",rowBtnType:"square"},{
+                page:0,
+                lastPage:4,
+                docs:row3,
+                title:"More items to your liking",
+            })
+
+
+    //- .suggestions  
+        .row-spinner(data-show-spinner="true" data-spinner-size="md")
+            +dynamicRow({
+                "rowItemType": "suggested-item",
+                "rowItemMinWidth":170,
+                "rowBtnType": "round",
+
+                    },
+                    {
+                        "url": `products/suggest/type/different/title/Apple iPhone 14 Plus 128 GB midnight/modelId/63bc126fb63b0ed0704a10e1`,
+                        "totalDocsLoad": 38,
+                        "title":"Suggested items",
+                        "limit": 6
+                    })
+
+            +dynamicRow({
+                "rowItemType": "item-with-sm-img",
+                "rowItemMinWidth":110,
+                "rowBtnType": "round"
+                    },
+                    {
+                        "url": `users/me/history`,
+
+                        "totalDocsLoad": 50,
+                        "limit": 6,
+                        "title":"Your Browsing history"
+                    })
+
+
+
+

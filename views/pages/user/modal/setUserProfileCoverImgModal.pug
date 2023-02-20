@@ -1,0 +1,23 @@
+// setUserProfileCover modal
+.positionel.modal(data-positionel-type='modal' data-positionel-name='upload-cover-photo' data-active='false' data-load-spinner='true' data-animation='translate-fade' data-pointer-position='none' data-position='fixed' data-delay-hide='false' data-show-event='click' data-static='false' data-has-defined-class='true' data-child-positionel='false' data-width='md' data-form='true' data-hide-form-after-submit='false' data-data='')
+    .overlay
+    .positionel-container.modal-container.container-100
+        // header
+        header.modal-header
+            p.s-8 Upload a cover photo
+            button.btn-icon.positionel-closebtn
+                i.fa.fa-times
+        footer.modal-footer
+            .positionel-content
+                p.mg-sm
+                    | Please use a JPG or PNG file. Your photo must be at least 640px
+                    | by 244px.
+                .model-user-profile-cover(style='height: 44rem; background: #000; padding: 4rem 3rem')
+                    img.img-100(alt='' data-input-id='cover_pic')
+        .modal-btns-container
+            button.btn-white.btn-md(data-positionel-hide-btn='')
+                | Cancel
+            .f-lw
+                label.btn-white.btn-md(for='cover_pic' data-action='pick-another-photo') Pick a different photo
+                button.btn-primary-light.btn-md(data-action='upload' data-url='users/me')
+                    | Upload

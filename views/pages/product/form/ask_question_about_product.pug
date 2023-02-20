@@ -1,0 +1,48 @@
+// ask-question-about-product
+.positionel.modal(data-positionel-type='modal' data-positionel-name='ask-question-about-product-form' data-active='false'  data-animation='scale-from-center' data-pointer-position='none' data-position='fixed' data-delay-hide='false' data-show-event='click' data-static='false' data-has-defined-class='true' data-child-positionel='false' data-width='sm' data-form='true' 
+data-hide-form-after-submit='true'
+
+
+
+)
+    .overlay
+    .positionel-container.modal-container.container-100
+        // header
+        header.positionel-header.modal-header
+            p.s-8 Post your question
+            button.btn-icon.positionel-closebtn
+                i.fa.fa-times
+        footer.positionel-footer.modal-footer
+            .spinner.hide
+            .positionel-content.mg-b-lw-all
+
+                // ask-question
+                form.form(
+                data-error='false' 
+                onsubmit='return false;' 
+                data-clear-inputs-when-hide='true'
+                data-data={
+                    modelId:productData.modelId,
+                    product:{ _id:productData._id,title:productData.title,thumbnail:productData.thumbnail,},
+                }
+                
+                data-submit-automatic="true"
+                data-url=`products/modelId/${productData.modelId}/ques-ans`
+                data-method="post"
+
+                )
+
+                    .form-group(data-error='false' data-required='true')
+                        textarea(name='ques' id='' data-input='')
+                        .form-error
+                            i.fa.fa-exclamation-circle
+                            p Question is required
+                    p.pt-sm.mg-b-lw
+                        | Your question might be answered by sellers, manufacturers, or
+                        | customers who bought this product.
+                    // modal-btns
+                    .form-btns
+                        button.btn-outline.btn-md(data-action='cancel')
+                            | Cancel
+                        button.btn-primary-light.btn-md(data-action='submit')
+                            | Post

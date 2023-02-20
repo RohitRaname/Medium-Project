@@ -1,0 +1,95 @@
+extends ../common_page 
+
+include ../../mixins/ratingIcons
+
+block section 
+
+    -const {_id:curWishlistId,name:curWishlistName}=curWishlist 
+
+    section.section-wishlist(data-data={wishlistId:curWishlistId})
+        .wishlist
+            .wishlist-container.container
+                // all wishlists
+                .wishlist-links
+                    each wishlist in wishlists
+
+                        a.wishlist-link.f-space.hover-color-primary(href=`/me/wishlists/${wishlist._id}` data-active=`${wishlist._id.toString()===curWishlistId.toString()}`)
+                            p.wishlist-name.hover-primary.pt.default-color= wishlist.name
+                            p.wishlist-status.pt-sm= wishlist.private || "Private"
+
+
+                // current wishlist
+                .wishlistCurrent.modal.mg-sm-all(data-static='true' data-modal-type='window')
+                    // wishlist-title
+                    .f-sm.f-ab
+                        h.wishlistCurrent-name.h-6= curWishlistName
+                        p.wishlistCurrent-status.t-md= curWishlist.private || "Private"
+                    .line-dim
+
+                    // window tabs
+                    .modal-view-tabs.f-space
+                        //- .wishCurrent-view-style
+                        //-     button.modal-tab.btn-icon-tab(data-window='list' data-active='true')
+                        //-         i.fas.fa-th-large(data-view='one-item')
+                        //-     button.modal-tab.btn-icon-tab(data-window='grid' data-active='false')
+                        //-         i.fas.fa-th(data-view='grid-item')
+
+                        // dropdown trigger
+                        div
+                            // trigger btn
+                            .f-sm.f-ab.pointer(data-positionel-btn='' data-positionel-name='wishlist-filter-&-sort-dropdown')
+                                p Filter &amp; Sort
+                                i.fa.fa-angle-down
+
+                            // sort & filter dropdown
+                            include ./dropdown/wishlistFilter&SortDropdown
+                    .line-dim
+
+
+                    .modal-windows
+                        // window-list-items
+                        .modal-window(data-window='list' data-active='true')
+                            .modal-window-message.hidden.blue
+                            ul.wishlistCurrent-items.list.modal-list(data-border-bottom='')
+                                each item in curWishlishItems
+                                    div.wishlistCurrent-item.g-m-1-max.gap-md.p-sm(data-col='3' data-item-id=item._id)
+                                        img.img-md(src=item.thumbnail alt='')
+                                        // item details
+                                        .wishlistCurrent-item-details
+                                            // title
+                                            a(href=`/${item.title.split(' ').join('-')}/${item._id}`).btn-inline.w-600= item.title
+                                            // ratings
+                                            .f-sl.pointer(data-positionel-btn='' data-positionel-name='product-ratings-overview')
+                                                .product-rating-icons.f.f-ab
+                                                    +ratingIcons(item.rating.value)
+                                                i.fa.fa-angle-down.product-rating-arrow.icon-lw.blue(aria-hidden='true')
+                                                p.t-sm.w-500.blue= item.rating.count
+                                            // price
+                                            p.pt.w-500= `${item.price.unit}${item.price.value}`
+                                            // size & color
+                                            .box-with-v-line.f-size-sm
+                                                div
+                                                    | Size: 
+                                                    span.letter-space= item.curVariant.size
+                                                div
+                                                    | Colour: 
+                                                    span.letter-space= item.curVariant.color.name
+                                        // cta
+                                        .wishlistCurrent-cta.mg-lw-all.f-flex-1.mg-l
+                                            p.f-size-lw
+                                                | Item added on 
+                                                span= new Date(item.ts).toLocaleString()
+                                            button.btn-primary-light.btn-round.btn-100(data-action='add-to-cart' data-data={_id:item._id,qty:1} data-click-effect data-automatic="" data-checkout="true")
+                                                | Add to Cart
+
+                                            .f-lw
+                                                button.btn-outline.btn-sm.btn-100.btn-round(data-action='move-to-another-wishlist' data-data={item:{_id:item._id,thumbnail:item.thumbnail},fromWishlistId:curWishlistId} data-positionel-btn='' data-positionel-name='move-item-to-list-dropdown')
+                                                    span Move
+                                                    i.fa.fa-angle-down(aria-hidden='true')
+
+                                                button.btn-outline.btn-sm.btn-100.btn-round(data-action='delete-item' 
+                                                data-url=`users/me/wishlists/${curWishlistId}/remove-product/${item._id}`)
+                                                    span Delete
+
+block more_positionels
+    include ./dropdown/moveItemToAnotherWishlistDropdown.pug   

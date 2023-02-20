@@ -1,0 +1,16 @@
+extends ../../common_page
+
+block section
+    section.section-add-new-address
+        .container.mg-b-sm-all
+            // route
+            .route.f-sm.f-ab
+                a.default-color.hover-primary(href='/me/account') Your Account
+                i.fa.fa-angle-right.default-color.icon-lw
+                a.default-color.hover-primary(href='/account/address') Your Addresses
+                i.fa.fa-angle-right.default-color.icon-lw
+                p.primary Your Addresses
+
+
+            //- form
+            include ./form/addNewAddressForm

@@ -1,0 +1,10 @@
+mixin ratingIcons(rating_value,icon_class)
+    each num in  [1, 2, 3, 4, 5]
+        if(rating_value-num>=0)
+            i(class=`fa fa-star ${icon_class}`)
+
+        else if( (Math.abs(rating_value - num) < 1 && Math.abs(rating_value - num).toString().includes('.5'))) 
+            i(class=`fa fa-star-half-o ${icon_class}`)
+            
+        else
+             i(class=`fa fa-star-o  ${icon_class}`)

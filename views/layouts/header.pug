@@ -1,0 +1,53 @@
+// header
+header.header
+    .header-content.f-sm
+        // logo
+        .header-box
+            a.logo-box(href='/home')
+                img.logo(src='/img/amazon/logo.png' alt='')
+        // delivery location
+
+        if(userData)
+            a.header-box.f-lw(data-type='change-delievery-location'
+            data-positionel-btn 
+            data-positionel-name='choose-user-location')
+                i.fa.fa-map-marker 
+                div
+                    p.pt-lw(data-delievery-username)= `Deliver to ${userData.profile.name}`
+                    h9.h-9.header-delievery-address
+                        span(data-delievery-state)= `${userData.address.state}`
+                        span.letter-s(data-delievery-zipcode)= `${userData.address.zipcode}`
+        // search form
+        .search-form
+            .search-form-content
+                input.search-input(type='text' data-positionel-btn='' data-positionel-name='search-products')
+                button.btn-icon(data-action='search')
+                    i.fa.fa-search
+        // user language
+        .header-box(data-type='change-user-language' data-positionel-btn='' data-positionel-name='choose-language')
+            //- <img src=`${user.country_flag}` alt="" />
+            h9.h-9 EN
+            .header-language-more-icon-box
+                i.fa.fa-caret-down(data-positionel-marker='' aria-hidden='true')
+        // account and lists
+
+        if(userData)
+            a.header-box(href='/my-accounts' data-type='account_and_lists' data-positionel-btn='' data-positionel-name='user-options')
+                p.pt-lw= `Hello,${userData.profile.name}`
+                .f-lw.f-ac
+                    p.h-9.h-0 Account &amp; Lists
+                    i.fa.fa-caret-down(data-positionel-marker='')
+        // returns and orders
+        li.header-box(data-link='/me/orders' data-type='return_and_orders' data-need-login-user)
+            p.pt-lw Returns
+            div
+                p.h-9.h-0 &amp; Orders
+        // carts
+        li.header-box(data-link='/me/cart' data-type='carts' data-need-login-user)
+            .header-cart-box
+                .header-cart-icon
+                    i.fas.fa-shopping-cart.header-cart-icon
+
+                    if(userData)
+                        p.header-cart-qty= userData.count.cartItems || 0
+                h.h-9.h-0 Cart

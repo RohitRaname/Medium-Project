@@ -1,0 +1,78 @@
+// create new shopping list
+.positionel.modal(data-positionel-type='modal' data-positionel-name='create-new-shopping-list' data-active='false' data-animation='scale-from-center' data-pointer-position='none' data-position='fixed' data-delay-hide='false' data-show-event='click' data-static='false' data-has-defined-class='true' data-child-positionel='false' data-has-child-positionel="true" data-width='sm' data-form='true' data-hide-form-after-submit='false'
+
+data-load-spinner='true' 
+data-hide-spinner="false"
+data-query={url:`users/me/wishlists/total/count`,method:"get",manual:false}
+)
+    .overlay
+    .positionel-container.modal-container.container-100
+        // header
+        header.modal-header
+            p.s-8 Create a new list
+            button.btn-icon.positionel-closebtn
+                i.fa.fa-times
+        footer.modal-footer
+            .spinner.hide
+            // first-content
+            .positionel-content.mg-b-lw-all(data-active='true' data-first-content='create-new-shoplist')
+                // list name
+                h.h-9 List name
+                form.form(
+                    data-error='false'
+                    onsubmit='return false;'
+                    data-clear-inputs-when-hide='true'
+                    data-data={
+                    product:{ _id:productData._id,thumbnail:productData.thumbnail},
+                    }
+                    data-submit-automatic="false"
+                    data-url=`products/modelId/${productData.parentVariantId}/ask-question`
+                    data-method="post"
+                    )
+                    .form-group(data-error='false' data-required='true')
+                        input(type='text' name='wishlistName' data-input='')
+                        .form-error
+                            i.fa.fa-exclamation-circle
+                            p Name is required
+                    p.pt-sm.mg-b-lw
+                        | Use lists to save items for later.All lists are private unless
+                        | you share them with mothers
+                    // learn more tooltip
+                    div
+                        button.btn-inline(data-positionel-btn='' data-positionel-name='shopping-list-learnmore-tooltip')
+                            p Learn more
+                            i.fa.fa-angle-down
+                        // learn more tooltip
+                        .positionel.tooltip(data-positionel-type='tooltip' data-positionel-name='shopping-list-learnmore-tooltip' data-active='false' data-animation='fade' data-show-event='mouseover' data-delay-hide='false' data-load-spinner='false' data-static='false' data-has-defined-class='false' data-pointer-position='bottom' data-position='top' data-child-positionel='true')
+                            .positionel-container
+                                .positionel-square
+                                // hide content
+                                .positionel-content
+                                    p.pt-sm
+                                        | Lists replaces wish lists and shopping lists, creating
+                                        | one place for all your lists. You can also share your
+                                        | lists with others by inviting them after you&apos;ve created
+                                        | a list.
+                    // modal-btns
+                    .form-btns
+                        button.btn-outline.btn-md(data-action='cancel')
+                            | Cancel
+                        button.btn-primary-light.btn-md(data-action='submit')
+                            | Create List
+            // second-content
+            .positionel-content.mg-b-lw-all(data-active='false' data-second-content='item-add-to-shopping-list-preview')
+                h8.h-7.h-m
+                    | 1 item added to
+                    span.modal-shopping-list-name.letter-s
+                // product
+                .list-item.modal-new-added-item-to-shopping-list(data-col='2' data-hover='false')
+                    img(src=productData.thumbnail)
+                    div
+                        p.pt-md.modal-item-name=productData.title
+                        p.red.pt-sm.modal-item-price= `${productData.convertPrice.unit} ${productData.convertPrice.value}`
+                // buttons
+                div
+                    button.btn-outline.btn-100.mg-b-lw
+                        | View Wish List
+                    button.btn-primary-light.btn-100(data-positionel-hide-btn)
+                        | Continue Shopping

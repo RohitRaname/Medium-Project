@@ -1,0 +1,47 @@
+extends ../base
+
+block form
+    form.form(data-type='create-account' data-error='false' onsubmit='return false;' data-clear-inputs-when-hide='true' data-static='true')
+        .form-container
+            h.h-4.h-m Create Account
+            .form-group(data-error='false' data-required='true')
+                h.h-9 Your name
+                input(type='text' name='name' data-input='' maxlength='20' placeholder='First and last name')
+                .form-error
+                    i.fas.fa-exclamation
+                    p Name is required
+            .form-group(data-error='false' data-required='true')
+                h.h-9 Email
+                input(type='email' name='email' data-input='')
+                .form-error
+                    i.fas.fa-exclamation
+                    p Email is invalid
+            .form-group(data-error='false' data-required='true')
+                h.h-9 Password
+                input(type='password' name='password' data-input='' placeholder='At least 6 characters' minlength='6')
+                .form-error
+                    i.fas.fa-exclamation
+                    p Password at least 6 characters
+            // hint
+            p.mg-b-md
+                | By enrolling your mobile phone number, you consent to receive
+                | automated security notifications via text message from Amazon.
+                | Message and data rates may apply.
+            button.btn-g.btn-100.mg-b-md(data-action='submit')
+                | Continue
+            .line-shadow.mg-b-md
+            p
+                | Already have an account?
+                a.btn-inline-span(href='/auth/login/0')
+                    | Sign in 
+                    i.fa.fa-caret-right
+            p.mg-b-md
+                | Buying for word?
+                a.btn-inline-span(href='/auth/signup/create-account')
+                    | Create a free business account 
+                    i.fa.fa-caret-right
+            p
+                | By creating an account or logging in, you agree to Amazon&rsquo;s
+                span.btn-inline-span Conditions of Use
+                |  and
+                span.btn-inline-span  Privacy Policy. 

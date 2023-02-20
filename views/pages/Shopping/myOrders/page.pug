@@ -1,0 +1,97 @@
+extends ../../common_page 
+include ../../../mixins/convertDate
+
+block section 
+
+    section.section-myOrder
+        .myOrder
+            .myOrder-container.container.p-md
+                // items
+                .myOrder-modal.modal.mg-sm-all(data-static='true' data-modal-type='window' data-error='false' data-load-spinner='true' data-hide-spinner='true')
+                    .modal-error
+                        p.pt-bg(data-title='')
+                        p(data-text='')
+                    .modal-tabs
+                        .btn-tab.modal-tab(data-active='true' data-window="myOrders" ) Orders
+                        .btn-tab.modal-tab(data-active='false' data-window="buy-again" )
+                            | Buy Again
+                    .modal-windows
+                        .spinner
+                        // modal page btns should be of modal-windows
+                        // to update the pagination btns according to window
+                        // orders
+                        .modal-window(
+                            data-window='myOrders' 
+                            data-active='true' 
+                            data-url='users/me/shopping/order/items' 
+                            data-filter-query=`ts[gt]=${orderItemsTimeFilterQuery}`
+                            data-docs-left=`${totalOrderItemsCountDuringTimePeriod>5?true:false}` 
+                            data-initial-docs-load="true"
+                            data-docs-loading='false' 
+                            data-page='0'
+                            data-limit=5
+                            data-sort="-ts"
+                            data-total-docs=totalOrderItemsCountDuringTimePeriod
+                            data-load-docs-till-page=`${Math.ceil(totalOrderItemsCountDuringTimePeriod/5)-1}
+                            `
+                            )
+                            .modal-window-sort-by-time-frame.mg-sm
+                                span.w-600(data-orders-count-by-timeframe='')= `${totalOrderItemsCountDuringTimePeriod} order`
+                                span  place in 
+                                span.letter-s
+                                    button.btn-dropdown.btn-sm.r-md.inline(data-positionel-btn='' data-positionel-name='filter-orders-by-timeframe')
+                                        span(data-value='') past 3 months
+                                        i.letter-s.icon-sm.fa.fa-angle-down.dark
+
+                            .modal-list.mg-sm-all.mg-md
+                                each orderItem in orderItems
+                                    -const {item, summary}=orderItem
+                                    .item.r-md.border-light
+                                        header.item-header.f-bg.bg-dark.p-lw
+                                            div
+                                                p.uppercase.t-sm Order placed
+                                                p=  new Intl.DateTimeFormat('en-US').format(orderItem.ts)
+                                            div
+                                                p.uppercase.t-sm Total
+                                                p= `${userData.currency.symbol}${(item.price*userData.currency.rate).toFixed(2)}`
+                                            div
+                                                p.uppercase.t-sm ship to
+                                                p.f-sl.f-ab(data-positionel-name='shipping-address-in-detail' data-positionel-btn='' data-data={address:`${summary.shipping.name}${summary.shipping.address}`})
+                                                    span.blue.shipping-address= summary.shipping.name
+                                                    i.fa.fa-angle-down.icon-lw.light
+                                        .item-content.p-sm
+                                            .f-lw
+                                                img.img-sm.trans-sl(src=item.thumbnail alt='')
+                                                div
+                                                    a.blue.hover-primary(href=`/${item.title.split(' ').join('-')}/${item._id}`)= item.title
+
+                                                       
+
+                            if(totalOrderItemsCountDuringTimePeriod>5)
+                            div.f.f-jc
+                                button.modal-load-doc-btn.btn-outline.btn-md
+                                    p See more orders
+                                    span(data-value)= `(${totalOrderItemsCountDuringTimePeriod-5})`
+
+                        // buy-again
+                        .modal-window.grid(data-window='buy-again' data-active='false' data-col='4' data-url='users/me/shopping/order/items/buy-again' data-limit='5' data-page='0' data-initial-docs-load="false")
+                            .grid-container.modal-list
+                                //- a.grid-item
+                                //-     img.img-bg.trans-lw(src='https://m.media-amazon.com/images/I/619f09kK7tL._SX679_.jpg' alt='Apple iPhone 14 256 GB midnight')
+                                //-     .trans-sm.mg-sl-all.left
+                                //-         p.pt-md.hover-color-primary
+                                //-             | Apple iPhone 14 256 GB midnight
+                                //-         p.mg-sm
+                                //-             span.inline.pt-lw.trans-sl Rs
+                                //-             span.pt-bg 299.00
+                                //-         .order-added-to-cart-message.f-lw.f-js.mg-lw.hidden
+                                //-             button.btn-icon.round.btn-icon-sl.bg-green
+                                //-                 i.fas.fa-check.icon-sl.white
+                                //-             h.pt-sm Added to cart
+                                //-         button.btn-primary.r-round.f-size-sm.btn-100.btn-md(data-action='add-to-cart' data-data='{_id:"ewrhjer"}' data-click-effect=''  data-automatic="" data-checkout="false")
+                                //-             | Add to Cart
+
+
+block more_positionels 
+    include ./dropdown/filterOrdersByDropdown
+    include ./hovercard/showOrderShippingDetailsHovercard

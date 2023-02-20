@@ -1,0 +1,643 @@
+extends ../common_page.pug
+
+//- mixins
+include ../../mixins/ratingIcons 
+include ../../mixins/ratingChart
+include ../../mixins/product&historyRow
+
+
+
+block section
+
+    -const {_id:product_id,title,name,price,convertPrice,discount,stock,attributes,description,assets,specs,curVariant,variants,rating,count,customerQuesAns,reviews_with_photos,reviews}=product
+
+    -const finalPrice= convertPrice?convertPrice:price
+    -const {product_imgs,product_spec_imgs,thumbnail}= assets
+    -const price_str= `${finalPrice.unit} ${finalPrice.value}`
+
+    -const priceValue=userData?Number(finalPrice.value):Number(price.value) 
+    -const priceUnit= userData?finalPrice.unit:price.unit
+
+
+
+
+    section.section-product(data-data=JSON.stringify(productData))
+        .product
+            .product-container
+                // hero section
+                .product-hero.container
+
+                    // product imgs
+                    //- product preview/overview imgs
+                    .product-imgs.f-col.f-sl
+                        .product-img-box(data-active="true")
+                            img(src=thumbnail alt=title)
+
+                        each product_img in product_imgs.slice(1)
+                            .product-img-box(data-active='false')
+                                img(src=product_img alt=title)    
+
+                    // cur product img
+                    .product-cur-img-box.pointer(data-positionel-btn='' data-positionel-name='product-overview-imgs')
+                        img(src=thumbnail alt=title)
+
+                    // product details
+                    .product-details
+
+                        h6.h-5.h-m.mg-b-lw.product-name=title
+
+                        // ratings icon | ratings-count | asked-ques-count
+                        .product-rating-box.grid-f.mg-b-sl
+                            .f-sl.pointer.z-45(data-positionel-btn='' data-positionel-name='product-ratings-overview')
+                                .product-rating-icons.f-sl.f-ab
+                                    +ratingIcons(rating.value)
+                                    i.fa.fa-angle-down.product-rating-arrow
+                            a.product-rating.blue.hover-primary(href='#rating')= `${rating.count} ratings`
+                            p |
+                            .f-sm
+                                a.product-question-asked.blue.hover-primary(href='#Q&A')=` ${count.ques} answered questions `
+                        .line.mg-b-sm
+
+                        // price
+                        .product-price-box.mg-b-sl
+
+                            .f-sm
+                                span.product-price-discount.h-4.h-0.h-l.w-200.primary.trans-sl=`${discount*.01*priceValue}% `
+                                p.product-price-current.f.f-as
+                                    span= priceUnit
+                                    span.h-4.h-m.h-0.trans-sl.inline= priceValue
+                            h6.t-sm.product-price-previous
+                                | M.R.P: 
+                                span.cut-line= `${priceUnit}${priceValue + discount*.01*priceValue}`
+
+                        // return policy tooltip
+                        div
+                            button.btn-inline.f-sm.f-size-sm(data-positionel-btn='' data-positionel-name='return-policy-tooltip')
+                                p Replacement Policy
+                                i.fa.fa-angle-down
+                            .tooltip.positionel(data-positionel-type='tooltip' data-positionel-name='return-policy-tooltip' data-active='false' data-pointer-position='center' data-position='bottom' data-animation='fade' data-show-event='mouseover' data-delay-hide='false' data-load-spinner='false' data-static='false' data-has-defined-class='false' data-child-positionel='false')
+                                .positionel-container
+                                    // trigger btn-> when click hide content will show
+                                    .positionel-square
+                                    // hide content
+                                    .positionel-content
+                                        p.pt-sm
+                                            | This item can&apos;t be returned to Amazon, if the item is
+                                            | &quot;No longer needed&quot;. For device related issues, please
+                                            | contact the brand directly for resolution.
+
+                        // size  box
+                        .product-size-box.mg-b-sm
+                            -const productSize=curVariant.size
+                            p.product-size-text.t-md.mg-b-sl
+                                | Size name: 
+                                h.h-9.inline.letter-s= productSize.value
+                            .product-size-options.f-sm(data-product-variant-options='')
+                                each size in variants.sizes
+                                    a.box(href=`/products/${size.variant_id}` data-active=`${size.value.toLowerCase()===productSize.toLowerCase()}`)= size.value
+
+                        // color box
+                        .product-color-box.mg-b-sm
+                            -const productColor=curVariant.color.name
+                            p.product-color-text.t-md.mg-b-sl
+                                | Colour: 
+                                h.h-9.inline.letter-s= productColor.value
+                            .product-color-options.f-sm(data-product-variant-options='')
+                                each color in variants.colors
+                                    a.box(data-active=`${color.color===productColor}` href=`/products/${color.variant_id}` data-img='')
+                                        img(src=`${color.color_img}` alt=title)
+
+                        // attributes
+                        .product-attributes.mg-b-sm
+                            ul.product-attributes-list.list.grid.grid-2(data-table='')
+                                each attribute in attributes 
+                                    p.s-9= attribute[0]
+                                    p= attribute[1]
+
+                        .line.mg-b-sm
+
+                        // about product
+                        .product-description
+                            ul.list(data-ordered-list='')
+                                h8.h-7 About this item
+                                each text in description     
+                                    p.pt-md=text
+
+                    // product cta
+                    .product-cta
+                        .border-box
+                            // transaction info
+                            .product-cta-details.mg-sm
+                                p.h-8.red= `${priceUnit} ${priceValue}`
+                                p.h-9.h-l.blue FREE delivery
+                                .product-deliverery-location.f-lw.f-ab
+                                    i.fa.fa-map-marker.icon-lw
+
+                                    if(userData)
+                                        p.pt-lw.blue
+                                            span Deliever to 
+                                            span= `${userData.profile.name} ${userData.address.state} ${userData.address.country}`
+
+                                if(Number(stock)<10)
+                                    p.green.pt.w-500.mg-b-sm=` Only ${stock} left in stock`
+                                else
+                                    p.green.pt.w-500.mg-b-sm Instock
+
+                                
+                                .f-lw.mg-md.f-ac.product-qty-select-box 
+                                    p.pt-sm Quantity: 
+                                    button.btn-outline.r-lw.f-sm.btn-sm(data-positionel-btn data-positionel-name="select-product-qty-dropdown") 
+                                        span(data-value).product-qty-selected.pt-sm.w-500 1
+                                        i.fa.fa-angle-down.icon-lw.dark
+
+
+                                
+
+                                // buttons
+                                button.btn-primary-light.btn-100.mg-b-sl.r-round(                       data-slide-hook="add-to-cart"
+                                    data-action="add-to-cart"
+                                    data-data={_id:productData._id,qty:1}
+                                    data-need-login-user
+                                    data-click-effect
+                                        )
+                                    | Add to cart
+                                button.btn-primary-dark.btn-100.mg-b-lw.r-round(data-action="buy-now"
+                                data-data={_id:productData._id,title:productData.title,price:productData.price.value,thumbnail:productData.thumbnail,qty:1}
+                                data-need-login-user
+                                data-click-effect
+                                )
+                                        | Buy Now
+
+                                // secure transaction tooltip
+                                div
+                                    .btn-inline(data-positionel-btn='' data-positionel-name='secure-transaction-tooltip')
+                                        i.fas.fa-lock.light
+                                        p.pt-sm.blue Secure transaction
+                                    .tooltip.positionel(data-positionel-type='tooltip' data-positionel-name='secure-transaction-tooltip' data-active='false' data-pointer-position='center' data-position='bottom' data-animation='fade' data-show-event='click' data-delay-hide='false' data-load-spinner='false' data-static='false' data-has-defined-class='false' data-child-positionel='false')
+                                        .positionel-container
+                                            // trigger btn-> when click hide content will show
+                                            button.btn-icon.positionel-closebtn
+                                                i.fa.fa-times(aria-hidden='true')
+                                            .positionel-square
+                                            // hide content
+                                            .positionel-content
+                                                h.h-9.mg-sm Your transaction is secure
+                                                p.pt-sm
+                                                    | We work hard to protect your security and privacy.
+                                                    | Our payment security system encrypts your
+                                                    | information during transmission. We don&rsquo;t share
+                                                    | your credit card details with third-party sellers,
+                                                    | and we don&rsquo;t sell your information to others
+
+                        .line.mg-b-md
+
+                        // add product to wishlist dropdown
+                        div
+                            button.btn-old.btn-100(data-positionel-btn='' data-positionel-name='add-product-to-wishlist-dropdown' data-need-login-user
+                            data-data={_id:productData._id,title:productData.title,thumbnail:productData.thumbnail}
+                            )
+                                // addtowishlist
+                                p() Add to Wish List
+
+                                .btn-old-icon-box()
+                                    i.fas.fa-angle-down
+
+                            //- wishlist drp[dpwm]
+                            include ./dropdown/wishlistDropdown
+
+                // product specs full size images
+                .product-gallery-imgs.container
+                    each gallery_img in product_spec_imgs
+                        img.product-gallery-img.img-full.mg-b-lw(src=gallery_img alt='')
+
+                // compare similar products
+                .product-similar.container
+                    h.h-4.h-m.center.mg-b-bg Compare Apple iPhone products
+                    .product-similer-container
+
+                        // similar products imgs
+                        .table(data-grid='')
+
+
+
+                            -const childVariantIds= Object.values(productVariantsCommonFieldValues.childVariantId)
+
+
+                            -const titlevalues= Object.values(productVariantsCommonFieldValues.title)
+
+                            div
+                                each commonFieldValues in Object.entries(productVariantsCommonFieldValues) 
+
+                                    -const [key,values]=commonFieldValues
+
+
+
+
+                                    if(key==="thumbnail")
+                                        .table-row
+                                            .table-box(data-no-border)
+                                            each value,i in values
+                                                .table-box.img-box-md(data-no-border)  
+                                                    img(src=value alt=titlevalues[i])
+
+                                    else if(key==="childVariantId")
+
+
+                                    else if(key==="title")
+                                        .table-row
+                                            .table-box(data-no-border) 
+                                            each value,i in values
+                                                .table-box(data-no-border) 
+                                                    a.blue.s-9.hover-primary(href=`/products/${childVariantIds[i]}`)=value
+
+                                    else if(key==="price")
+                                        .table-row
+                                            .table-box 
+                                                p.s-8=key
+                                            each value,i in values
+                                                .table-box 
+                                                    p.s-8.s-l.f-lw.f-ab
+                                                        | From: 
+                                                        span.letter-s.primary.s-6.s-m= `${value.unit}${value.value}`
+
+                                    else if(key==="rating")
+                                        .table-row
+                                            .table-box 
+                                                p.s-8=key
+                                            each value,i in values
+                                                .table-box.product-rating-box.f-lw.f-ab
+                                                    .product-rating-icons
+                                                        +ratingIcons(value.value)
+                                                    a.pt-lw.blue.hover-primary(href=`/review/${childVariantIds[i]}`)= `(${value.count})`
+
+
+                                    else 
+                                        .table-row
+                                            .table-box 
+                                                p.s-8=key.split("_").join(" ")
+                                            each value,i in values
+                                                .table-box 
+                                                    p=value
+
+
+
+
+
+                        //- div 
+                            each el in similar_products 
+
+
+
+                                .table-col(data-value-col='')
+
+                                    .table-box 
+                                    .table-box.f-col.f-sm
+                                        img.img-sm(src=el.thumbnail alt=el.name)
+                                        a.blue.s-9.hover-primary(href=`/products/${el._id}`)=el.name
+
+                                // field name
+                                .table-col(data-field-col='')
+                                    .table-box
+                                        p.s-8.s-l.f-lw.f-ab
+                                            | From: 
+                                            span.letter-s.primary.s-6.s-m= `${el.unit}${el.price}`
+
+                                // ratings
+                                //- .table-col(data-value-col='')
+                                //-     .table-box
+                                //-         p.s-8 Ratings
+                                //-     .table-box.product-rating-box.f-lw
+                                //-         .product-rating-icons
+                                //-             +ratingIcons(el?.rating.value)
+                                //-         a.pt-lw.blue.hover-primary(href=`/product/${el._id}/reviews`)= `(${el.rating.count})`
+
+                                each prop in el
+                                    .table-col(data-value-col='')
+                                        .table-box
+                                            p.s-8=el.name
+                                        .table-box
+                                            p.pt-md= el.value
+
+                // product technical details
+                .product-technical-details.container
+                    .center
+                        h4.h-3.mg-b-sm Technical Details
+                        h6.h-5.mg-b-md= name
+
+                    .table(data-col="2")
+                        -const firstCol= specs.slice(0,8)
+                        .table-col()
+                            each el in firstCol
+                                .table-row
+                                    .s-9= el.name.split("_").join(" ")
+                                    .pt-sm.mg-b-lw= el.value
+
+                        -const secondCol= specs.slice(8)
+                        .table-col
+                            each el in secondCol
+                                .table-row
+                                    .s-9= el.name.split("_").join(" ")
+                                    .pt-sm.mg-b-lw= el.value 
+
+                .line.mg-b-bg
+
+                .product-ques-review-search.container.container-80(style="margin:unset")   
+                    header.mg-b-sm-all.mg-b-md
+                        h5.h-5.h-d Looking for specific info?
+                        p.t-md Search product info, Q&amp;A, review
+
+                        //- search ques
+                        .common-search-input
+                            i.fa.fa-search
+                            input(type='text width-80' name='search-asked-questions-or-reviews-related-to-product' placeholder='Type a keyword')
+                // product customer questions
+
+                if(count.ques>0)
+                    .product-ques-ans.container.container-80.mg-b-sm.modal(id='Q&A' data-static='true' data-modal-type="window" style="margin:unset;")
+                        .modal-container
+                            .modal-content
+                                if(count.ques>0)
+                                    h5.h-5.h-d Customer questions and answers
+                                    -const limitQues= customerQuesAns.slice(0,4)
+                                    .product-questions-container.modal-window(
+                                        data-active="true"
+                                        data-window="ques-ans"
+                                        data-url=`products/modelId/${productData.modelId}/ques-ans?limit=4&ts[lt]=${new Date().toISOString()}&product.modelId=${productData.modelId}` 
+                                        data-docs-left=`${count.ques>5?true:false}` 
+                                        data-docs-loading='false' 
+                                        data-page='0'
+                                        data-load-docs-till-page="2"
+
+                                        data-redirect-docs-page-url=`/products/${productData._id}/ques-ans`
+                                        )
+
+                                        .modal-list
+                                            if(count.ques>0)
+                                                each ques_ans in limitQues
+                                                    .product-question-box.f-sm
+                                                        // vote
+                                                        .product-question-vote-box.center
+                                                            //- increase vote button
+                                                            button.btn-icon-primary.product-ques-vote-btn(data-url=`products/modelId/${productData.modelId}/ques-ans/${ques_ans._id}/count/increase?field=vote` data-active="false" data-action="increase" data-need-login-user)
+                                                                i.fas.fa-caret-up.icon-bg
+                                                            .product-question-vote-count
+                                                                p.pt-sm.w-500(data-value)= ques_ans.count.vote || 0
+                                                                p.pt-sm.w-500 vote
+
+                                                            //- decrase vote button
+                                                            button.btn-icon-primary.product-ques-vote-btn(data-url=`products/modelId/${productData.modelId}/ques-ans/${ques_ans._id}/count/decrease?field=vote` data-active="false" data-action="decrease" data-need-login-user)
+                                                                i.fas.fa-caret-down.icon-bg
+                                                        .line-v
+                                                        .product-question-text.g-m-1.gap-sm
+                                                            // question
+                                                            p.s-9 Question:
+                                                            a.pt-md.blue.hover-primary(href=`/ques-ans/${ques_ans._id}`)= ques_ans.ques
+                                                            // answer
+                                                            p.s-9 Answer:
+                                                            .product-question-answer.mg-b-sm
+                                                                //- if(ques_ans && ques_ans.ans)
+                                                                //- p.pt-md= ques_ans.ans.text
+                                                                //- p.product-question-answer-by.t-sm.mg-b-lw
+                                                                //-     =`By ${ques_ans.author.name} on  ${ques_ans.ans.ts.toLocaleString()}`
+                                                                p.pt-md= "rohit is more powerful than anyone"
+                                                                p.product-question-answer-by.t-sm.mg-b-lw
+                                                                    =`By Rohit rana yesterday`
+
+                                        if(count.ques>4)
+                                            button.modal-load-doc-btn.btn-outline.btn-sm.mg-l(data-total-ques=product.count.ques)
+                                                p See more answered question
+                                                span(data-value)= `(${count.ques})`
+                    .line.mg-b-md
+
+
+
+                // search reviews,questions and product details
+                .modal.hidden.container.container-80.product-search-matching-ques-ans-and-reviews-modal.container-h-md(data-query='ques-ans,reviews' data-static='true' data-modal-type="window" style="margin:unset")
+                    .modal-container
+                        .positionel-content
+                            .modal-tabs.mg-b-sm
+                                button.btn-tab.modal-tab(data-active='true' data-window='all')
+                                    | All
+                                button.btn-tab.modal-tab(data-active='false' data-window='ques-ans')
+                                    | Customer Q&amp;A
+                                button.btn-tab.modal-tab(data-active='false' data-window='reviews')
+                                    | Customer Reviews
+                            .modal-windows.mg-b-bg
+                                // preview window
+                                .modal-window.mg-b-sm-all(data-window='all' data-active='true')
+
+                                    // customer-ques-ans
+                                    .modal-window-preview(data-window-preview="ques-ans")
+                                        p.modal-title.t-md.mg-b-sm
+                                            | Customer questions and answers
+                                        .modal-list.mg-b-sm-all
+                          
+
+                                        button.btn-inline-u(data-window-change-btn='' data-window='ques-ans')
+                                            p 
+                                                span See 
+                                                span(data-value) 9 
+                                                span.letter-s matching Q&amp;A
+                                            i.fa.fa-angle-right  
+
+                                    // customer-reviews
+                                    .modal-window-preview(data-window-preview="reviews")
+                                        p.modal-title.t-md.mg-b-sm Customer Reviews
+                                        .modal-list.mg-b-sm-all
+                                         
+                                        button.btn-inline-u(data-window-change-btn='' data-window='reviews')
+                                            p 
+                                                span See 
+                                                span(data-value) 9
+                                                span.letter-s matching customer reviews
+                                            i.fa.fa-angle-right  
+
+                                // ques-ans window
+                                .modal-window(data-window='ques-ans' data-active='false')
+                                    // ques-ans
+                                    .modal-list.mg-b-sm-all
+                                        // modal-item
+                                    
+
+                                // reviews window
+                                .modal-window(data-window='reviews' data-active='false')
+                                    .modal-list.mg-b-sm-all
+                                        // modal-item
+                                     
+
+                // post ques box
+                .container
+                    .product-post-ques-box.f-md.bg-dim.r-bg.p-sm.f-ab.mg-b-md
+                        s.s-9 Don&apos;t see the answer you&apos;re looking for?
+                        button.btn-outline(
+                        data-positionel-btn='' data-positionel-name='ask-question-about-product-form' 
+                        data-need-login-user
+                        )
+                            | Post your question
+
+                .line.mg-b-bg
+
+                // customer review
+                #rating.container.product-customer-reviews
+
+                    // ratings | chart | write-customer-review
+                    .product-rating-chart-container
+                        // product rating overview
+                        .product-ratings-overview.mg-b-sm-all.mg-b-lg(data-scroll-event-race)
+                            h.h-5.h-d Customer reviews
+                            // rating text
+                            .product-rating-text
+                                // icons
+                                .f-sm.f-ab.mg-b-sl
+                                    .f-sl.product-rating-icons
+                                        +ratingIcons(rating.value)
+                                    p.pt=`${rating.value} out of 5`
+                                p.t-md= `${rating.count} global ratings`
+
+                            // rating in chart table
+                            .product-rating-chart(data-race="false")
+                                +ratingChart(rating,true)
+
+                        .line.mg-b-bg
+                        // write customer review
+                        .product-write-review.mg-b-bg
+                            h6.h-6.h-d Review this product
+                            p.pt-md.mg-b-sm
+                                | Share your thoughts with other customers
+                            button(class=`btn-outline btn-100` data-link=`/review/create-Review/${product._id}` data-need-login-user )
+                                | Write a product review
+                        .line
+
+                    // gallery img and reviews
+                    .product-reviews-container.modal(data-modal-type="window")
+                        // reviews some photos
+                        .reviews-overview-photos.modal-window(
+                            data-window="review-photos"
+                            data-page="0"
+                            data-active="true"
+
+                            data-url=`products/modelId/${productData.modelId}/reviews?content.photos[gt]=[]&limit=10&modelId=${productData.modelId}&exclude=product,count&sort=ts`  
+
+                            data-total-docs=count.reviews 
+                            data-last-item-index=reviews_with_photos.length-1
+
+                            )
+                            h.h-6.mg-b-sm Reviews with images
+                            // photos
+                            ul.product-reviews-photos.mg-b-sm.f-lw.modal-list
+                                each review,i in reviews_with_photos.slice(0,4) 
+                                    -const reviewData={_id:review._id,modelId:review.modelId,author:review.author,content:review.content,ts:review.ts}
+
+                                    li(data-index=i 
+                                    data-positionel-btn='' data-positionel-name='reviews-photo-gallery' 
+                                    data-window="preview-review"
+                                    data-data=JSON.stringify(reviewData) class=`img-box-md ${i<5?"":"hidden"}` )
+                                        img(src=`../../img/reviews/${review.content.photos[0]}` alt='')
+
+                            if(Number(count.photoReviews)>0)
+                                p.pt-md.blue.hover-primary.mg-b-sm(data-positionel-btn='' data-positionel-name='reviews-photo-gallery'
+                                data-window="store-reviews"
+                                )
+                                    | See all customer images
+
+
+                        // reviews
+                        ul.reviews-list.mg-sm
+                            h6.h-6.mg-b-sm
+                                | Top reviews from 
+                                //- span=user?.location?.country
+
+                            each review in reviews
+                                -const {author,count,content,ts,_id:review_id}=review;
+                                -const {name,pic,country}=author;
+                                -const {title,text,photos}= content
+
+                                -const reviewData={_id:review._id,modelId:review.modelId,author:review.author,content:review.content,ts:review.ts} 
+
+                                .review.mg-b-md(data-data=JSON.stringify(reviewData))
+                                    // author | rating | review-title | review-date | product-spec
+                                    .review-header
+                                        a.f-sm.f-ac.mg-b-sl.pointer(href=`/profile/${author._id}`)
+                                            img.img-sl.round.review-author-img(src=`/img/users/${pic || "default.png"}` alt='')
+                                            p.pt-md.review-author-name= name
+                                        // rating | review-title
+                                        a.f-sm.f-ab.pointer(href=`/reviews/${review_id}`)
+                                            .f-sl.product-rating-icons
+                                                +ratingIcons(Number(count.rating),"icon-sm")
+                                            p.s-9.s-d.hover-primary= title
+                                        // date-of-review
+                                        div
+                                            p.t-md.review-postat
+                                                | Reviewed in
+                                                span.review-author-country.letter-s= `${country} ${ts.toLocaleString()}`
+                                        // about-product
+                                        .f-sm.review-product-details.mg-b-sl
+                                            p.t-md
+                                                | Colour: 
+                                                span.letter-s=review.product.color
+                                            |                   |
+                                            p.t-md
+                                                | Size name: 
+                                                span.letter-s=review.product.size
+                                            |                   |
+                                            p.pt-md.primary.w-600 Verified Purchase
+                                    // review-text | review-img | review-stats
+                                    footer.review-footer
+                                        // review-text
+                                        .review-text-box.pt-md
+                                            if(text.length<400)
+                                                p.mg-b-sl= text
+                                            else 
+                                                p.review-visible-text.mg-b-sl= text.slice(0,400)
+
+                                                button.btn-inline.mg-b-lw
+                                                    i.fa.fa-angle-down
+                                                    p Read more
+                                                p.review-invisible-text.hidden.mg-b-sm= text.slice(400)
+
+                                        // review-imgs
+                                        .review-imgs.mg-b-sl.f-sl
+                                            each photo in photos
+                                                img.img-lw.r-sm.review-img(src=`/img/reviews/${photo}` alt='')
+
+                                        // review-helpful-count
+                                        div.review-helpful-box
+                                            p.t-sm.mg-b-sm
+                                                span.review-helpful-count(data-value)= count.helpful
+                                                |  found this
+                                                |  helful
+                                            // review-btns
+                                            .f-sm.f-ab
+                                                button.btn-outline.review-helpful-btn(data-url=`products/modelId/${productData.modelId}/reviews/${review._id}/count/increase?field=helpful` data-need-login-user ) Helpful
+                                                .dim |
+                                                button.btn-text-dull(data-need-login-user) Report abuse
+
+                        .line.mg-sm        
+                        a.btn-inline.f-lw.f-js(href=`/review/${productData._id}`)
+                            span.w-600 See all reviews
+                            i.fa.fa-angle-right.blue
+
+    //- product & history Row
+block row
+    +productAndHistoryRow(productData.title,productData._id)
+
+block more_positionels 
+    //- hovercard
+
+    //- form
+
+
+    //- modal
+    include ./modal/product_photos_overview
+    include ./modal/review_photos_gallery
+    include ./dropdown/selectProductQtyDropdown
+        
+
+    if(userData)
+        include ./form/ask_question_about_product
+        include ./form/create_wishlist_list
+        include ./modal/add_product_to_wishlist
+        include ./slideComponent/addToCart
+
+
+ 

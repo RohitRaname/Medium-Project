@@ -1,0 +1,102 @@
+// add-to-wishlist modal
+.positionel.modal(data-positionel-type='modal' data-positionel-name='add-product-to-wishlist-modal' data-active='false'  data-animation='translate-fade' data-pointer-position='none' data-position='fixed' data-delay-hide='false' data-show-event='click' data-static='false' data-has-defined-class='true' data-child-positionel='false'
+
+data-load-spinner='true' 
+data-hide-spinner="false"
+data-query={url:'/users/me/wishlist/wishlistId/productId',method:"post",manual:true}
+
+)
+    .overlay
+    .positionel-container.modal-container.container-100
+        .spinner
+
+        // header
+        header.modal-header.sticky-header
+            p.s-8 Add to Wish List
+            button.btn-icon.positionel-closebtn
+                i.fa.fa-times
+        .positionel-content
+            // footer
+            .modal-content.mg-b-sm-all
+                // item add to shopping-list
+
+                div.p-sm
+                
+                    .modal-item-add
+                        // item add is already added
+                        .modal-item-duplicate.hidden
+                            h6.h-6.h-m
+                                | The item was already in
+                                a.btn-inline-u.modal-wishlist-name.letter-s(href="/wishlist/id") Shopping List
+                            p.t-sm We moved it to the top of list.
+
+                        //- // new item add to wishlist
+                        .modal-item-new-add-box
+                            h.h-m.h-6
+                                | One item added to
+                                a.btn-inline-u.letter-s(href=`/wishlist/${userData.wishlists.length>0 && userData.wishlists[0]._id}`) Shopping List
+
+
+                    .modal-item.modal-product-to-be-add.g-m-1-max
+                        img.modal-item-img.img-sm(src=productData.thumbnail alt='')
+                        a.modal-item-title.btn-inline-u(href=`/products/${productData._id}`)= productData.title
+                        .border-box
+                            a.btn-outline.btn-100(href="/wishlists") View Your List
+                            a.btn-primary-light.btn-100(data-positionel-hide-btn) Continue Shopping
+
+                .line
+                // suggested product to buy
+                //- .card.card-md(data-card-type='products-in-1-row')
+                //-     // cards
+                //-     p.card-title Customers who bought also bought
+                //-     .card-content
+                //-         .card-btns
+                //-             button.slider-btn(data-btn='left' data-active='true')
+                //-             button.slider-btn(data-btn='right' data-active='true')
+                //-         .card-list
+                //-             .card-item(data-border='')
+                //-                 // imgs
+                //-                 img.card-img.mg-b-sl(src='/img/products/2.jpg' alt='')
+                //-                 // details
+                //-                 .card-item-details
+                //-                     p.blue.capitalize Elon must ki rudeness
+                //-                     .product-rating-text
+                //-                         // icons
+                //-                         .f-lw.f-as
+                //-                             .f.product-rating-icons
+                //-                                 i.fa.fa-star.icon-sm(aria-hidden='true')
+                //-                                 i.fa.fa-star.icon-sm(aria-hidden='true')
+                //-                                 i.fa.fa-star.icon-sm(aria-hidden='true')
+                //-                                 i.fa.fa-star.icon-sm(aria-hidden='true')
+                //-                                 i.fa.fa-star.icon-sm(aria-hidden='true')
+                //-                             p.pt-sm.blue 190
+                //-                     p.card-price.f-0.f-as.red $900
+                //-                 // buttons
+                //-                 div
+                //-                     button.btn-primary-light.btn-100.mg-b-lw
+                //-                         | Add to Cart
+                //-                     button.btn-outline.btn-100
+                //-                         | Add to Wish List
+                //-             .card-item(data-border='')
+                //-                 // imgs
+                //-                 img.card-img.mg-b-sl(src='/img/products/2.jpg' alt='')
+                //-                 // details
+                //-                 .card-item-details
+                //-                     p.blue.capitalize Elon must ki rudeness
+                //-                     .product-rating-text
+                //-                         // icons
+                //-                         .f-lw.f-as
+                //-                             .f.product-rating-icons
+                //-                                 i.fa.fa-star.icon-sm(aria-hidden='true')
+                //-                                 i.fa.fa-star.icon-sm(aria-hidden='true')
+                //-                                 i.fa.fa-star.icon-sm(aria-hidden='true')
+                //-                                 i.fa.fa-star.icon-sm(aria-hidden='true')
+                //-                                 i.fa.fa-star.icon-sm(aria-hidden='true')
+                //-                             p.pt-sm.blue 190
+                //-                     p.card-price.f-0.f-as.red $900
+                //-                 // buttons
+                //-                 div
+                //-                     button.btn-primary-light.btn-100.mg-b-lw
+                //-                         | Add to Cart
+                //-                     button.btn-outline.btn-100
+                //-                         | Add to Wish List

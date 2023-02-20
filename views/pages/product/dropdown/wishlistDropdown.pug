@@ -1,0 +1,61 @@
+if(userData)
+
+    .dropdown.positionel(data-positionel-type='dropdown' data-positionel-name='add-product-to-wishlist-dropdown' 
+    data-active='false' 
+    data-pointer-position='none' 
+    data-position='bottom' 
+    data-animation='fade' 
+    data-show-event='click' 
+    data-delay-hide='false' 
+    data-load-spinner='false' 
+
+    data-load-data=""
+    data-static='false' 
+    data-has-defined-class='true'  
+    data-child-positionel='false'
+    data-position-type="absolute"
+    data-set-positionbtn-width="false")
+        .positionel-container
+            // trigger btn-> when click hide content will show
+            .positionel-content
+
+                ul.list(
+                    data-col='2' 
+                    data-change-positionbtn-text="false" 
+                    data-action="add-product-to-wishlist" 
+                    data-active-select-item="false"
+                    data-common-data={}
+
+                    )
+                    .list-container
+                        if(userData.wishlists && userData.wishlists.length>0)
+                            each wishlist in userData.wishlists
+                                -const {_id,name,items}= wishlist
+                                -const item=items.slice(-1)[0]
+
+                                li.list-item.list-item-sm(
+                                    data-data={wishlist:{_id,name}}
+                                    data-text-wrap
+                                    data-get-data="sectionEl"
+                                    data-positionel-btn 
+                                    data-positionel-name="add-product-to-wishlist-modal"
+                                    )
+
+                                    if(item)
+                                        img(src=item.thumbnail alt=item.name)
+                                        div
+                                            p=name
+                                            p Private
+
+                    .line-dim
+                    button.btn-inline-u.p-lw(
+
+                        data-positionel-btn 
+                        data-positionel-name="create-new-shopping-list"
+                        data-data
+
+                    )
+                        i.fa.fa-plus
+                        p.f-size-sm Create another Wish List
+
+

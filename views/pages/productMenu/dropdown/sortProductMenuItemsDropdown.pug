@@ -1,0 +1,16 @@
+.positionel.dropdown(data-dropdown-type='select-options-dropdown' data-positionel-name='productMenu-sort-dropdown' data-positionel-type='dropdown' data-active='false' data-position-type='fixed' data-load-spinner='false' data-animation='fade' data-pointer-position='none' data-position='cover' data-delay-hide='false' data-show-event='click' data-static='false' data-has-defined-class='true' data-child-positionel='false' data-set-positionbtn-width='false' data-change-positionbtn-text='false')
+    .overlay.overlay-t
+    .positionel-container(style='max-height: unset; overflow-y: auto;')
+        .positionel-content
+            // list
+            ul.list(data-text-wrap='' data-query='filter')
+                li.list-item(data-value='' data-active='true')
+                    p Featured
+                li.list-item(data-value='price.value' data-active='false')
+                    p Price: Low  to High
+                li.list-item(data-value='-price.value' data-active='false')
+                    p Price: High to Low
+                li.list-item(data-value='-reviews.count' data-active='false')
+                    p Avg: Customer Review
+                li.list-item(data-value='-_id' data-active='false')
+                    p Newest Arrivals

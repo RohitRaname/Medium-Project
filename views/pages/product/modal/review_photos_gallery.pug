@@ -1,0 +1,93 @@
+// reviews photo gallery
+.positionel.modal(data-positionel-type='modal' data-modal-type='gallery' data-positionel-name='reviews-photo-gallery' data-active='false' data-position='fixed' data-load-spinner='false' data-hide-spinner="true" data-animation='translate-fade' data-pointer-position='none' data-show-event='click' data-delay-hide='false' data-static='false' data-has-defined-class='true' data-child-positionel='false' data-width='bg')
+    .overlay
+    .positionel-container.modal-container
+        .spinner
+
+        .modal-header
+            button.btn-icon.positionel-closebtn
+                i.fa.fa-times
+
+        .positionel-content
+            .modal-windows
+
+                //- preview-review
+                .modal-window(data-window='preview-review' data-active='true')
+                    // view all photos
+                    .mg-b-lw.modal-tab(data-window='store-reviews')
+                        i.fa.fa-th.icon-bg(data-action="show-all-photos")
+                        p.s-7.s-d View Image Gallery
+                    .modal-gallery-container
+                        .modal-gallery(data-review-index='0' data-cur-img-index='0' data-total-imgs='5')
+                            // gallery main img
+                            .modal-gallery-cur-photo-container
+                                .modal-gallery-cur-photo-box
+                                    img.modal-gallery-cur-photo(src='../../img/products/1.jpg' alt='I at MrPena Seminar within 2 year.')
+                                    .modal-gallery-change-photo-btns
+                                        button.modal-gallery-change-photo-btn.btn-icon(data-btn='left' style='display: none;')
+                                            i.fa.fa-angle-left(aria-hidden='true')
+                                        button.modal-gallery-change-photo-btn.btn-icon(data-btn='right')
+                                            i.fa.fa-angle-right(aria-hidden='true')
+                            // gallery content => text | other related imgs
+                            .modal-gallery-content
+                                // gallery details
+                                .modal-gallery-text.mg-b-sm-all.mg-b-sm
+                                    // review-author
+                                    .f-sm
+                                        img.img-avatar(src='../../img/users/default.png' alt='rohit the billionare man')
+                                        p.pt-md rohit the billionare man
+                                    // stars and title
+                                    div
+                                        .f-i.product-rating-icons
+                                            i.fa.fa-star(aria-hidden='true')
+                                            i.fa.fa-star(aria-hidden='true')
+                                            i.fa.fa-star(aria-hidden='true')
+                                            i.fa.fa-star(aria-hidden='true')
+                                            i.fa.fa-star(aria-hidden='true')
+                                        p.s-7.s-d.inline-span I at MrPena Seminar within 2 year.
+                                    // date
+                                    p.t-sm
+                                        | Reviewed in 
+                                        span India
+                                        |  on
+                                        span 21/12/2022, 15:31:05
+                                    // review-text
+                                    p.pt-md
+                                        | I am the god
+                                // gallery related imgs
+                                .modal-gallery-all-photos.grid-5.gap-lw
+                                    .box(data-outline='' data-scale-img='' data-active='true')
+                                        img(src='../../img/products/1.jpg' alt='')
+                                    .box(data-outline='' data-scale-img='' data-active='false')
+                                        img(src='../../img/products/2.jpg' alt='')
+                                    .box(data-outline='' data-scale-img='' data-active='false')
+                                        img(src='../../img/products/3.jpg' alt='')
+                                    .box(data-outline='' data-scale-img='' data-active='false')
+                                        img(src='../../img/products/4.jpg' alt='')
+                                    .box(data-outline='' data-scale-img='' data-active='false')
+                                        img(src='../../img/products/5.jpg' alt='')
+
+                if(reviews_with_photos)
+                    //- store reviews to show in preview reviews
+                    .modal-window(
+                        data-window="store-reviews"
+                        data-page="0"
+                        data-total-docs=count && count.photoReviews 
+                        data-last-item-index=reviews_with_photos.length-1
+                        data-active="false"
+                        data-url=`products/modelId/${productData.parentVariantId}/reviews?content.photos[gt]=[]&modelId=${productData.modelId}&exclude=product,count&sort=-ts`  
+                        data-all-docs-set="false"
+                        )
+                        .modal-grid-photos.positionel-scroll.modal-list
+                            if(reviews_with_photos)
+                            each review,i in reviews_with_photos 
+                                -const reviewData={_id:review._id,parentVariantId:review.ParentVariantId,author:review.author,content:review.content,ts:review.ts}
+
+                                li(data-index=i 
+                                data-positionel-btn='' data-positionel-name='reviews-photo-gallery' data-data=JSON.stringify(reviewData) 
+                                class=`img-box-md` 
+                                )
+                                    img(src=`/img/reviews/${review.content.photos[0]}` alt='')
+
+
+

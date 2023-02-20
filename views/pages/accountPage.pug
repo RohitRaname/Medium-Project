@@ -1,0 +1,18 @@
+extends ./common_page 
+
+block section
+    section.section
+        .myAccount
+            .myAccount-container.container
+                h.h-4.h-l.mg-md Your Addresses
+                .myAccount-settings.f-sm
+                    a.f-lw.border-box.border-light.myAccount-setting(href='/me/orders')
+                        img(src='/img/amazon/account/orders.png' alt='')
+                        div
+                            h8.h-6.h-m Your Orders
+                            p.t-md Track,return,or buy things again
+                    a.f-lw.border-box.border-light.myAccount-setting(href='/me/address')
+                        img(src='/img/amazon/account/location.png' alt='')
+                        div
+                            h8.h-6.h-m Your addresses
+                            p.t-md Edit addresses for orders and gifts
