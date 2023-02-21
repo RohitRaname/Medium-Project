@@ -33,10 +33,9 @@ const formatQuery = (query) => {
   );
   match = JSON.parse(add$ToQueryObj);
 
-  console.log('match', match);
-
   Object.keys(match).forEach((key) => {
     if (Number(match[key])) match[key] = Number(match[key]);
+    else if (match[key] === '[]') match[key] = [];
     else if (Object.keys(match[key]).length > 0) {
       const nestedObj = match[key];
 
@@ -50,6 +49,8 @@ const formatQuery = (query) => {
       });
     }
   });
+
+  // taking care of ts
   Object.keys(match).forEach((key) => {
     const keys = Object.keys(match[key]);
     if (key === 'ts' && keys.length === 0) {
@@ -67,9 +68,11 @@ const formatQuery = (query) => {
 
   // converting id into mongodb id
   Object.keys(match).forEach((key) => {
-    if (key.toLowerCase().includes('id'))
+    if (key.toLowerCase().includes('id') && !Array.isArray(match[key]) )
       match[key] = new mongoose.Types.ObjectId(match[key]);
   });
+
+  console.log('match', match);
 
   if (query.sort) {
     const sortStr = query.sort.split(',');
