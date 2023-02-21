@@ -27,6 +27,7 @@ exports.saveBlogComment = tryCatch(async (userId, blogId, comment) => {
   const { parentId } = comment;
   let parentComment, updateParentCommentReplyCount;
 
+  // 1. update parent comment replyTo Count
   if (parentId) {
     [parentComment, updateParentCommentReplyCount] = await Promise.all([
       topLevelBucketController.getEmbeddedItem(
@@ -48,8 +49,8 @@ exports.saveBlogComment = tryCatch(async (userId, blogId, comment) => {
     comment.ancestorIds = [...parentComment.ancestorIds, parentComment._id];
   }
 
-  // 2.save comment
-  const commentDoc = await topLevelBucketController.addItemToList(
+  // 2.save blog comments
+  const commentDoc =  topLevelBucketController.addItemToList(
     Comment,
     blogId,
     'comments',
@@ -63,19 +64,22 @@ exports.saveBlogComment = tryCatch(async (userId, blogId, comment) => {
       query: {
         filter: {},
 
-        update: {
-          $push: {
-            recentBlogs: {
-              $each: [blog],
-              $slice: 10,
-              $position: 0,
-            },
-          },
-          $inc: { 'count.blogs': 1 },
-        },
+        update: {},
       },
     }
   );
+
+  // 3.update comment count in blog
+  const updateCommentCountInBlogs = addUserActivityItemAndUpdateCountInBlog(
+    userId,
+    blogId,
+    comment,
+    "comments",
+    "comment",
+    "increase"
+  );
+
+  await Promise.all([commentDoc,updateCommentCountInBlogs])
 
   return commentDoc;
 });
@@ -123,39 +127,9 @@ exports.postComment = tryCatch(async (userId, blogId, comment) => {
   ]);
 });
 
-exports.likeComment = tryCatch(
-  async (userId, blogId, commentId) =>
-    await topLevelBucketController.addItemToList(
-      UserActivity,
-      userId,
-      'likeComments',
-      { _id: commentId },
-      {
-        checkItemExist: false,
-        deleteItemExist: false,
-      },
-      {
-        update: false,
-        query: {
-          filter: {},
-
-          update: {
-            $push: {
-              recentBlogs: {
-                $each: [blog],
-                $slice: 10,
-                $position: 0,
-              },
-            },
-            $inc: { 'count.blogs': 1 },
-          },
-        },
-      }
-    )
-);
 
 exports.getComments = tryCatch(async (userId, blogId, query) => {
-  const comments = topLevelBucketController.getEmbeddedItems(
+  const comments = await topLevelBucketController.getEmbeddedItems(
     Comment,
     userId,
     'comments',
@@ -164,3 +138,12 @@ exports.getComments = tryCatch(async (userId, blogId, query) => {
   );
   return comments;
 });
+
+exports.apiCreateComment= catchAsync(async(req,res,next)=>{
+  await this.postComment(req.user._id,req.user.blogId,req.body)
+  return send(res,200,"comment created");
+})
+exports.apiGetComments= catchAsync(async(req,res,next)=>{
+  await this.getComments(req.user._id,req.user.blogId,req.query)
+  return send(res,200,"get comments");
+})
