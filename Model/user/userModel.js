@@ -174,11 +174,11 @@ UserSchema.pre(/^find/, function (next) {
   next();
 });
 
-UserSchema.pre('aggregate', function (next) {
-  this.pipeline.unshift({ $match: { active: true } });
+// UserSchema.pre('aggregate', function (next) {
+//   this.pipeline.unshift({ $match: { active: true } });
 
-  next();
-});
+//   next();
+// });
 
 const User = mongoose.model('user', UserSchema);
 
