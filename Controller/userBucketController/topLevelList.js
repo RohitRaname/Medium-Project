@@ -84,6 +84,7 @@ exports.addItemToList = tryCatch(
     queryOptions, // {limit,checkItemExist,updateIfItemExist
     updateUserOptions // {update,query}
   ) => {
+
     if (
       queryOptions.checkItemExist &&
       (await this.itemExistInList(model, userId, listName, item._id))
@@ -307,13 +308,13 @@ exports.getTotalPage = tryCatch(async (model, userId) => {
   return Number(doc.page);
 });
 
-exports.getEmbeddedItem =tryCatch(async (model, userId, listName,itemId,filter) => {
+exports.getEmbeddedItem =tryCatch(async (model, userId, listName,itemId) => {
   let pipeline = [
     {
       $match: {
         userId: new mongoose.Types.ObjectId(userId),
-        [`${listName}._id}`]: itemId,
-        ...filter
+        [`${listName}._id`]: new mongoose.Types.ObjectId(itemId),
+        
       },
     },
 
@@ -321,18 +322,24 @@ exports.getEmbeddedItem =tryCatch(async (model, userId, listName,itemId,filter) 
 
     { $replaceWith: `$${listName}` },
 
-    { $match: { _id: new mongoose.Types.ObjectId(itemId) } },
+    { $match: { _id: new mongoose.Types.ObjectId(itemId) ,active:{$ne:false} }},
   ];
 
 
+  console.log('embeddedItem-pipeline',pipeline)
+
+
+
+
   const item = await model.aggregate(pipeline).exec();
+  console.log('parent-item',item)
 
   return item[0];
 });
 
 
 // Filter Items ----------------------------------------
-exports.getEmbeddedItems = tryCatch(async (model, userId, listName, query,filter={}) => {
+exports.getEmbeddedItems = tryCatch(async (model, userId, listName, query,filter={},manualItemFilter) => {
   let pipeline = [
     {
       $match: {
@@ -475,102 +482,6 @@ exports.getUserAllActivityDocs = tryCatch(async (userId, fields) => {
 
   return items[0];
 });
-
-// ALL ITEMS
-// exports.getAllEmbeddedItems = tryCatch(async (model, userId, query) => {
-//   const { listName, sort, project, directContainItems } = query;
-
-//   let pipeline = [
-//     {
-//       $match: {
-//         userId: new mongoose.Types.ObjectId(userId),
-//         [listName]: { $gt: [] },
-//       },
-//     },
-
-//     { $unwind: `$${listName}` },
-
-//     !directContainItems
-//       ? { $replaceWith: '$items' }
-//       : { $replaceWith: `$${listName}` },
-
-//     { $match: { active: { $ne: false } } },
-
-//     sort
-//       ? {
-//           $sort: {
-//             [sort.includes('-') ? sort.slice(1) : sort]: sort.includes('-')
-//               ? -1
-//               : 1,
-//           },
-//         }
-//       : null,
-
-//     project ? { $project: project } : null,
-//   ];
-
-//   pipeline = pipeline.filter((el) => el);
-
-//   const items = await model.aggregate(pipeline).exec();
-
-//   return items;
-// });
-// exports.getRefAllItems = tryCatch(async (model, userId, query) => {
-//   const {
-//     listName,
-//     sort,
-
-//     project,
-//     directContainItems,
-//     lookup,
-//     replaceWith,
-//     unset,
-//   } = query;
-
-//   let pipeline = [
-//     {
-//       $match: {
-//         userId: new mongoose.Types.ObjectId(userId),
-//         [listName]: { $gt: [] },
-//       },
-//     },
-
-//     { $unwind: `$${listName}` },
-
-//     !directContainItems
-//       ? { $replaceWith: '$items' }
-//       : { $replaceWith: `$${listName}` },
-
-//     { $match: { active: { $ne: false } } },
-
-//     sort ? { $sort: { ts: sort.includes('-') ? -1 : 1 } } : null,
-
-//     {
-//       $lookup: lookup || {
-//         from: 'products',
-//         localField: '_id',
-//         foreignField: '_id',
-//         as: 'match',
-//       },
-//     },
-
-//     {
-//       $replaceWith: replaceWith || {
-//         $mergeObjects: ['$$ROOT', { $first: '$match' }],
-//       },
-//     },
-
-//     unset ? { $unset: unset } : null,
-
-//     project ? { $project: project } : null,
-//   ];
-
-//   pipeline = pipeline.filter((el) => el);
-
-//   const items = await model.aggregate(pipeline).exec();
-
-//   return items;
-// });
 
 // Shortcut Function to add data to user------------------------------------
 exports.addItemToUser = tryCatch(async (userId, activityField, item) => {

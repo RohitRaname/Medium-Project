@@ -18,6 +18,7 @@ const BlogSchema = new mongoose.Schema({
     text: String,
     thumbnail: String,
     photos: [String],
+    timeToRead:{type:Number,default:1}
   },
   active: { type: Boolean, default: false },
   ts: { type: Date, default: new Date() },

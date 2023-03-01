@@ -17,7 +17,7 @@ const UserActivitySchema = new mongoose.Schema({
       _id: mongoose.Schema.Types.ObjectId,
       name: String,
       avatar: String,
-      bio:String
+      bio: String,
     },
   ],
   mutedUsers: [
@@ -25,16 +25,44 @@ const UserActivitySchema = new mongoose.Schema({
       _id: mongoose.Schema.Types.ObjectId,
       name: String,
       avatar: String,
-      bio:String
+      bio: String,
     },
   ],
+
+  wishlists: [
+    {
+      _id: mongoose.Schema.Types.ObjectId,
+      name: String,
+
+      // this limit is for nested items
+      limit: { type: Number, default: 50 },
+      // max 50 items
+      items: [
+        {
+          _id: mongoose.Schema.Types.ObjectId,
+          genre: String,
+          access: String,
+          content: {
+            title: String,
+            text: String,
+            thumbnail: String,
+            photos: [String],
+            timeToRead: Number,
+          },
+          active: { type: Boolean, default: false },
+          ts: { type: Date, default: new Date() },
+        },
+      ],
+    },
+  ],
+
   following: [
     {
       _id: mongoose.Schema.Types.ObjectId,
       name: String,
       avatar: String,
       followers: { type: Number, default: 0 },
-      bio:String
+      bio: String,
     },
   ],
   followers: [
@@ -43,7 +71,7 @@ const UserActivitySchema = new mongoose.Schema({
       name: String,
       avatar: String,
       followers: { type: Number, default: 0 },
-      bio:String
+      bio: String,
     },
   ],
   history: [
@@ -63,24 +91,23 @@ const UserActivitySchema = new mongoose.Schema({
         text: String,
         thumbnail: String,
         photos: [String],
+        timeToRead: Number,
       },
-      active:{type:Boolean,default:false},
-      ts:{type:Date,default:new Date()},
+      active: { type: Boolean, default: false },
+      ts: { type: Date, default: new Date() },
 
-      count:{
-        like:{type:Number,default:0},
-        comment:{type:Number,default:0},
-        bookmark:{type:Number,default:0},
-        views:{type:Number,default:0},
-      }
+      count: {
+        like: { type: Number, default: 0 },
+        comment: { type: Number, default: 0 },
+        bookmark: { type: Number, default: 0 },
+        views: { type: Number, default: 0 },
+      },
     },
   ],
 
-  genreBlogsWrite:[String],
-  genreFollow:[String],
-  genreIgnore:[String],
-  
-  
+  genreBlogsWrite: [String],
+  genreFollow: [String],
+  genreIgnore: [String],
 
   likeBlogs: [{ _id: mongoose.Schema.Types.ObjectId }],
   bookmarkBlogs: [{ _id: mongoose.Schema.Types.ObjectId }],

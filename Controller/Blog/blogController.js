@@ -1,4 +1,4 @@
-const sharp= require('sharp')
+const sharp = require('sharp');
 
 // Utils
 const catchAsync = require('../../utils/catchAsync');
@@ -16,44 +16,40 @@ const Blog = require('../../Model/blog/blogModel');
 const topLevelBucketController = require('../userBucketController/topLevelList');
 const Factory = require('../handleFactoryController');
 
-
-
 exports.resizePhotos = async (req, res, next) => {
   if (!req.files) return next();
 
-  const {thumbnail,photos}= req.files;
+  const { thumbnail, photos } = req.files;
 
-  const promises=[];
+  const promises = [];
   if (thumbnail) {
     const filename = `blog-thumbnail-${req.user._id}-${Date.now()}.png`;
     req.body['thumbnail'] = filename;
 
     promises.push(
       sharp(thumbnail.file.buffer)
-      .resize(600,600)
-      .toFormat('png')
-      .jpeg({ quality: 90 })
-      .toFile(`public/img/blogs/thumbnail/${filename}`)
-      ) 
-    }
+        .resize(600, 600)
+        .toFormat('png')
+        .jpeg({ quality: 90 })
+        .toFile(`public/img/blogs/thumbnail/${filename}`)
+    );
+  }
   if (photos) {
-    
-    photos.map(photo=>{
+    photos.map((photo) => {
       const filename = `blog-photo-${req.user._id}-${Date.now()}.png`;
       req.body['photos'].push(filename);
 
       promises.push(
         sharp(photo.file.buffer)
-        .resize(1200,1080)
-        .toFormat('png')
-        .jpeg({ quality: 90 })
-        .toFile(`public/img/blogs/photos/${filename}`)
-        )
-    })
+          .resize(1200, 1080)
+          .toFormat('png')
+          .jpeg({ quality: 90 })
+          .toFile(`public/img/blogs/photos/${filename}`)
+      );
+    });
   }
 
-  await Promise.all(promises)
-
+  await Promise.all(promises);
 
   next();
 };
@@ -78,6 +74,7 @@ exports.getBlogs = tryCatch(async (genre, page, limit) => {
 });
 
 exports.searchBlog = tryCatch(async (q, query) => {
+  console.log('searchblog', q, query);
   const pipeline = [
     {
       $search: {
@@ -180,7 +177,7 @@ exports.getFilterBlogs = tryCatch(async (userId, getBlogsAfterTs) => {
     // check and set if i muted the blog author
   });
 
-  console.log(blogs)
+  console.log(blogs);
 
   return blogs;
 });

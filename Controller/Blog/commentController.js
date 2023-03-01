@@ -18,6 +18,7 @@ const {
   addUserActivityItemAndUpdateCountInBlog,
 } = require('../User/meController');
 
+// save comment in comment bucket controller
 exports.saveBlogComment = tryCatch(async (userId, blogId, comment) => {
   // 1.check parent exist of comment and if exist then increase its child comment count
   // 1.5.increase tweet comment count (if comment top parent el)
@@ -32,25 +33,26 @@ exports.saveBlogComment = tryCatch(async (userId, blogId, comment) => {
     [parentComment, updateParentCommentReplyCount] = await Promise.all([
       topLevelBucketController.getEmbeddedItem(
         Comment,
-        userId,
+        blogId,
         'comments',
-        parentId,
-        { blogId: new mongoose.Types.ObjectId(blogId) }
+        parentId
       ),
       topLevelBucketController.updateItemInList(
         Comment,
         blogId,
         'comments',
         parentId,
-        { $inc: { 'comment.$.count.reply': 1 } }
+        { $inc: { 'comments.$.count.reply': 1 } }
       ),
     ]);
+
+    console.log('parent-comment', parentComment);
 
     comment.ancestorIds = [...parentComment.ancestorIds, parentComment._id];
   }
 
   // 2.save blog comments
-  const commentDoc =  topLevelBucketController.addItemToList(
+  const commentDoc = await topLevelBucketController.addItemToList(
     Comment,
     blogId,
     'comments',
@@ -69,22 +71,10 @@ exports.saveBlogComment = tryCatch(async (userId, blogId, comment) => {
     }
   );
 
-  // 3.update comment count in blog
-  const updateCommentCountInBlogs = addUserActivityItemAndUpdateCountInBlog(
-    userId,
-    blogId,
-    comment,
-    "comments",
-    "comment",
-    "increase"
-  );
-
-  await Promise.all([commentDoc,updateCommentCountInBlogs])
-
   return commentDoc;
 });
 
-// firstUser follow secondUser
+// whole comment save
 exports.postComment = tryCatch(async (userId, blogId, comment) => {
   comment._id = new mongoose.Types.ObjectId();
 
@@ -116,6 +106,7 @@ exports.postComment = tryCatch(async (userId, blogId, comment) => {
     userId,
     blogId,
     { _id: comment._id, text: comment.text },
+    'comments',
     'comment',
     'increase'
   );
@@ -127,23 +118,26 @@ exports.postComment = tryCatch(async (userId, blogId, comment) => {
   ]);
 });
 
-
-exports.getComments = tryCatch(async (userId, blogId, query) => {
+exports.getComments = tryCatch(async (blogId, query) => {
+  delete query.blogId;
   const comments = await topLevelBucketController.getEmbeddedItems(
     Comment,
-    userId,
+    blogId,
     'comments',
     query,
-    new mongoose.Types.ObjectId(blogId)
+    {}
   );
   return comments;
 });
 
-exports.apiCreateComment= catchAsync(async(req,res,next)=>{
-  await this.postComment(req.user._id,req.user.blogId,req.body)
-  return send(res,200,"comment created");
-})
-exports.apiGetComments= catchAsync(async(req,res,next)=>{
-  await this.getComments(req.user._id,req.user.blogId,req.query)
-  return send(res,200,"get comments");
-})
+exports.apiCreateComment = catchAsync(async (req, res, next) => {
+  await this.postComment(req.user._id, req.query.blogId, req.body);
+  return send(res, 200, 'comment created');
+});
+exports.apiGetComments = catchAsync(async (req, res, next) => {
+  const comments = await this.getComments(req.query.blogId, req.query);
+  return send(res, 200, 'get comments', {
+    docs: comments,
+    total: comments.length,
+  });
+});

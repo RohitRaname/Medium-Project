@@ -17,9 +17,11 @@ exports.addUserActivityItemAndUpdateCountInBlog = tryCatch(
     activityItem,
     userActivityField,
     countField,
-    action
+    action,
   ) => {
+
     let updateUserActivity;
+    
     if (countField !== 'views') {
       updateUserActivity =
         action === 'increase'
@@ -47,7 +49,11 @@ exports.addUserActivityItemAndUpdateCountInBlog = tryCatch(
             );
     }
 
-    const updateUserBlogsCount = topLevelBucketController.updateItemInList(
+    let updateUserBlogsCount,updateGlobalBlogCount;
+
+    if(countField){
+
+     updateUserBlogsCount = topLevelBucketController.updateItemInList(
       UserActivity,
       userId,
       'blogs',
@@ -59,17 +65,21 @@ exports.addUserActivityItemAndUpdateCountInBlog = tryCatch(
       }
     );
 
-    const updateGlobalBlogCount = globalBlogController.updateBlogCountField(
+     updateGlobalBlogCount = globalBlogController.updateBlogCountField(
       blogId,
       countField,
       action === 'increase' ? 1 : -1
     );
+  }
+
 
     await Promise.all([
       updateUserActivity,
       updateUserBlogsCount,
       updateGlobalBlogCount,
     ]);
+
+
   }
 );
 

@@ -68,7 +68,7 @@ const formatQuery = (query) => {
 
   // converting id into mongodb id
   Object.keys(match).forEach((key) => {
-    if (key.toLowerCase().includes('id') && !Array.isArray(match[key]) )
+    if (key.toLowerCase().includes('id') && !Array.isArray(match[key]))
       match[key] = new mongoose.Types.ObjectId(match[key]);
   });
 
@@ -114,19 +114,19 @@ exports.formatQueryIntoPipeline = (
 
   let formatPipeline = [
     match && Object.keys(match).length > 0 ? { $match: match } : null,
-    sort ||
-    (ignoreQueryOperator &&
-      !ignoreQueryOperator.find((operator) => operator === 'sort'))
+    sort &&
+    ignoreQueryOperator &&
+    !ignoreQueryOperator.find((operator) => operator === 'sort')
       ? { $sort: sort }
       : null,
-    skip ||
-    (ignoreQueryOperator &&
-      !ignoreQueryOperator.find((operator) => operator === 'skip'))
+    skip &&
+    ignoreQueryOperator &&
+    !ignoreQueryOperator.find((operator) => operator === 'skip')
       ? { $skip: skip }
       : null,
-    limit ||
-    (ignoreQueryOperator &&
-      !ignoreQueryOperator.find((operator) => operator === 'limit'))
+    limit &&
+    ignoreQueryOperator &&
+    !ignoreQueryOperator.find((operator) => operator === 'limit')
       ? { $limit: limit }
       : null,
     unset ? { $unset: unset } : null,

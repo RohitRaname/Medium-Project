@@ -136,7 +136,7 @@ exports.searchUsers = tryCatch(async (q, query) => {
 
 exports.apiSearchUsers = catchAsync(async (req, res) => {
   const users = await this.searchUsers(req.query.q, req.query);
-  return send(res, 200, 'search users', users);
+  return send(res, 200, 'search users', {docs:users});
 });
 ///////////////////////////////////////////////
 // AddressController

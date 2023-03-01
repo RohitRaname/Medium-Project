@@ -16,10 +16,11 @@ const authRouter = require('./Routes/Auth/baseAuthRouter');
 const blogRouter= require('./Routes/blogRouter')
 const genreRouter = require('./Routes/genreRouter');
 const userRouter= require('./Routes/User/baseRouter')
+const commentRouter= require('./Routes/commentRouter')
 // const ViewRouter = require('./Routes/view/baseViewRouter');
    
 const app = express();
- 
+  
 app.use(connectLivereload()); 
 app.use(cors('*'));
 
@@ -51,6 +52,7 @@ app.use('/api/v1/auth/', authRouter);
 app.use('/api/v1/blogs/', blogRouter);
 app.use('/api/v1/genres/', genreRouter);
 app.use('/api/v1/users/', userRouter);
+app.use('/api/v1/comments/', commentRouter);
 // app.use('/api/v1/users', userRouter);
 // app.use('/', ViewRouter);
 
