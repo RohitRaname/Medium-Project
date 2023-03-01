@@ -30,12 +30,15 @@ const UserActivitySchema = new mongoose.Schema({
     },
   ],
 
-  // reading list
-  readingListBlogs: [
+  // reading list with blogs
+  readingLists: [
     {
+      // readingList id
       _id: mongoose.Schema.Types.ObjectId,
+
+      // reading list name
       name: String,
-      // max 50 items
+
       blog: {
         _id: mongoose.Schema.Types.ObjectId,
         genre: String,
@@ -51,7 +54,6 @@ const UserActivitySchema = new mongoose.Schema({
           thumbnail: String,
           timeToRead: Number,
         },
-
         ts: Date,
       },
     },

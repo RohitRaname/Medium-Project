@@ -80,6 +80,8 @@ exports.checkItemExistAndReturnItemList = tryCatch(
   }
 );
 
+
+// here i didnot check for limit 
 exports.addItem = tryCatch(
   async (
     model,
