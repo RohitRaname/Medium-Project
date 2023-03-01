@@ -12,6 +12,7 @@ const UserActivitySchema = new mongoose.Schema({
 
   // this limit if for top level items => review,wishlists
   limit: { type: Number, default: 50 },
+
   blockedUsers: [
     {
       _id: mongoose.Schema.Types.ObjectId,
@@ -29,30 +30,30 @@ const UserActivitySchema = new mongoose.Schema({
     },
   ],
 
-  wishlists: [
+  // reading list
+  readingListBlogs: [
     {
       _id: mongoose.Schema.Types.ObjectId,
       name: String,
-
-      // this limit is for nested items
-      limit: { type: Number, default: 50 },
       // max 50 items
-      items: [
-        {
+      blog: {
+        _id: mongoose.Schema.Types.ObjectId,
+        genre: String,
+        access: String,
+        author: {
           _id: mongoose.Schema.Types.ObjectId,
-          genre: String,
-          access: String,
-          content: {
-            title: String,
-            text: String,
-            thumbnail: String,
-            photos: [String],
-            timeToRead: Number,
-          },
-          active: { type: Boolean, default: false },
-          ts: { type: Date, default: new Date() },
+          name: String,
+          avatar: String,
         },
-      ],
+        content: {
+          title: String,
+          text: String,
+          thumbnail: String,
+          timeToRead: Number,
+        },
+
+        ts: Date,
+      },
     },
   ],
 
