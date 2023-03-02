@@ -13,6 +13,7 @@ const followUserRouter = require('./userActivity/followUserRouter');
 const userGenreRouter = require('./userActivity/genre/baseGenreRouter');
 const notificationRouter = require('./userActivity/notificationRouter');
 const historyRouter= require('./userActivity/historyRouter')
+const readingListRouter= require('./userActivity/readingListRouter')
 
 Router.use('/block', blockUserRouter);
 Router.use('/mute', muteUserRouter);
@@ -20,6 +21,7 @@ Router.use('/follow', followUserRouter);
 Router.use('/genre', userGenreRouter);
 Router.use('/notifications', notificationRouter);
 Router.use('/history',historyRouter)
+Router.use('/readingList',readingListRouter)
 
 Router.route('/')
   .patch(

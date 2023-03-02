@@ -35,11 +35,12 @@ const UserActivitySchema = new mongoose.Schema({
     {
       // readingList id
       _id: mongoose.Schema.Types.ObjectId,
+      access:{type:String,default:"public", enum:["public","private"]},
 
       // reading list name
       name: String,
 
-      blog: {
+      items: [{
         _id: mongoose.Schema.Types.ObjectId,
         genre: String,
         access: String,
@@ -55,7 +56,7 @@ const UserActivitySchema = new mongoose.Schema({
           timeToRead: Number,
         },
         ts: Date,
-      },
+      }],
     },
   ],
 

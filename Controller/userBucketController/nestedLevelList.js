@@ -80,8 +80,7 @@ exports.checkItemExistAndReturnItemList = tryCatch(
   }
 );
 
-
-// here i didnot check for limit 
+// here i didnot check for limit
 exports.addItem = tryCatch(
   async (
     model,
@@ -97,7 +96,7 @@ exports.addItem = tryCatch(
           [`${mainListName}._id`]: topParentListObj._id,
         },
         {
-          $push: { [`${mainListName}.$.items`]: { _id: item._id } },
+          $push: { [`${mainListName}.$.items`]: item },
         },
         {
           new: true,
@@ -167,86 +166,90 @@ exports.moveItemToTopOfList = tryCatch(
 );
 
 // add item to bucketList
-exports.addItemToListAndUpdateUser = tryCatch( async (
-  model,
-  userId,
-  mainListName,
-  topParentListObj, // {_id,name}
-  item,
-  updateUserOptions // {update,query}
-) => {
-  const itemList = await this.checkItemExistAndReturnItemList(
+exports.addItemToListAndUpdateUser = tryCatch(
+  async (
     model,
     userId,
     mainListName,
-    topParentListObj,
-    item
-  );
-
-
-  // list length exceed
-  if (itemList && itemList.length > defaultLimit)
-    return await this.createNewList(
+    topParentListObj, // {_id,name}
+    item,
+    updateUserOptions // {update,query}
+  ) => {
+    const itemList = await this.checkItemExistAndReturnItemList(
       model,
       userId,
       mainListName,
       topParentListObj,
-      item,
-      updateUserOptions
+      item._id
     );
 
-  // item already exist
-  if (itemList) {
-    await this.moveItemToTopOfList(
+    console.log('itemInList', itemList);
+
+    // list length exceed
+    if (itemList && itemList.length > defaultLimit)
+      return await this.createNewList(
+        model,
+        userId,
+        mainListName,
+        topParentListObj,
+        item,
+        updateUserOptions
+      );
+
+    // item already exist
+    if (itemList) {
+      await this.moveItemToTopOfList(
+        model,
+        userId,
+        mainListName,
+        topParentListObj, // {_id,name}
+        item
+      );
+
+      return 'item-exist';
+    }
+
+    const docUpdate = await this.addItem(
       model,
       userId,
       mainListName,
-      topParentListObj, // {_id,name}
+      topParentListObj,
       item
     );
 
-    return 'item-exist';
+    if (docUpdate) {
+      if (updateUserOptions.update)
+        this.updateUserDoc(userId, updateUserOptions.query);
+    }
+
+    // if list is full then new create new doc
   }
-
-  const docUpdate = await this.addItem(
-    model,
-    userId,
-    mainListName,
-    topParentListObj,
-    item
-  );
-
-  if (docUpdate) {
-    if (updateUserOptions.update)
-      this.updateUserDoc(userId, updateUserOptions.query);
-  }
-
-  // if list is full then new create new doc
-});
-exports.removeItemFromListAndUpdateUser = tryCatch( async (
-  model,
-  userId,
-  mainListName,
-  topParentListId, // {_id}
-  itemId, // {_id}
-  updateUserOptions // {update,query}
-) => {
-
-  const docUpdate = await this.removeItem(
+);
+exports.removeItemFromListAndUpdateUser = tryCatch(
+  async (
     model,
     userId,
     mainListName,
     topParentListId, // {_id}
-    itemId
-  );
+    itemId, // {_id}
+    updateUserOptions // {update,query}
+  ) => {
+    const docUpdate = await this.removeItem(
+      model,
+      userId,
+      mainListName,
+      topParentListId, // {_id}
+      itemId
+    );
 
-  if (!docUpdate) return 'item-not-exist';
+    if (!docUpdate) return 'item-not-exist';
 
-  if (docUpdate) {
-    if (updateUserOptions.update)
-      this.updateUserDoc(userId, updateUserOptions.query);
+    if (docUpdate) {
+      if (updateUserOptions.update)
+        this.updateUserDoc(userId, updateUserOptions.query);
+    }
   }
-});
+);
 
 // tojust add new field during development phase
 exports.updateAllItems = tryCatch(
@@ -268,3 +271,91 @@ exports.updateAllItems = tryCatch(
       )
       .exec()
 );
+
+// get nested list items (readinglist ->rohitPowerGuy  -> saved blogs)
+exports.getListItems = tryCatch(async (model, userId, listName, listId) => {
+  const pipeline = [
+    {
+      $match: {
+        userId: new mongoose.Types.ObjectId(userId),
+      },
+    },
+
+    { $project: { [listName]: 1, _id: 0 } },
+
+    {
+      $set: {
+        [listName]: {
+          $filter: {
+            input: `$${listName}`,
+            as: 'list',
+            cond: {
+              $and: [
+                {
+                  $eq: ['$$list._id', new mongoose.Types.ObjectId(listId)],
+                },
+                {
+                  $gt: [{ $size: '$$list.items' }, 0],
+                },
+              ],
+            },
+          },
+          // $first: {
+          // },
+        },
+      },
+    },
+
+    { $project: { items: `$${listName}.items` } },
+
+    { $unwind: '$items' },
+
+    // filter stage (purchased or not)
+    // { $match: { purchased: filter === 'purchased' } }, // false or true
+
+    // {
+    //   $lookup: {
+    //     from: 'products',
+    //     let: { itemId: `$_id` },
+    //     pipeline: [
+    //       {
+    //         $match: {
+    //           $expr: {
+    //             $and: [{ $eq: ['$_id', '$$itemId'] }],
+    //           },
+    //         },
+    //       },
+
+    //       {
+    //         $project: {
+    //           title: 1,
+    //           _id: 1,
+    //           rating: { count: '$rating.count', value: '$rating.value' },
+    //           curVariant: 1,
+    //           price: 1,
+    //           thumbnail: '$assets.thumbnail',
+    //         },
+    //       },
+    //     ],
+
+    //     as: 'matched',
+    //   },
+    // },
+
+    // {
+    //   $replaceWith: {
+    //     $mergeObjects: [
+    //       { $first: '$matched' },
+    //       { ts: '$ts', purchased: '$purchased' },
+    //     ],
+    //   },
+    // },
+  ];
+
+  console.log('embeddedItem-pipeline', pipeline);
+
+  const item = await model.aggregate(pipeline).exec();
+  console.log('parent-item', item);
+
+  return item[0].items;
+});
