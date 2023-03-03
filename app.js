@@ -17,7 +17,7 @@ const blogRouter= require('./Routes/blogRouter')
 const genreRouter = require('./Routes/genreRouter');
 const userRouter= require('./Routes/User/baseRouter')
 const commentRouter= require('./Routes/commentRouter')
-// const ViewRouter = require('./Routes/view/baseViewRouter');
+const ViewRouter = require('./Routes/View/baseViewRouter');
    
 const app = express();
   
@@ -54,7 +54,7 @@ app.use('/api/v1/genres/', genreRouter);
 app.use('/api/v1/users/', userRouter);
 app.use('/api/v1/comments/', commentRouter);
 // app.use('/api/v1/users', userRouter);
-// app.use('/', ViewRouter);
+app.use('/', ViewRouter);
 
 // arrow function simply return the function
 app.use('*', (req, res, next) => {
