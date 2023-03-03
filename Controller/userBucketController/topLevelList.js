@@ -515,7 +515,7 @@ exports.getItemsFromUser = tryCatch(
     await this.getEmbeddedItems(UserActivity, userId, activityField, query)
 );
 
-exports.userActivityController = (activityField, action, query,) =>
+exports.userActivityController = (activityField, action, query) =>
   tryCatch(async (req, res, next) => {
     const userId = req.user._id;
     const itemId = req.params.id;

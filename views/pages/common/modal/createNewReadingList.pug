@@ -1,0 +1,43 @@
+// create new reading list
+.positionel.modal(data-positionel-type='modal' data-positionel-name='create-new-reading-list' data-active='false' data-load-spinner='false' data-animation='fade' data-pointer-position='none' data-position='fixed' data-delay-hide='false' data-show-event='click' data-static='false' data-has-defined-class='true' data-child-positionel='false' data-width='md' data-form='true' data-hide-form-after-submit='true')
+    .overlay
+    .positionel-container.modal-container.container-100
+        // header
+        header.modal-header
+            p.h-3.h-d Create a new list
+            button.btn-icon.positionel-closebtn
+                i.fa.fa-times(aria-hidden='true')
+        footer.modal-footer
+            .spinner.hide
+            // first-content
+            .positionel-content.mg-b-lw-all(data-active='true' data-first-content='create-new-shoplist')
+                form.form(data-error='false' onsubmit='return false;' data-clear-inputs-when-hide='true' data-url='users/me/readingList' data-method='post' data-submit-automatic='true' data-data='')
+                    .form-group(data-error='false' data-required='true' data-count-field='true')
+                        input(type='text' name='name' placeholder='Give it a name' data-input='' maxlength='60' value='')
+                        .form-count
+                            span(data-value='') 0
+                            | /60
+                        .form-error
+                            i.fa.fa-exclamation-circle(aria-hidden='true')
+                            p Name is required
+                    .form-group(data-error='false' data-required='true' data-count-field='true')
+                        input(type='text' name='description' placeholder='Description' data-input='' maxlength='200' value='')
+                        .form-count
+                            span(data-value='') 0
+                            | /200
+                        .form-error
+                            i.fa.fa-exclamation-circle(aria-hidden='true')
+                            p Name is required
+                    .form-group(data-type='checkbox' data-required='false' data-error='false')
+                        input.hidden(type='text' name='private' data-input='' value='')
+                        p.mg-lw.f-lw
+                            button.btn-checkbox(data-active='false')
+                                i.fa.fa-check(aria-hidden='true')
+                            |                     Make it private
+                    // learn more tooltip
+                    // modal-btns
+                    .form-btns.f-jc
+                        button.btn-outline(data-action='cancel')
+                            | Cancel
+                        button.btn-primary-light.btn-disabled(data-action='submit')
+                            | Create List

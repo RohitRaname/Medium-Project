@@ -18,7 +18,6 @@ const tryCatch = require('../../utils/tryCatch');
 exports.apiCreateReadingList = catchAsync(async (req, res, next) => {
   const listId = mongoose.Types.ObjectId();
 
-  const { listName } = req.body;
 
   const userId = req.user._id;
 
@@ -28,8 +27,9 @@ exports.apiCreateReadingList = catchAsync(async (req, res, next) => {
     'readingLists',
     {
       _id: listId,
-      name: listName,
+      
       items: [],
+      ...req.body
     },
     {
       checkItemExist: true,
@@ -48,7 +48,7 @@ exports.apiCreateReadingList = catchAsync(async (req, res, next) => {
 
   // add wishlist with item to user
 
-  return send(res, 200, 'wishlist-created', result);
+  return send(res, 200, 'readingListCreated', {readingListId:listId});
 });
 exports.apiDeleteReadingList = catchAsync(async (req, res, next) => {
   const { id } = req.params;
@@ -105,8 +105,8 @@ exports.apiAddItemToReadingList = catchAsync(async (req, res, next) => {
   // list {_id}
   
 
-  const {id,itemId}= req.params;
-  const blog= await globalBlogController.getBlog(itemId)
+  const {id}= req.params;
+
 
   const userId = req.user._id;
 
@@ -115,7 +115,7 @@ exports.apiAddItemToReadingList = catchAsync(async (req, res, next) => {
     userId,
     'readingLists',
     { _id: id }, // {_id}
-    blog, // {}
+    req.body, // {}
     {
       update: false,
       query: {

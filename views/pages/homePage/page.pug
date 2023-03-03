@@ -1,0 +1,130 @@
+extends ../common/page
+
+
+block section
+    section.section-home
+        .home
+            // blogs
+            .home-left
+                .home-left-container
+                    .modal.suggest-blogs-modal(data-static='true' data-modal-type='window')
+                        .modal-tabs.mg-sm.f
+                            // move left button
+                            button.btn-icon.hidden.home-genre-scroll-btn(data-action='move-left')
+                                i.fa.fa-angle-left(aria-hidden='true')
+                            .modal-tabs-content.home-myGenre-list
+                                .modal-tabs-list(data-page='0' data-total-page='')
+                                    a.btn-icon(href='/genre/add' data-action='add-genre')
+                                        i.fa.fa-plus(aria-hidden='true')
+                                    button.modal-tab.btn-tab(data-window='for-me' data-active='true')
+                                        | For you
+                                 
+                                    each genreFollow in me.recentGenreFollow
+                                        button.modal-tab.btn-tab(data-window=`${genreFollow}`)= genreFollow
+
+                            // move right button
+                            button.btn-icon.home-genre-scroll-btn(data-action='move-right')
+                                i.fas.fa-angle-right(aria-hidden='true')
+
+                        .modal-windows
+                            .modal-window(data-window='blogs' data-active='true' data-url='blogs' data-filter-query=`lastBlogTs=${new Date().toISOString()}` data-search-query='' data-limit='10' data-page='0' data-no-more-docs='false' data-docs-loading='false')
+                                .modal-list
+                                    each blog in blogs
+                                        -const {author,content}=blog
+                                        .postPreview-item.item(data-id=blog._id)
+                                            // blog author and text
+                                            .item-left.f
+                                                div
+                                                    // user-img and user-title
+                                                    .f-sl.mg-sl
+                                                        img.img-avatar(src=`/img/users/${author.avatar}` alt='')
+                                                        p.pt-md.wrap.w-500= author.name
+                                                        .dot
+                                                        p.t-md= blog.postAt
+                                                        i.fa.fa-star(aria-hidden='true')
+                                                        p.t-md= blog.access
+
+                                                    // title
+                                                    h.s-6.s-d= content.title
+
+                                                    // text
+                                                    p.pt-md.mg-md= content.text
+
+                                                    // posted time and time period
+                                                    .item-footer.f-space
+                                                        // blog detials
+                                                        p.f-sl
+                                                            span.btn-dull.t-sm= blog.genre
+                                                            span.dot
+                                                            span.t-sm= `${blog.timeToRead} min Read`
+                                                            span.dot
+                                                            span.t-sm Select for you
+                                                        
+                                                        .postPreview-btns.f-lw
+
+                                                            button.btn-icon(data-action='bookmark-post' data-positionel-btn='' data-positionel-name='readingList-dropdown' data-data=blog)
+                                                                i.fa.fa-bookmark-o.dim(aria-hidden='true')
+
+                                                            button.btn-icon(data-action='ignore-post-genre' data-data={genre:blog.genre})
+                                                                i.fa.fa-minus-circle(aria-hidden='true')
+
+                                                            button.btn-icon(data-trigger='post-options-dropdown' data-positionel-btn='' data-positionel-name='blog-options-dropdown' data-data={author:blog.author})
+                                                                i.fas.fa-ellipsis-h(aria-hidden='true')
+
+                                            // post img
+                                            .item-right
+                                                img.img-full(src=`/img/blogs/${content.thumbnail}` alt='')
+
+            .home-right
+                .home-right-container.mg-md-all
+
+                    //- h.h-7.mg-md Staff Picks
+                    // blogs to read
+                    //- .home-blogsToRead.list.mg-sm-all
+
+
+                    //-     .item
+                    //-         // user-img and user-title
+                    //-         .f-sl.mg-sl
+                    //-             img.img-avatar(src='../../../img/users/default.png' alt='')
+                    //-             p.h-9.wrap Matthew Specktor in Sybarite
+                    //-         h.h-7.h-d I am becoming more powerful like andrew tate and dan pena.
+                    //-     button.btn-inline See the full list
+                   
+                   
+                    // write blog
+                    a.btn-black.w-500(href='/write') Start writing
+                    .line-dim
+                    //- .home-recommendGenre
+                    //-     h.h-7 Recommend topics
+
+                    //-     each genre in suggestedGenres
+                    //-         button.btn-dull.dark.w-500.btn-md= genre
+
+                    //- .recommed-whoToFollow
+                    //-     each suggestedUser in suggestedUsers
+                    //-         .item
+                    //-             img.img-avatar(src=`/img/users/${suggestedUser.avatar}` alt='')
+                    //-             .item-content
+                    //-                 h.h-8.h-d= suggestedUser.name
+                    //-                 p.t-lw.w-500= suggestedUser.bio
+
+                    //-             button.btn-outline.link(data-url=`users/me/follow/true/${suggestedUser._id}` data-method='post' data-change-url-to=`users/me/follow/false/${suggestedUser._id}` data-change-text-to='Following' data-data=suggestedUser)
+                    //-                 | Follow
+                    //-     button.btn-inline See more suggestions
+
+
+                    footer.footer.t-lw
+                        span Help
+                        span Status
+                        span Writers
+                        span Blog
+                        span Careers
+                        span Privacy
+                        span Terms
+                        span About
+                        span Text to speech
+
+
+
+block morePositionels

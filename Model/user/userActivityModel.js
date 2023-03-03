@@ -21,6 +21,7 @@ const UserActivitySchema = new mongoose.Schema({
       bio: String,
     },
   ],
+  
   mutedUsers: [
     {
       _id: mongoose.Schema.Types.ObjectId,
