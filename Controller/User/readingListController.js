@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const UserActivity = require('../../Model/user/userActivityModel');
 
 // CONTROLLER
+const globalBlogController= require('../Blog/blogController')
 const topLevelBucketController = require('../userBucketController/topLevelList');
 const nestedLevelBucketController = require('../userBucketController/nestedLevelList');
 
@@ -102,7 +103,10 @@ exports.apiGetReadingLists = catchAsync(async (req, res) => {
 // wishlist(nested-level) ---------------------------
 exports.apiAddItemToReadingList = catchAsync(async (req, res, next) => {
   // list {_id}
-  const { item } = req.body;
+  
+
+  const {id,itemId}= req.params;
+  const blog= await globalBlogController.getBlog(itemId)
 
   const userId = req.user._id;
 
@@ -110,8 +114,8 @@ exports.apiAddItemToReadingList = catchAsync(async (req, res, next) => {
     UserActivity,
     userId,
     'readingLists',
-    { _id: req.params.id }, // {_id}
-    item, // {}
+    { _id: id }, // {_id}
+    blog, // {}
     {
       update: false,
       query: {
@@ -318,6 +322,41 @@ exports.apiGetReadingListsItems = catchAsync(async (req, res, next) => {
   return send(res, 200, 'items', { docs: wishlistItems });
 });
 
+// i now know the value of consistency just show up 
+exports.getReadingListsInWhichItemExist= tryCatch(async(userId,itemId,activityDocs)=>{
+  const userActivityDocs= activityDocs || await UserActivity.find({userId:userId})
+
+
+  const listArr=[]
+
+userActivityDocs.forEach(doc=>{
+  const {readingLists}=doc;
+
+  readingLists.forEach(list=>{
+    if(list.items.find(item=>item._id.toString()===itemId.toString())) listArr.push({_id:list._id,name:list.name})
+  })
+
+})
+
+return listArr;
+
+
+
+
+  
+
+})
+
+exports.apiGetListsInWhichItemExist = catchAsync(async (req, res, next) => {
+  const lists = await this.getReadingListsInWhichItemExist(
+    req.user._id,
+    req.params.itemId,
+    false
+  );
+  return send(res, 200, 'reading list item exist', lists);
+});
+
+
 // small queries---------------------------------
 
 exports.updateWishlistsAllItems = catchAsync(async (req, res) => {
@@ -329,3 +368,4 @@ exports.updateWishlistsAllItems = catchAsync(async (req, res) => {
   );
   return send(res, 200, 'update all items');
 });
+

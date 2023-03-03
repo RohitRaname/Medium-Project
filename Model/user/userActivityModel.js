@@ -35,10 +35,12 @@ const UserActivitySchema = new mongoose.Schema({
     {
       // readingList id
       _id: mongoose.Schema.Types.ObjectId,
-      access:{type:String,default:"public", enum:["public","private"]},
-
+      
       // reading list name
       name: String,
+
+      private:{type:Boolean,default:false},
+      description:String,
 
       items: [{
         _id: mongoose.Schema.Types.ObjectId,

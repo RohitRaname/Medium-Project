@@ -54,6 +54,8 @@ exports.resizePhotos = async (req, res, next) => {
   next();
 };
 
+exports.getBlog = tryCatch(async (id) => await Factory.getOneFunc(Blog, id));
+
 exports.createBlog = tryCatch(async (blog) => {
   await Blog.create(blog);
 });
@@ -195,6 +197,7 @@ exports.apiGetFilterBlogs = catchAsync(async (req, res) => {
   });
 });
 
+exports.apiGetBlog = Factory.getOne(Blog);
 exports.apiGetBlogs = Factory.getAll(Blog);
 
 exports.apiSearchBlogs = catchAsync(async (req, res) => {

@@ -14,14 +14,18 @@ Router.get('/name', readingListController.apiGetReadingLists);
 // reading list summary(total blogs)
 Router.get('/summary', readingListController.apiGetReadingListsSummary);
 
+Router.get(
+  '/item-exist-in-lists/:itemId',
+  readingListController.apiGetListsInWhichItemExist
+);
+
 Router.route('/:id')
-  .post(readingListController.apiAddItemToReadingList)
+
   .get(readingListController.apiGetReadingListsItems)
   .delete(readingListController.apiDeleteReadingList);
 
-Router.delete(
-  '/:id/item/:itemId',
-  readingListController.apiRemoveItemFromReadingList
-);
+Router.route('/:id/item/:itemId')
+  .delete(readingListController.apiRemoveItemFromReadingList)
+  .post(readingListController.apiAddItemToReadingList);
 
 module.exports = Router;
