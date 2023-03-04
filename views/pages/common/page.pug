@@ -1,4 +1,4 @@
-extends ../base_template/_base
+extends ../../base_template/_base
 
 
 
@@ -6,20 +6,23 @@ block section
     
 
 block positionels
-    include ./dropdown/
-    include ./dropdown/addOrRemoveBlogFromReadinglistDropdown
-    include ./dropdown/blogOptionsDropdown
-    include ./dropdown/searchDropdown
-    include ./dropdown/userProfileOptionsDropdown
+    div.positionels
+        include ./dropdown/addOrRemoveBlogFromReadinglistDropdown
+        include ./dropdown/blogOptionsDropdown
+        include ./dropdown/searchDropdown
+        include ./dropdown/userProfileOptionsDropdown
 
-    include ./modal/createNewReadingList
-   
-   
+        include ./modal/createNewReadingList
 
-    block morePositionels
+        // login And Signup Page
+        include ../auth/form/login
+        include ../auth/form/signup
+    
+    
+
+        block morePositionels
 
 
-block row 
 
 
 

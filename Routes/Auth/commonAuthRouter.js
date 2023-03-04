@@ -14,6 +14,6 @@ Router.post('/verify-token', commonAuthController.verifyOTPToken(false));
 
 
 // ADMIN 
-Router.post('/admin/login',commonAuthController.login,sendJwtIfNeeded(false))
-Router.post('/admin/signup',commonAuthController.signup,sendJwtIfNeeded(false))
+Router.post('/login',commonAuthController.login,sendJwtIfNeeded(false))
+Router.post('/signup',commonAuthController.signup,sendJwtIfNeeded(false))
 module.exports = Router;

@@ -1,20 +1,23 @@
 // SIGNUP _--------------------------------------------
-exports.renderCreateAccountPage = (req, res) => {
-  res.render('pages/auth/signup/createAccount');
-};
-exports.renderVerifyAccountPage = (req, res) => {
+// exports.renderCreateAccountPage = (req, res) => {
+//   res.render('pages/auth/signup/createAccount');
+// };
+exports.renderVerifySignupAccountPage = (req, res) => {
   const { email } = req.query;
-  res.render('pages/auth/signup/verifyAccount', { email });
+
+  
+
+  res.render('pages/auth/verifySignupPage');
 };
 
 // LOGIN _--------------------------------------------
-exports.renderEnterEmail = (req, res) => {
-  res.render('pages/auth/login/0.enterEmail.pug');
-};
-exports.renderEnterPassword = (req, res) => {
-  const { email } = req.query;
-  res.render('pages/auth/login/1.enterPassword.pug', { email });
-};
+// exports.renderEnterEmail = (req, res) => {
+//   res.render('pages/auth/login/0.enterEmail.pug');
+// };
+// exports.renderEnterPassword = (req, res) => {
+//   const { email } = req.query;
+//   res.render('pages/auth/login/1.enterPassword.pug', { email });
+// };
 
 // FORGOTPASSWORD _--------------------------------------------
 exports.renderForgotPasswordFindAccount = (req, res) => {

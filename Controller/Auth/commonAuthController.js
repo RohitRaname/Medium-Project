@@ -16,10 +16,10 @@ exports.restricTo =
     next();
   };
 
-exports.logoutFunc =(res)=>{
+exports.logoutFunc = (res) => {
   res.clearCookie('refreshJwt', { httpOnly: true });
   res.clearCookie('jwt', { httpOnly: true });
-}
+};
 
 exports.logout = (req, res, next) => {
   res.clearCookie('refreshJwt', { httpOnly: true });
@@ -50,8 +50,7 @@ exports.accountPasswordValid = (pass) =>
     const { email, password, keepMeSignedIn } = req.body;
     const user = await User.findOne({ email }, { password: 1 }).exec();
 
-    if(!user) return next(new AppError('User with email not exist',400))
-    
+    if (!user) return next(new AppError('User with email not exist', 400));
 
     if (!(await user.isValidPassword(password, user.password)))
       return next(
@@ -79,11 +78,11 @@ exports.accountPasswordValid = (pass) =>
 // need token
 exports.verifyOTPToken = (pass) =>
   catchAsync(async (req, res, next) => {
-    const { email, token } = req.body;
+    const {  token } = req.query;
+    console.log('token',token)
     const tokenHash = generateHash(token);
 
     const user = await User.findOne({
-      email,
       tokenHash,
     }).exec();
 
@@ -124,7 +123,7 @@ exports.sendOTPToken = (email_type, redirect_link_path) => async (req, res) => {
       req,
       user,
       email_type,
-      `${redirect_link_path}/${verificationToken}`,
+      `${redirect_link_path}`,
       verificationToken
     );
   } catch (err) {
@@ -179,6 +178,15 @@ exports.login = catchAsync(async (req, res, next) => {
 });
 
 exports.signup = catchAsync(async (req, res, next) => {
+  const { name, email, password } = req.body;
+
+  let user = { name, email, password, emailVerify: false };
+  user = await User.create(user);
+
+  req.user = user;
+  next();
+});
+exports.adminSignup = catchAsync(async (req, res, next) => {
   const { name, email, password } = req.body;
 
   let user = { name, email, password, emailVerify: true };

@@ -1,6 +1,5 @@
 extends ../common/page
 
-
 block section
     section.section-home
         .home
@@ -8,29 +7,36 @@ block section
             .home-left
                 .home-left-container
                     .modal.suggest-blogs-modal(data-static='true' data-modal-type='window')
+
+
                         .modal-tabs.mg-sm.f
-                            // move left button
-                            button.btn-icon.hidden.home-genre-scroll-btn(data-action='move-left')
-                                i.fa.fa-angle-left(aria-hidden='true')
+                            
+                            if(me.recentGenreFollow>6)
+                                // move left button
+                                button.btn-icon.hidden.home-genre-scroll-btn(data-action='move-left')
+                                    i.fa.fa-angle-left(aria-hidden='true')
+
                             .modal-tabs-content.home-myGenre-list
                                 .modal-tabs-list(data-page='0' data-total-page='')
                                     a.btn-icon(href='/genre/add' data-action='add-genre')
                                         i.fa.fa-plus(aria-hidden='true')
                                     button.modal-tab.btn-tab(data-window='for-me' data-active='true')
                                         | For you
-                                 
+
                                     each genreFollow in me.recentGenreFollow
                                         button.modal-tab.btn-tab(data-window=`${genreFollow}`)= genreFollow
-
-                            // move right button
-                            button.btn-icon.home-genre-scroll-btn(data-action='move-right')
-                                i.fas.fa-angle-right(aria-hidden='true')
+                                
+                            
+                            if(me.recentGenreFollow>6)
+                                // move right button
+                                button.btn-icon.home-genre-scroll-btn(data-action='move-right')
+                                    i.fas.fa-angle-right(aria-hidden='true')
 
                         .modal-windows
                             .modal-window(data-window='blogs' data-active='true' data-url='blogs' data-filter-query=`lastBlogTs=${new Date().toISOString()}` data-search-query='' data-limit='10' data-page='0' data-no-more-docs='false' data-docs-loading='false')
                                 .modal-list
                                     each blog in blogs
-                                        -const {author,content}=blog
+                                        -const {author,content,access}=blog
                                         .postPreview-item.item(data-id=blog._id)
                                             // blog author and text
                                             .item-left.f
@@ -40,8 +46,11 @@ block section
                                                         img.img-avatar(src=`/img/users/${author.avatar}` alt='')
                                                         p.pt-md.wrap.w-500= author.name
                                                         .dot
-                                                        p.t-md= blog.postAt
-                                                        i.fa.fa-star(aria-hidden='true')
+
+                                                        if(access==="member")
+                                                            p.t-md= blog.postAt
+                                                            i.fa.fa-star(aria-hidden='true')
+                                                            
                                                         p.t-md= blog.access
 
                                                     // title
@@ -59,7 +68,7 @@ block section
                                                             span.t-sm= `${blog.timeToRead} min Read`
                                                             span.dot
                                                             span.t-sm Select for you
-                                                        
+
                                                         .postPreview-btns.f-lw
 
                                                             button.btn-icon(data-action='bookmark-post' data-positionel-btn='' data-positionel-name='readingList-dropdown' data-data=blog)
@@ -90,8 +99,8 @@ block section
                     //-             p.h-9.wrap Matthew Specktor in Sybarite
                     //-         h.h-7.h-d I am becoming more powerful like andrew tate and dan pena.
                     //-     button.btn-inline See the full list
-                   
-                   
+
+
                     // write blog
                     a.btn-black.w-500(href='/write') Start writing
                     .line-dim

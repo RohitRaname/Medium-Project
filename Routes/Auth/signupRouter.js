@@ -12,10 +12,10 @@ Router.post(
   signupController.createAccount,
   commonAuthController.sendOTPToken(
     'signup-verification',
-    'signup/verify-account'
+    'auth/signup/verify-account'
   )
 );
-Router.post(
+Router.get(
   '/verify-account',
   commonAuthController.verifyOTPToken(true),
   signupController.verifyAccount,

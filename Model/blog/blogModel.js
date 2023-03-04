@@ -30,6 +30,12 @@ const BlogSchema = new mongoose.Schema({
     views: { type: Number, default: 0 },
   },
 
+
+  // property for user interaction by me during when blogs is shown in site 
+  authorMuted:{type:Boolean,default:false}, // authorMutedByMe
+  addedToReadingList:{type:Boolean,default:false} // authorMutedByMe
+  
+
   // this will be fast to fill so no need it to be here
 });
 BlogSchema.pre(/^find/, function (next) {

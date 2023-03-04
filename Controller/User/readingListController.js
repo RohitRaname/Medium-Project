@@ -4,7 +4,8 @@ const mongoose = require('mongoose');
 const UserActivity = require('../../Model/user/userActivityModel');
 
 // CONTROLLER
-const globalBlogController= require('../Blog/blogController')
+const globalBlogController = require('../Blog/blogController');
+const userController = require('./userController');
 const topLevelBucketController = require('../userBucketController/topLevelList');
 const nestedLevelBucketController = require('../userBucketController/nestedLevelList');
 
@@ -14,42 +15,56 @@ const send = require('../../utils/sendJSON');
 const AppError = require('../../utils/AppError');
 const tryCatch = require('../../utils/tryCatch');
 
-// wishlists(top-level) -------------------------------------------
-exports.apiCreateReadingList = catchAsync(async (req, res, next) => {
+
+
+
+// list {name,private,description}
+exports.createReadingList= tryCatch(async(userId,list)=>{
   const listId = mongoose.Types.ObjectId();
 
-
-  const userId = req.user._id;
-
-  const result = await topLevelBucketController.addItemToList(
-    UserActivity,
-    userId,
-    'readingLists',
-    {
+  const result = await Promise.all([
+    userController.addItemToUserArrField(userId, 'readingLists', {
       _id: listId,
-      
-      items: [],
-      ...req.body
-    },
-    {
-      checkItemExist: true,
-      limit: 50,
-    },
-    {
-      update: false,
-      query: {
-        filter: {},
-        update: {
-          $push: {},
-        },
-      },
-    }
-  );
+      name: list.name,
+    }),
 
+    topLevelBucketController.addItemToList(
+      UserActivity,
+      userId,
+      'readingLists',
+      {
+        _id: listId,
+
+        items: [],
+        ...list,
+      },
+      {
+        checkItemExist: true,
+        limit: 50,
+      },
+      {
+        update: false,
+        query: {
+          filter: {},
+          update: {
+            $push: {},
+          },
+        },
+      }
+    ),
+  ]);
+})
+
+// wishlists(top-level) -------------------------------------------
+exports.apiCreateReadingList = catchAsync(async (req, res, next) => {
+  const userId=req.user._id;
+  await this.createReadingList(userId,req.body);
   // add wishlist with item to user
 
-  return send(res, 200, 'readingListCreated', {readingListId:listId});
+  return send(res, 200, 'readingListCreated'
+  );
 });
+
 exports.apiDeleteReadingList = catchAsync(async (req, res, next) => {
   const { id } = req.params;
 
@@ -100,30 +115,34 @@ exports.apiGetReadingLists = catchAsync(async (req, res) => {
   return send(res, 200, 'readingLists', { docs: wishlists });
 });
 
-// wishlist(nested-level) ---------------------------
+//add item to readinglist and bookmark it if it is not added to any my readingList ---------------------------
 exports.apiAddItemToReadingList = catchAsync(async (req, res, next) => {
   // list {_id}
-  
 
-  const {id}= req.params;
-
+  const { id } = req.params;
 
   const userId = req.user._id;
 
-  const result = await nestedLevelBucketController.addItemToListAndUpdateUser(
-    UserActivity,
-    userId,
-    'readingLists',
-    { _id: id }, // {_id}
-    req.body, // {}
-    {
-      update: false,
-      query: {
-        filter: {},
-        update: {},
-      },
-    } // {update,query}
-  );
+  const result = await Promise.all([
+    nestedLevelBucketController.addItemToListAndUpdateUser(
+      UserActivity,
+      userId,
+      'readingLists',
+      { _id: id }, // {_id}
+      req.body, // {}
+      {
+        update: false,
+        query: {
+          filter: {},
+          update: {},
+        },
+      } // {update,query}
+    )
+  ]
+
+
+  ) 
+  ;
 
   if (result === 'item-exist') return next(new AppError('item-exist', 400));
 
@@ -131,6 +150,7 @@ exports.apiAddItemToReadingList = catchAsync(async (req, res, next) => {
 
   return send(res, 200, 'wishlist product added', result);
 });
+
 exports.apiRemoveItemFromReadingList = catchAsync(async (req, res, next) => {
   const { id, itemId } = req.params;
 
@@ -322,30 +342,28 @@ exports.apiGetReadingListsItems = catchAsync(async (req, res, next) => {
   return send(res, 200, 'items', { docs: wishlistItems });
 });
 
-// i now know the value of consistency just show up 
-exports.getReadingListsInWhichItemExist= tryCatch(async(userId,itemId,activityDocs)=>{
-  const userActivityDocs= activityDocs || await UserActivity.find({userId:userId})
+// i now know the value of consistency just show up
+exports.getReadingListsInWhichItemExist = tryCatch(
+  async (userId, itemId, activityDocs) => {
+    const userActivityDocs =
+      activityDocs || (await UserActivity.find({ userId: userId }));
 
+    const listArr = [];
 
-  const listArr=[]
+    userActivityDocs.forEach((doc) => {
+      const { readingLists } = doc;
 
-userActivityDocs.forEach(doc=>{
-  const {readingLists}=doc;
+      readingLists.forEach((list) => {
+        if (
+          list.items.find((item) => item._id.toString() === itemId.toString())
+        )
+          listArr.push({ _id: list._id, name: list.name });
+      });
+    });
 
-  readingLists.forEach(list=>{
-    if(list.items.find(item=>item._id.toString()===itemId.toString())) listArr.push({_id:list._id,name:list.name})
-  })
-
-})
-
-return listArr;
-
-
-
-
-  
-
-})
+    return listArr;
+  }
+);
 
 exports.apiGetListsInWhichItemExist = catchAsync(async (req, res, next) => {
   const lists = await this.getReadingListsInWhichItemExist(
@@ -356,9 +374,7 @@ exports.apiGetListsInWhichItemExist = catchAsync(async (req, res, next) => {
   return send(res, 200, 'reading list item exist', lists);
 });
 
-
 // small queries---------------------------------
-
 exports.updateWishlistsAllItems = catchAsync(async (req, res) => {
   nestedLevelBucketController.updateAllItems(
     UserActivity,
@@ -368,4 +384,3 @@ exports.updateWishlistsAllItems = catchAsync(async (req, res) => {
   );
   return send(res, 200, 'update all items');
 });
-

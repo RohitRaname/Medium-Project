@@ -5,30 +5,28 @@ const cookieParser = require('cookie-parser');
 const path = require('path');
 const connectLivereload = require('connect-livereload');
 const cors = require('cors');
-             
+
 // controller -----------------------------------------
 const GlobalErrorHandler = require('./Controller/global_error_handler');
 
-
- 
 // router ---------------------------------------------
 const authRouter = require('./Routes/Auth/baseAuthRouter');
-const blogRouter= require('./Routes/blogRouter')
+const blogRouter = require('./Routes/blogRouter');
 const genreRouter = require('./Routes/genreRouter');
-const userRouter= require('./Routes/User/baseRouter')
-const commentRouter= require('./Routes/commentRouter')
+const userRouter = require('./Routes/User/baseRouter');
+const commentRouter = require('./Routes/commentRouter');
 const ViewRouter = require('./Routes/View/baseViewRouter');
-   
+
 const app = express();
-  
-app.use(connectLivereload()); 
+
+app.use(connectLivereload());
 app.use(cors('*'));
 
-// set pug  
+// set pug
 app.set('view engine', 'pug');
 app.set('views', './views');
 // server static file
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join("..","/frontend")));
 
 // // ge t req short url
 app.use(morgan('dev'));
@@ -44,9 +42,6 @@ app.use((req, res, next) => {
   next();
 });
 // console.log('recive req');
-
-
-
 
 app.use('/api/v1/auth/', authRouter);
 app.use('/api/v1/blogs/', blogRouter);
@@ -65,4 +60,3 @@ app.use('*', (req, res, next) => {
 app.use(GlobalErrorHandler);
 
 module.exports = app;
-      

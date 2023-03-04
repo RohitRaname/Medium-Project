@@ -51,5 +51,8 @@ exports.verifyAccount = catchAsync(async (req, res, next) => {
 
   await req.user.save();
 
+
+  req.redirectTo ="/"
+
   next();
 });

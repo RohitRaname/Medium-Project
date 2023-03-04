@@ -76,7 +76,6 @@ exports.getBlogs = tryCatch(async (genre, page, limit) => {
 });
 
 exports.searchBlog = tryCatch(async (q, query) => {
-  console.log('searchblog', q, query);
   const pipeline = [
     {
       $search: {
@@ -127,7 +126,7 @@ exports.getFilterBlogs = tryCatch(async (userId, getBlogsAfterTs) => {
   const ts = new Date(getBlogsAfterTs) || new Date();
   const userActivity = await topLevelBucketController.getUserAllActivityDocs(
     userId,
-    ['genreIgnore', 'mutedUsers', 'bookmarkBlogs']
+    ['genreIgnore', 'mutedUsers', 'bookmarkBlogs', 'readingLists']
   );
 
   //  did i bookmark the blog
@@ -135,10 +134,13 @@ exports.getFilterBlogs = tryCatch(async (userId, getBlogsAfterTs) => {
   const blogs = [];
 
   const getRightBlogs = async (queryTs, genreIgnore) => {
-    const docs = await Blog.find({
-      ts: { $lt: queryTs },
-      genre: { $nin: genreIgnore },
-    })
+    const docs = await Blog.find(
+      {
+        ts: { $lt: queryTs },
+        genre: { $nin: genreIgnore },
+      },
+      { count: 0, active: 0 }
+    )
       .sort({
         'count.views': -1,
         'count.like': -1,
@@ -169,8 +171,12 @@ exports.getFilterBlogs = tryCatch(async (userId, getBlogsAfterTs) => {
   }
 
   blogs.forEach((blog) => {
-    // check and set if blogs are bookmark by me
-    blog.bookmark = checkDocExistInUserActivity('bookmarkBlogs', blog._id);
+    // I need readingList
+    blog.addedToReadingList = userActivity['readingLists'].find((list) =>
+      list.items.find((item) => item._id.toString() === blog._id.toString())
+    ) || false;
+
+
     blog.authorMuted = checkDocExistInUserActivity(
       'mutedUsers',
       blog.author._id
@@ -179,7 +185,7 @@ exports.getFilterBlogs = tryCatch(async (userId, getBlogsAfterTs) => {
     // check and set if i muted the blog author
   });
 
-  console.log(blogs);
+  console.log('blog', blogs[0]);
 
   return blogs;
 });

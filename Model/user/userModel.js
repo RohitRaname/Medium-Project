@@ -62,20 +62,17 @@ const UserSchema = new mongoose.Schema(
 
     profile: {
       fullName: String,
-      avatar: { type: String },
-      // info
-      bio: { type: String},
+      avatar: { type: String, default: 'default.png' },
+      bio: { type: String },
       birth: Date,
-      pic: { type: String, default: 'default.png' },
       coverPic: { type: String, default: 'defaultCover.png' },
     },
 
-    recentGenreBlogsWrite:[String],
-    recentGenreFollow:[String],
-    recentGenreIgnore:[String],
+    recentGenreBlogsWrite: [String],
+    recentGenreFollow: [String],
+    recentGenreIgnore: [String],
 
     keepMeSignedIn: { type: Boolean, default: false },
-  
 
     recentBlogs: [
       {
@@ -88,15 +85,16 @@ const UserSchema = new mongoose.Schema(
           photos: [String],
         },
 
-        ts:{type:Date,default:new Date()}
+        ts: { type: Date, default: new Date() },
       },
     ],
+
+    readingLists: [{ _id: mongoose.Types.ObjectId, name: String }],
 
     count: {
       following: { type: Number, default: 0 },
       followers: { type: Number, default: 0 },
     },
-
   },
   {
     toObject: { virtual: true },

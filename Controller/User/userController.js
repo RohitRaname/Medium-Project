@@ -8,20 +8,32 @@ const tryCatch = require('../../utils/tryCatch');
 const {
   formatQueryIntoPipeline,
 } = require('../../utils/mongodbQueryConverter');
+const readingListController= require('../User/readingListController')
 
 exports.setRestrictUserDataInReq = (req, res, next) => {
   if (!req.user) return next();
   const { user } = req;
   req.restrictUser = {
-    profile: {
       _id: user._id,
       name: user.name,
       ...user.profile,
-    },
   };
 
   next();
 };
+
+// new user have some fields that are provided by site(one reading list already created) 
+exports.setMustDataForNewUser= catchAsync(async(req,res,next)=>{
+  const userId= req.user._id;
+
+  // create one mandatory reading list
+  await readingListController.createReadingList(userId,"readingList");
+
+  next()
+
+
+
+})
 
 // only return profile info format document
 exports.formatUser = (user) => {
@@ -91,6 +103,18 @@ exports.resizeImages = async (req, res, next) => {
 
   next();
 };
+
+
+// recentGenreFollow,readingLists
+exports.addItemToUserArrField = tryCatch(async(userId, arrField,item)=>{
+  await User.findOneAndUpdate({_id:userId},{$push:{[arrField]:item}}).exec()
+})
+exports.removeItemFromUserArrField = tryCatch(async(userId, arrField,itemId)=>{
+  await User.findOneAndUpdate({_id:userId},{$pull:{[arrField]:{_id:itemId}}}).exec()
+})
+exports.removeItemsFromUserArrField = tryCatch(async(userId, arrField,itemIds)=>{
+  await User.findOneAndUpdate({_id:userId},{$pullAll:{[arrField]:{_id:{$in:itemIds}}}}).exec()
+})
 
 exports.setUserIdAsParams = (req, res, next) => {
   req.params.id = req.user._id;

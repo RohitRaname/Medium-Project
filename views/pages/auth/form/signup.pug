@@ -1,0 +1,41 @@
+.positionel.modal.signup-form(data-positionel-type='modal' data-positionel-name='signup-modal' data-active='false' data-load-spinner='false' data-animation='fade' data-pointer-position='none' data-position='fixed' data-delay-hide='false' data-show-event='click' data-static='false' data-has-defined-class='true' data-child-positionel='false' data-width='md' data-form='true' data-hide-form-after-submit='false')
+    .overlay
+    .positionel-container.modal-container.container-100(style='position: fixed; top: 50%; left: 50%')
+        button.btn-icon.positionel-closebtn
+            i.fa.fa-times(aria-hidden='true')
+        // first content
+        .positionel-content(data-content='signup')
+            // header
+            header.modal-header(style='display: block; height: unset')
+                p.h-3.h-d Signup
+                p.pt-md.mg-md
+                    | Enter the email address associated with your account.
+            footer.modal-footer
+                form.form(data-error='false' onsubmit='return false;' data-clear-inputs-when-hide='true' data-url='auth/signup/create-account' data-method='post' data-submit-automatic='true' data-data='')
+                    .form-container
+                        .form-group(data-error='false' data-required='true')
+                            input(type='text' name='name' placeholder='Name' data-input='' maxlength='60')
+                            .form-error
+                                i.fa.fa-exclamation-circle
+                                p Please enter a unique name.
+                        .form-group(data-error='false' data-required='true')
+                            input(type='email' name='email' placeholder='Email' data-input='' maxlength='60')
+                            .form-error
+                                i.fa.fa-exclamation-circle
+                                p Please enter a correct email
+                        .form-group(data-error='false' data-required='true')
+                            input(type='password' name='password' placeholder='Password' data-input='' minlength='4')
+                            .form-error
+                                i.fa.fa-exclamation-circle
+                                p Please enter a correct password
+                        // learn more tooltip
+                        // modal-btns
+                        .form-btns.f-jc
+                            button.btn-black(data-action='submit')
+                                | Continue
+        data.positionel-content.hidden(data-content='message')
+            .modal-footer.f-c
+                p
+                    | Go to mailtrap and click on
+                    span.dark Verify
+                    |  button t

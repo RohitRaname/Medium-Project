@@ -5,6 +5,7 @@ const sendReq = (res, statusCode, message, dataSend) => {
 
   res.status(statusCode).json({
     status,
+    statusCode,
     message,
     data:dataSend,
   });

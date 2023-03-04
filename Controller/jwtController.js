@@ -230,6 +230,10 @@ exports.sendJwtIfNeeded = (pass) =>
     // resetting some properties
     //   req.userBothJwtAreValid = false;
     if (pass) return next();
+
+
+    if(req.redirectTo) return res.redirect('/')
+
     return send(res, 200);
 
     // Now need to clear some variables for future safe req here properties dont repeat
