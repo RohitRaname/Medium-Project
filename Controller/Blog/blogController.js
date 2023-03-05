@@ -122,80 +122,83 @@ exports.updateBlogCountField = tryCatch(async (blogId, countField, value) => {
 });
 
 // get blogs that are not in genre which i ignore, have bookmark and author muted property according to me
-exports.getFilterBlogs = tryCatch(async (userId, getBlogsAfterTs) => {
-  const ts = new Date(getBlogsAfterTs) || new Date();
-  const userActivity = await topLevelBucketController.getUserAllActivityDocs(
-    userId,
-    ['genreIgnore', 'mutedUsers', 'bookmarkBlogs', 'readingLists']
-  );
-
-  //  did i bookmark the blog
-
-  const blogs = [];
-
-  const getRightBlogs = async (queryTs, genreIgnore) => {
-    const docs = await Blog.find(
-      {
-        ts: { $lt: queryTs },
-        genre: { $nin: genreIgnore },
-      },
-      { count: 0, active: 0 }
-    )
-      .sort({
-        'count.views': -1,
-        'count.like': -1,
-        'count.comment': -1,
-        'count.bookmark': -1,
-      })
-      .limit(10)
-      .exec();
-
-    // if(!docs.length===0) return new Error('no more docs')
-    return docs;
-  };
-
-  // itemId can be userId or blogId
-  const checkDocExistInUserActivity = (activityField, itemId) =>
-    userActivity[activityField].find((el) => el._id.toString() === itemId)
-      ? true
-      : false;
-
-  while (blogs.length < 10) {
-    const getDocs = await getRightBlogs(ts, userActivity.genreIgnore);
-
-    if (getDocs.length === 0 || blogs.length > 10) break;
-
-    blogs.push(...getDocs);
-
-    if (getDocs.length <= 10) break;
-  }
-
-  blogs.forEach((blog) => {
-    // I need readingList
-    blog.addedToReadingList = userActivity['readingLists'].find((list) =>
-      list.items.find((item) => item._id.toString() === blog._id.toString())
-    ) || false;
-
-
-    blog.authorMuted = checkDocExistInUserActivity(
-      'mutedUsers',
-      blog.author._id
+exports.getFilterBlogs = tryCatch(
+  async (userId, getBlogsAfterTs, blogRelatedToGenre) => {
+    const ts = new Date(getBlogsAfterTs) || new Date();
+    const userActivity = await topLevelBucketController.getUserAllActivityDocs(
+      userId,
+      ['genreIgnore', 'mutedUsers', 'bookmarkBlogs', 'readingLists']
     );
 
-    // check and set if i muted the blog author
-  });
+    //  did i bookmark the blog
 
-  console.log('blog', blogs[0]);
+    const blogs = [];
 
-  return blogs;
-});
+    const getRightBlogs = async (queryTs, genreIgnore) => {
+      const docs = await Blog.find(
+        {
+          ts: { $lt: queryTs },
+          genre: blogRelatedToGenre
+            ? blogRelatedToGenre
+            : { $nin: genreIgnore },
+        },
+        { count: 0, active: 0 }
+      )
+        .sort({
+          'count.views': -1,
+          'count.like': -1,
+          'count.comment': -1,
+          'count.bookmark': -1,
+        })
+        .limit(10)
+        .exec();
+
+      // if(!docs.length===0) return new Error('no more docs')
+      return docs;
+    };
+
+    // itemId can be userId or blogId
+    const checkDocExistInUserActivity = (activityField, itemId) =>
+      userActivity[activityField].some(
+        (el) => el._id.toString() === itemId.toString()
+      );
+
+    while (blogs.length < 10) {
+      const getDocs = await getRightBlogs(ts, userActivity.genreIgnore);
+
+      if (getDocs.length === 0 || blogs.length > 10) break;
+
+      blogs.push(...getDocs);
+
+      if (getDocs.length <= 10) break;
+    }
+
+    console.log('blog-authoe-id', userActivity['mutedUsers']);
+
+    blogs.forEach((blog) => {
+      // I need readingList
+      blog.addedToReadingList = userActivity['readingLists'].some((list) =>
+        list.items.find((item) => item._id.toString() === blog._id.toString())
+      );
+
+      blog.authorMuted = checkDocExistInUserActivity(
+        'mutedUsers',
+        blog.author._id
+      );
+
+      // check and set if i muted the blog author
+    });
+
+    return blogs;
+  }
+);
 
 exports.apiCreateBlog = catchAsync(async (req, res) => {
   const blog = await this.createBlog(req.user, req.body);
   return send(res, 200, 'blog created', blog);
 });
 exports.apiGetFilterBlogs = catchAsync(async (req, res) => {
-  const blogs = await this.getFilterBlogs(req.user._id, req.query.lastBlogTs);
+  const blogs = await this.getFilterBlogs(req.user._id, req.query.lastBlogTs,req.query.genre);
   return send(res, 200, 'filter blogs', {
     total: blogs.length,
     lastBlogTs: blogs.length > 0 && blogs.slice(-1)[0].ts,

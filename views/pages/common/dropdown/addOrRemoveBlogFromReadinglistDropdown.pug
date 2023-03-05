@@ -1,5 +1,8 @@
 // add blog to or delete blog from readingList
-.dropdown.positionel(data-positionel-type='dropdown' data-positionel-name='readingList-dropdown' data-active='false' data-pointer-position='center' data-position='center' data-delay-hide='false' data-load-spinner='true' data-static='false' data-has-defined-class='true' data-hide-by='default' data-animation='fade' data-show-event='click' data-set-positionbtn-width='false' data-child-positionel='false' data-='')
+.dropdown.positionel(data-positionel-type='dropdown' data-positionel-name='readingList-dropdown' data-active='false' data-pointer-position='center' data-position='center' data-delay-hide='false' data-load-spinner='true' data-hide-spinner="false" data-static='false' data-has-defined-class='true' data-hide-by='default' data-animation='fade' data-show-event='click' data-set-positionbtn-width='false' data-child-positionel='false' data-url='users/me/readingList/itemExistInList'
+data-hide-spinner-after-render-time="200"
+
+)
     .overlay.overlay-t
     .positionel-container(style='\
     top: 8rem;\
@@ -9,17 +12,22 @@
     width: 100%;\
     padding: 0;\
     ')
+
+        .spinner
         .positionel-square
         // trigger btn-> when click hide content will show
         .positionel-content
-            ul.list(data-col='3' data-item-hover='false')
+
+            ul.list(data-col='3' data-item-hover='false' data-checkbox)
                 .list-container(style='padding: 2rem 0')
                     each readingList in me.readingLists
                         li.list-item(style='padding: 1rem 2rem' data-id=readingList._id)
                             button.btn-checkbox
                                 i.fa.fa-check(aria-hidden='true')
                             p.wrap= readingList.name
-                            i.fa.fa-lock.dim(aria-hidden='true')
+
+                            if(readingList.private)
+                                i.fa.fa-lock.dim(aria-hidden='true')
                   
                 .line-dim
                 .list-item(style='padding: 2rem 2rem' data-action='create-list')

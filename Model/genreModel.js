@@ -11,8 +11,9 @@ const GenreSchema = new mongoose.Schema({
     writers: { type: Number, default: 0 },
     blogs: { type: Number, default: 0 },
   },
-  writerAvatar:[String]
+  writerAvatar:[String],
 
+  __v:{type:Number,select:false}
   // this will be fast to fill so no need it to be here
 });
 

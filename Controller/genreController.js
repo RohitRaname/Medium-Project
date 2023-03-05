@@ -26,6 +26,7 @@ exports.updateGenreCountField = tryCatch(async (genre, updateBody) => {
   );
 });
 
+exports.recommendGenre= tryCatch(async()=>{})
 
 
 

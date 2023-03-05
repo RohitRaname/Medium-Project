@@ -22,6 +22,8 @@ const FollowersSchema = new mongoose.Schema({
       followersCount: { type: Number, default: 0 },
     },
   ],
+
+  __v:{type:Number,select:false}
   // this will be fast to fill so no need it to be here
 });
 

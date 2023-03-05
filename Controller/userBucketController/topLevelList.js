@@ -521,6 +521,9 @@ exports.userActivityController = (activityField, action, query) =>
     const itemId = req.params.id;
     let result;
 
+
+    console.log("mute-userId",userId,)
+
     if (action === 'add-item')
       result = await this.addItemToUser(
         userId,

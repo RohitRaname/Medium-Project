@@ -89,12 +89,14 @@ const UserSchema = new mongoose.Schema(
       },
     ],
 
-    readingLists: [{ _id: mongoose.Types.ObjectId, name: String }],
+    readingLists: [{ _id: mongoose.Types.ObjectId, name: String ,private:{type:Boolean,default:false}}],
 
     count: {
       following: { type: Number, default: 0 },
       followers: { type: Number, default: 0 },
     },
+
+    __v:{type:Number,select:false}
   },
   {
     toObject: { virtual: true },

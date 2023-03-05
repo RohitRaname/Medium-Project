@@ -38,6 +38,9 @@ const CommentSchema = new mongoose.Schema({
     },
   ],
 
+  
+  __v:{type:Number,select:false}
+
   // this will be fast to fill so no need it to be here
 });
 const Comment = mongoose.model('comment', CommentSchema);

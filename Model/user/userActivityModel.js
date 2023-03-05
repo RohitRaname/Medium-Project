@@ -112,14 +112,15 @@ const UserActivitySchema = new mongoose.Schema({
     },
   ],
 
-  genreBlogsWrite: [String],
-  genreFollow: [String],
-  genreIgnore: [String],
+  genreBlogsWrite: [{_id:String}],
+  genreFollow: [{_id:String}],
+  genreIgnore: [{_id:String}],
 
   likeBlogs: [{ _id: mongoose.Schema.Types.ObjectId }],
   bookmarkBlogs: [{ _id: mongoose.Schema.Types.ObjectId }],
   comments: [{ _id: mongoose.Schema.Types.ObjectId }],
 
+  __v:{type:Number,select:false}
   // this will be fast to fill so no need it to be here
 });
 

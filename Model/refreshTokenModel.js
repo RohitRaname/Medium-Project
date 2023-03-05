@@ -12,7 +12,7 @@ const refreshTokenSchema = new mongoose.Schema(
       required:true
     } ,
     
-      
+    __v:{type:Number,select:false}
   },
   {
     toObject: { virtual: true },

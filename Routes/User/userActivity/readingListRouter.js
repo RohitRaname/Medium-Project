@@ -15,7 +15,7 @@ Router.get('/name', readingListController.apiGetReadingLists);
 Router.get('/summary', readingListController.apiGetReadingListsSummary);
 
 Router.get(
-  '/item-exist-in-lists/:itemId',
+  '/itemExistInList/:itemId',
   readingListController.apiGetListsInWhichItemExist
 );
 

@@ -33,7 +33,7 @@ block section
                                     i.fas.fa-angle-right(aria-hidden='true')
 
                         .modal-windows
-                            .modal-window(data-window='blogs' data-active='true' data-url='blogs' data-filter-query=`lastBlogTs=${new Date().toISOString()}` data-search-query='' data-limit='10' data-page='0' data-no-more-docs='false' data-docs-loading='false')
+                            .modal-window(data-window='for-me' data-active='true' data-url='blogs' data-filter-query=`lastBlogTs=${new Date().toISOString()}` data-search-query='' data-limit='10' data-page='0' data-no-more-docs='false' data-docs-loading='false' data-initial-docs-load="true")
                                 .modal-list
                                     each blog in blogs
                                         -const {author,content,access}=blog
@@ -71,8 +71,14 @@ block section
 
                                                         .postPreview-btns.f-lw
 
+                                                            -const {authorMuted,addedToReadingList}=blog
+
                                                             button.btn-icon(data-action='bookmark-post' data-positionel-btn='' data-positionel-name='readingList-dropdown' data-data=blog)
-                                                                i.fa.fa-bookmark-o.dim(aria-hidden='true')
+
+                                                                if(!addedToReadingList)
+                                                                    i.fa.fa-bookmark-o.dim(aria-hidden='true')
+                                                                else
+                                                                    i.fa.fa-bookmark.dark(aria-hidden='true')
 
                                                             button.btn-icon(data-action='ignore-post-genre' data-data={genre:blog.genre})
                                                                 i.fa.fa-minus-circle(aria-hidden='true')
@@ -83,6 +89,11 @@ block section
                                             // post img
                                             .item-right
                                                 img.img-full(src=`/img/blogs/${content.thumbnail}` alt='')
+
+
+                            each genreFollow in me.recentGenreFollow 
+                                .modal-window(data-window=genreFollow data-active='true' data-url='blogs' data-filter-query=`lastBlogTs=${new Date().toISOString()}&genre=${genreFollow}` data-search-query='' data-limit='10' data-page='0' data-no-more-docs='false' data-docs-loading='false' data-initial-docs-load="false")
+                                    .modal-list  
 
             .home-right
                 .home-right-container.mg-md-all
