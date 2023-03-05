@@ -131,14 +131,15 @@ exports.getFollowers = tryCatch(async (userId, query) => {
 });
 
 // genreFollow is of current user
-exports.suggestUsersToFollow = tryCatch(async (genreFollow, query) => {
+exports.suggestUsersToFollow = tryCatch(async (userId,
+   genreFollow, query) => {
   console.log(genreFollow, query);
   let { page, limit } = query;
   page = Number(page);
   limit = Number(limit);
 
   // i follow genre and history watched
-  const users = await User.find({ recentGenreBlogsWrite: { $in: genreFollow } })
+  const users = await User.find({ recentGenreFollow: { $in: genreFollow },_id:{$ne:userId} })
     .sort({ 'count.followers': -1 })
     .skip(page * limit)
     .limit(limit)
@@ -162,7 +163,9 @@ exports.apiGetFollowers = catchAsync(async (req, res) => {
   return send(res, 200, 'followers users', users);
 });
 exports.apiSuggestUsersToFollow = catchAsync(async (req, res) => {
+  const userId= req.user._id;
   const users = await this.suggestUsersToFollow(
+    userId,
     req.user.recentGenreFollow,
     req.query
   );

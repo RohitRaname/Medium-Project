@@ -115,23 +115,23 @@ block section
                     // write blog
                     a.btn-black.w-500(href='/write') Start writing
                     .line-dim
-                    //- .home-recommendGenre
-                    //-     h.h-7 Recommend topics
+                    .home-recommendGenre
+                        h.h-7.mg-lw Recommend topics
 
-                    //-     each genre in suggestedGenres
-                    //-         button.btn-dull.dark.w-500.btn-md= genre
+                        each genre in recommendGenre
+                            button.btn-dull.dark.w-500.btn-md= genre
 
-                    //- .recommed-whoToFollow
-                    //-     each suggestedUser in suggestedUsers
-                    //-         .item
-                    //-             img.img-avatar(src=`/img/users/${suggestedUser.avatar}` alt='')
-                    //-             .item-content
-                    //-                 h.h-8.h-d= suggestedUser.name
-                    //-                 p.t-lw.w-500= suggestedUser.bio
+                    .recommed-whoToFollow
+                        each suggestedUser in recommendUsers
+                            .item.mg-lw
+                                img.img-avatar(src=`/img/users/${suggestedUser.avatar}` alt='')
+                                .item-content
+                                    h.h-8.h-d= suggestedUser.name
+                                    p.t-lw.w-500= suggestedUser.bio
 
-                    //-             button.btn-outline.link(data-url=`users/me/follow/true/${suggestedUser._id}` data-method='post' data-change-url-to=`users/me/follow/false/${suggestedUser._id}` data-change-text-to='Following' data-data=suggestedUser)
-                    //-                 | Follow
-                    //-     button.btn-inline See more suggestions
+                                button.btn-outline.btn-sm.link(data-url=`users/me/follow/true/${suggestedUser._id}` data-method='post' data-change-url-to=`users/me/follow/false/${suggestedUser._id}` data-change-text-to='Following' data-data=suggestedUser)
+                                    | Follow
+                        button.btn-inline See more suggestions
 
 
                     footer.footer.t-lw

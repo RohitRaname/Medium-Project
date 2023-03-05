@@ -2,8 +2,16 @@
 const express = require('express');
 
 const Router = express.Router();
+
+// Routes
 const genreFollowRouter= require('./genreFollowRouter')
 const ignoreGenreRouter= require('./ignoreGenreRouter')
+
+// Controller
+const genreController= require('../../../../Controller/genreController')
+
+
+
 
 
 
@@ -11,5 +19,7 @@ const ignoreGenreRouter= require('./ignoreGenreRouter')
 // Genre Follow
 Router.use('/follow',genreFollowRouter)
 Router.use('/ignore',ignoreGenreRouter)
+
+Router.get('/recommed',genreController.apiRecommendGenre)
 
 module.exports= Router;

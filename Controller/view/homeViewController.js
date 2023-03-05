@@ -3,16 +3,33 @@ const AppError = require('../../utils/AppError');
 
 // controller
 const globalBlogController = require('../Blog/blogController');
+const genreController = require('../genreController');
+const followController = require('../User/followController');
 
 exports.renderHomePage = catchAsync(async (req, res, next) => {
-  const userId = req.user._id;
+  const user = req.user;
+  const userId = user._id;
 
-  const blogs = await globalBlogController.getFilterBlogs(userId, new Date());
+  let blogs, recommendGenre, recommendUsers;
+
+  [blogs, recommendGenre, recommendUsers] = await Promise.all([
+    globalBlogController.getFilterBlogs(userId, new Date()),
+    genreController.recommendGenre(user.recentGenreFollow, 4),
+    followController.suggestUsersToFollow(userId, user.recentGenreFollow, {
+      page: 0,
+      limit: 2,
+    }),
+  ]);
+
+  console.log(recommendGenre,recommendUsers)
 
   return res.render('pages/home/page', {
     page: 'home',
-    me: req.user,
+    me: user,
     userData: req.restrictUser,
     blogs,
+    recommendGenre,
+    recommendUsers,
   });
+
 });
