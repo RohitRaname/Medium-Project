@@ -13,9 +13,12 @@ const Comment = require('../../Model/blog/commentModel');
 const UserActivity = require('../../Model/user/userActivityModel');
 
 // Controller
+
+const meController = require('../User/meController');
 const topLevelBucketController = require('../userBucketController/topLevelList');
 const {
   addUserActivityItemAndUpdateCountInBlog,
+  getMyActivityFieldAllItems,
 } = require('../User/meController');
 
 // save comment in comment bucket controller
@@ -118,15 +121,24 @@ exports.postComment = tryCatch(async (userId, blogId, comment) => {
   ]);
 });
 
-exports.getComments = tryCatch(async (blogId, query) => {
+exports.getComments = tryCatch(async (userId, blogId, query) => {
   delete query.blogId;
-  const comments = await topLevelBucketController.getEmbeddedItems(
+  let comments = await topLevelBucketController.getEmbeddedItems(
     Comment,
     blogId,
     'comments',
     query,
     {}
   );
+
+  comments = await meController.filterDocsForMe(
+    UserActivity,
+    userId,
+    ['mutedUsers', 'blockedUsers'],
+    comments,
+    'author'
+  );
+
   return comments;
 });
 
@@ -135,9 +147,7 @@ exports.apiCreateComment = catchAsync(async (req, res, next) => {
   return send(res, 200, 'comment created');
 });
 exports.apiGetComments = catchAsync(async (req, res, next) => {
-  const comments = await this.getComments(req.query.blogId, req.query);
-  return send(res, 200, 'get comments', {
-    docs: comments,
-    total: comments.length,
-  });
+  const userId = req.user._id;
+  const comments = await this.getComments(userId, req.query.blogId, req.query);
+  return send(res, 200, 'get comments', comments);
 });

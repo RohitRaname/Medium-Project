@@ -1,3 +1,5 @@
+const mongoose = require('mongoose');
+
 const catchAsync = require('../../utils/catchAsync');
 const tryCatch = require('../../utils/tryCatch');
 const send = require('../../utils/sendJSON');
@@ -17,11 +19,10 @@ exports.addUserActivityItemAndUpdateCountInBlog = tryCatch(
     activityItem,
     userActivityField,
     countField,
-    action,
+    action
   ) => {
-
     let updateUserActivity;
-    
+
     if (countField !== 'views') {
       updateUserActivity =
         action === 'increase'
@@ -49,37 +50,33 @@ exports.addUserActivityItemAndUpdateCountInBlog = tryCatch(
             );
     }
 
-    let updateUserBlogsCount,updateGlobalBlogCount;
+    let updateUserBlogsCount, updateGlobalBlogCount;
 
-    if(countField){
+    if (countField) {
+      updateUserBlogsCount = topLevelBucketController.updateItemInList(
+        UserActivity,
+        userId,
+        'blogs',
+        blogId,
+        {
+          $inc: {
+            [`blogs.$.count.${countField}`]: action === 'increase' ? 1 : -1,
+          },
+        }
+      );
 
-     updateUserBlogsCount = topLevelBucketController.updateItemInList(
-      UserActivity,
-      userId,
-      'blogs',
-      blogId,
-      {
-        $inc: {
-          [`blogs.$.count.${countField}`]: action === 'increase' ? 1 : -1,
-        },
-      }
-    );
-
-     updateGlobalBlogCount = globalBlogController.updateBlogCountField(
-      blogId,
-      countField,
-      action === 'increase' ? 1 : -1
-    );
-  }
-
+      updateGlobalBlogCount = globalBlogController.updateBlogCountField(
+        blogId,
+        countField,
+        action === 'increase' ? 1 : -1
+      );
+    }
 
     await Promise.all([
       updateUserActivity,
       updateUserBlogsCount,
       updateGlobalBlogCount,
     ]);
-
-
   }
 );
 
@@ -103,3 +100,83 @@ exports.apiAddUserActivityItemAndUpdateCountInBlog = (
       `${countIncreaseOrDecrease === 'decrease' ? 'un' : ''}${countField} blog`
     );
   });
+
+// mutedUsers,blockedUsers
+exports.getMyActivityFieldAllItems = tryCatch(
+  async (userId, activityField, query) =>
+    await topLevelBucketController.getEmbeddedItems(
+      UserActivity,
+      userId,
+      activityField,
+      query || {}
+    )
+);
+
+exports.checkDocsExistInMyActivity = tryCatch(
+  async (userId, activityField, itemId) =>
+    await topLevelBucketController.itemExistInList(
+      UserActivity,
+      userId,
+      activityField,
+      itemId
+    )
+);
+
+// filter by condition (mutedUsers,blockUSers)
+exports.filterDocsForMe = tryCatch(
+  async (model, userId, fields,  givenDocs, compareField) => {
+    const setPipelineForField = (field) => [
+      {
+        $match: {
+          userId: new mongoose.Types.ObjectId(userId),
+          [field]: { $gt: [] },
+        },
+      },
+
+      { $unwind: `$${field}` },
+
+      { $replaceWith: `$${field}` },
+
+      { $match: { active: { $ne: false } } },
+    ];
+
+    const filterDocs = (docs, activityDocs) =>
+      docs.filter(
+        (givenDoc) =>
+          !activityDocs.find((activityDoc) =>
+            activityDoc._id.toString() === compareField
+              ? givenDoc[compareField]['_id'].toString()
+              : givenDoc._id.toString()
+          )
+      );
+
+    let facetPipeline = [
+      {
+        $facet: {
+          mutedUsers: fields.find((field) => field === 'mutedUsers')
+            ? setPipelineForField('mutedUsers')
+            : {},
+
+          blockedUsers: fields.find((field) => field === 'blockedUsers')
+            ? setPipelineForField('blockedUsers')
+            : {},
+        },
+      },
+    ];
+
+    let agg = await model.aggregate(facetPipeline).exec();
+    agg = agg[0];
+
+    console.log('agg',agg)
+
+    // filter comments from user that i muted in past
+    fields.forEach((field) => {
+      if (field === 'mutedUsers')
+        givenDocs = filterDocs(givenDocs, agg['mutedUsers']);
+      if (field === 'blockedUsers')
+        givenDocs = filterDocs(givenDocs, agg['blockedUsers']);
+    });
+
+    return givenDocs;
+  }
+);

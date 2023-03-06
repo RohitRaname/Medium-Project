@@ -7,9 +7,11 @@ const sendReq = (res, statusCode, message, dataSend) => {
     status,
     statusCode,
     message,
-    data:dataSend,
+    data: Array.isArray(dataSend)
+      ? { docs: dataSend, total: dataSend.length }
+      : dataSend,
   });
-}; 
+};
 
 // exports.send = (res, statusCode, doc,message, doc) => {
 //   let status;
@@ -25,4 +27,3 @@ const sendReq = (res, statusCode, message, dataSend) => {
 // };
 
 module.exports = sendReq;
- 

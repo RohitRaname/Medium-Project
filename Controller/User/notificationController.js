@@ -6,16 +6,25 @@ const followerController = require('../../Model/userActivity/followersModel');
 
 // Model
 const Notification = require('../../Model/userActivity/notificationModel');
+const UserActivity = require('../../Model/user/userActivityModel');
 
 
 // CONTROLLER
 const topLevelBucketController = require('../userBucketController/topLevelList');
+const meController= require('./meController')
 
 // send notification to followers when i post something
 exports.sendNotificationToFollowers = tryCatch(async (userId, item) => {
   console.log('sendNotification', userId, item);
 
-  const followers = await followerController.getFollowers(userId);
+  let followers = await followerController.getFollowers(userId);
+
+  followers=  await meController.filterDocsForMe(
+    UserActivity,
+    userId,
+    ['mutedUsers', 'blockedUsers'],
+    followers,
+  );
 
   console.log('followers', followers);
   const sendNotificationPromises = [];
@@ -42,13 +51,20 @@ exports.sendNotificationToFollowers = tryCatch(async (userId, item) => {
 });
 
 exports.getNotifications = tryCatch(
-  async (userId, query) =>
-    await topLevelBucketController.getEmbeddedItems(
+  async (userId, query) =>{
+
+    const notifications= await topLevelBucketController.getEmbeddedItems(
       Notification,
       userId,
       'notifications',
       query
-    )
+      )
+
+    const mutedUsers= await getMyActivityFieldAllItems(userId,"mutedUsers")
+
+    // filter comments from user that i muted in past
+    comments= comments.filter(comment=> !mutedUsers.find(user=> user._id.toString()===comment.author._id.toString()));
+    }
 );
 
 exports.apiGetNotifications = catchAsync(async (req, res) => {

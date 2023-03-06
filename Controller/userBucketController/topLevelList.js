@@ -61,6 +61,37 @@ exports.itemExistInList = tryCatch(async (model, userId, listName, itemId) => {
   return item ? true : false;
 });
 
+exports.checkDocsExistsAndFilterDocs = tryCatch(
+  async (model, bucketId, listName, query, givenDocs, compareField) => {
+
+    console.log('compareField',compareField)
+
+    const activityDocs = await this.getEmbeddedItems(
+      model,
+      bucketId,
+      listName,
+      query || {}
+    );
+
+      console.log('mutedUsers',activityDocs)
+
+    // filter comments from user that i muted in past
+    givenDocs = givenDocs.filter(
+      (givenDoc) =>
+        !activityDocs.find(
+          (activityDoc) =>
+            activityDoc._id.toString() ===
+            compareField
+              ? givenDoc[compareField]['_id'].toString()
+              : givenDoc._id.toString()
+           
+        )
+    );
+
+    return givenDocs;
+  }
+);
+
 exports.updateItemInList = tryCatch(
   async (model, userId, listName, itemId, updateItemQuery) =>
     await model
@@ -84,14 +115,13 @@ exports.addItemToList = tryCatch(
     queryOptions, // {limit,checkItemExist,updateIfItemExist
     updateUserOptions // {update,query}
   ) => {
-
     if (
       queryOptions.checkItemExist &&
       (await this.itemExistInList(model, userId, listName, item._id))
     ) {
       console.log('item exist');
       if (queryOptions.updateIfItemExist) {
-        console.log('update the existing item')
+        console.log('update the existing item');
         await this.updateItemInList(
           model,
           userId,
@@ -308,13 +338,12 @@ exports.getTotalPage = tryCatch(async (model, userId) => {
   return Number(doc.page);
 });
 
-exports.getEmbeddedItem =tryCatch(async (model, userId, listName,itemId) => {
+exports.getEmbeddedItem = tryCatch(async (model, userId, listName, itemId) => {
   let pipeline = [
     {
       $match: {
         userId: new mongoose.Types.ObjectId(userId),
         [`${listName}._id`]: new mongoose.Types.ObjectId(itemId),
-        
       },
     },
 
@@ -322,63 +351,65 @@ exports.getEmbeddedItem =tryCatch(async (model, userId, listName,itemId) => {
 
     { $replaceWith: `$${listName}` },
 
-    { $match: { _id: new mongoose.Types.ObjectId(itemId) ,active:{$ne:false} }},
+    {
+      $match: {
+        _id: new mongoose.Types.ObjectId(itemId),
+        active: { $ne: false },
+      },
+    },
   ];
 
-
-  console.log('embeddedItem-pipeline',pipeline)
-
-
-
+  console.log('embeddedItem-pipeline', pipeline);
 
   const item = await model.aggregate(pipeline).exec();
-  console.log('parent-item',item)
+  console.log('parent-item', item);
 
   return item[0];
 });
 
-
 // Filter Items ----------------------------------------
-exports.getEmbeddedItems = tryCatch(async (model, userId, listName, query,filter={},manualItemFilter) => {
-  let pipeline = [
-    {
-      $match: {
-        userId: new mongoose.Types.ObjectId(userId),
-        [listName]: { $gt: [] },
-        ...filter
+exports.getEmbeddedItems = tryCatch(
+  async (model, userId, listName, query, filter = {}, manualItemFilter) => {
+    let pipeline = [
+      {
+        $match: {
+          userId: new mongoose.Types.ObjectId(userId),
+          [listName]: { $gt: [] },
+          ...filter,
+        },
       },
-    },
 
-    { $unwind: `$${listName}` },
+      { $unwind: `$${listName}` },
 
-    { $replaceWith: `$${listName}` },
+      { $replaceWith: `$${listName}` },
 
-    { $match: { active: { $ne: false } } },
+      { $match: { active: { $ne: false } } },
 
-    // itemFilter && itemFilter ? { $match: itemFilter } : null,
+      // itemFilter && itemFilter ? { $match: itemFilter } : null,
 
-    ...formatQueryIntoPipeline(query),
+      ...formatQueryIntoPipeline(query),
 
-    // sort ? { $sort: { ts: sort.includes('-') ? -1 : 1 } } : null,
+      // sort ? { $sort: { ts: sort.includes('-') ? -1 : 1 } } : null,
 
-    // { $skip: Number(skip) || 0 },
+      // { $skip: Number(skip) || 0 },
 
-    // { $limit: Number(limit) || 10 },
+      // { $limit: Number(limit) || 10 },
 
-    // project
-    //   ? {
-    //       $project: project,
-    //     }
-    //   : null,
-  ];
+      // project
+      //   ? {
+      //       $project: project,
+      //     }
+      //   : null,
+    ];
 
-  pipeline = pipeline.filter((el) => el);
-  console.log(pipeline);
+    pipeline = pipeline.filter((el) => el);
+    console.log(pipeline);
 
-  const items = await model.aggregate(pipeline).exec();
+    const items = await model.aggregate(pipeline).exec();
 
-  return items;
-});
+    return items;
+  }
+);
 
 exports.getRefItems = tryCatch(async (model, userId, query) => {
   const {
@@ -495,17 +526,13 @@ exports.addItemToUser = tryCatch(async (userId, activityField, item) => {
       deleteItemExist: false,
     },
     {
-      
       update: false,
-     
     }
   );
 });
-exports.removeItemFromUser = tryCatch(async (userId, activityField, itemId,) => {
-  await this.removeItemFromList(UserActivity, userId, activityField, itemId,   {
-      
-    update: false ,
-   
+exports.removeItemFromUser = tryCatch(async (userId, activityField, itemId) => {
+  await this.removeItemFromList(UserActivity, userId, activityField, itemId, {
+    update: false,
   });
 });
 
@@ -521,18 +548,17 @@ exports.userActivityController = (activityField, action, query) =>
     const itemId = req.params.id;
     let result;
 
-
-    console.log("mute-userId",userId,)
+    console.log('mute-userId', userId);
 
     if (action === 'add-item')
       result = await this.addItemToUser(
         userId,
         activityField,
-        Object.keys(req.body).length === 0 ? { _id: itemId } : req.body,
+        Object.keys(req.body).length === 0 ? { _id: itemId } : req.body
       );
 
     if (action === 'remove-item')
-      result = await this.removeItemFromUser(userId, activityField, itemId,);
+      result = await this.removeItemFromUser(userId, activityField, itemId);
 
     if (action === 'get-items') {
       result = await this.getItemsFromUser(userId, activityField, query);
