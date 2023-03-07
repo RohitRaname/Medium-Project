@@ -124,7 +124,7 @@ exports.checkDocsExistInMyActivity = tryCatch(
 
 // filter by condition (mutedUsers,blockUSers)
 exports.filterDocsForMe = tryCatch(
-  async (model, userId, fields,  givenDocs, compareField) => {
+  async (model, userId, fields, givenDocs, compareField) => {
     const setPipelineForField = (field) => [
       {
         $match: {
@@ -167,7 +167,7 @@ exports.filterDocsForMe = tryCatch(
     let agg = await model.aggregate(facetPipeline).exec();
     agg = agg[0];
 
-    console.log('agg',agg)
+    console.log('agg', agg);
 
     // filter comments from user that i muted in past
     fields.forEach((field) => {

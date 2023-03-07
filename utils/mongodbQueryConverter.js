@@ -1,4 +1,8 @@
+/* eslint-disable no-await-in-loop */
 const mongoose = require('mongoose');
+
+// utils
+const tryCatch= require('./tryCatch')
 
 exports.add$toQuery = (query) => {
   let add$ToQueryObj = JSON.stringify(query);
@@ -143,4 +147,6 @@ exports.formatQueryIntoPipeline = (
 };
 
 
-// 
+// retry func if docs is less than defined limit (10) 
+// eg. i want 10 blogs but 4 of 10 were from blocked users so i now need additional 4 blogs so full 10 docs limit, so this func will reRequest again it fullfil 10 docs Limit 
+

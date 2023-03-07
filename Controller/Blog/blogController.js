@@ -127,10 +127,8 @@ exports.getFilterBlogs = tryCatch(
     const ts = new Date(getBlogsAfterTs) || new Date();
     const userActivity = await topLevelBucketController.getUserAllActivityDocs(
       userId,
-      ['genreIgnore', 'mutedUsers', 'bookmarkBlogs', 'readingLists']
+      ['genreIgnore', 'mutedUsers','blockedUsers', 'bookmarkBlogs', 'readingLists']
     );
-
-    //  did i bookmark the blog
 
     const blogs = [];
 
@@ -141,6 +139,7 @@ exports.getFilterBlogs = tryCatch(
           genre: blogRelatedToGenre
             ? blogRelatedToGenre
             : { $nin: genreIgnore },
+            "author._id":{$nin:userActivity["blockedUsers"]}
         },
         { count: 0, active: 0 }
       )
@@ -167,6 +166,9 @@ exports.getFilterBlogs = tryCatch(
       const getDocs = await getRightBlogs(ts, userActivity.genreIgnore);
 
       if (getDocs.length === 0 || blogs.length > 10) break;
+
+
+      // filter blocked User docs
 
       blogs.push(...getDocs);
 

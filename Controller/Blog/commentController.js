@@ -7,6 +7,7 @@ const send = require('../../utils/sendJSON');
 const {
   formatQueryIntoPipeline,
 } = require('../../utils/mongodbQueryConverter');
+const { retryUntilFulfillReqDocsLimit } = require('../helper_controller');
 
 // Model
 const Comment = require('../../Model/blog/commentModel');
@@ -18,7 +19,6 @@ const meController = require('../User/meController');
 const topLevelBucketController = require('../userBucketController/topLevelList');
 const {
   addUserActivityItemAndUpdateCountInBlog,
-  getMyActivityFieldAllItems,
 } = require('../User/meController');
 
 // save comment in comment bucket controller
@@ -119,35 +119,48 @@ exports.postComment = tryCatch(async (userId, blogId, comment) => {
     saveCommentInUser,
     updateCommentCountInBlog,
   ]);
+
+  return comment._id;
 });
 
-exports.getComments = tryCatch(async (userId, blogId, query) => {
-  delete query.blogId;
-  let comments = await topLevelBucketController.getEmbeddedItems(
-    Comment,
-    blogId,
-    'comments',
-    query,
-    {}
-  );
+// userId, blogId, query
+exports.getComments = (funcArgs, reqQuery) =>
+  retryUntilFulfillReqDocsLimit(
+    tryCatch(async () => {
+      const [userId, blogId] = funcArgs;
 
-  comments = await meController.filterDocsForMe(
-    UserActivity,
-    userId,
-    ['mutedUsers', 'blockedUsers'],
-    comments,
-    'author'
-  );
+      console.log("query",reqQuery)
 
-  return comments;
-});
+      delete reqQuery.blogId;
+      let comments = await topLevelBucketController.getEmbeddedItems(
+        Comment,
+        blogId,
+        'comments',
+        reqQuery,
+        {}
+      );
+
+      comments = await meController.filterDocsForMe(
+        UserActivity,
+        userId,
+        ['mutedUsers', 'blockedUsers'],
+        comments,
+        'author'
+      );
+
+      return comments;
+    }),reqQuery
+  );
 
 exports.apiCreateComment = catchAsync(async (req, res, next) => {
-  await this.postComment(req.user._id, req.query.blogId, req.body);
-  return send(res, 200, 'comment created');
+ const commentId= await this.postComment(req.user._id, req.query.blogId, req.body);
+  return send(res, 200, 'comment created',{commentId});
 });
 exports.apiGetComments = catchAsync(async (req, res, next) => {
   const userId = req.user._id;
-  const comments = await this.getComments(userId, req.query.blogId, req.query);
+  const comments = await this.getComments(
+    [userId, req.query.blogId],
+    req.query
+  );
   return send(res, 200, 'get comments', comments);
 });

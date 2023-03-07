@@ -21,7 +21,7 @@ const UserActivitySchema = new mongoose.Schema({
       bio: String,
     },
   ],
-  
+
   mutedUsers: [
     {
       _id: mongoose.Schema.Types.ObjectId,
@@ -36,30 +36,32 @@ const UserActivitySchema = new mongoose.Schema({
     {
       // readingList id
       _id: mongoose.Schema.Types.ObjectId,
-      
+
       // reading list name
       name: String,
 
-      private:{type:Boolean,default:false},
-      description:String,
+      private: { type: Boolean, default: false },
+      description: String,
 
-      items: [{
-        _id: mongoose.Schema.Types.ObjectId,
-        genre: String,
-        access: String,
-        author: {
+      items: [
+        {
           _id: mongoose.Schema.Types.ObjectId,
-          name: String,
-          avatar: String,
+          genre: String,
+          access: String,
+          author: {
+            _id: mongoose.Schema.Types.ObjectId,
+            name: String,
+            avatar: String,
+          },
+          content: {
+            title: String,
+            text: String,
+            thumbnail: String,
+            timeToRead: Number,
+          },
+          ts: Date,
         },
-        content: {
-          title: String,
-          text: String,
-          thumbnail: String,
-          timeToRead: Number,
-        },
-        ts: Date,
-      }],
+      ],
     },
   ],
 
@@ -112,15 +114,22 @@ const UserActivitySchema = new mongoose.Schema({
     },
   ],
 
-  genreBlogsWrite: [{_id:String}],
-  genreFollow: [{_id:String}],
-  genreIgnore: [{_id:String}],
+  genreBlogsWrite: [{ _id: String }],
+  genreFollow: [{ _id: String }],
+  genreIgnore: [{ _id: String }],
 
-  likeBlogs: [{ _id: mongoose.Schema.Types.ObjectId }],
+  likeBlogs: [
+    {
+      _id: mongoose.Schema.Types.ObjectId,
+      name: String,
+      avatar: String,
+      bio: String,
+    },
+  ],
   bookmarkBlogs: [{ _id: mongoose.Schema.Types.ObjectId }],
   comments: [{ _id: mongoose.Schema.Types.ObjectId }],
 
-  __v:{type:Number,select:false}
+  __v: { type: Number, select: false },
   // this will be fast to fill so no need it to be here
 });
 

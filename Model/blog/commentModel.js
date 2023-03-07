@@ -19,6 +19,7 @@ const CommentSchema = new mongoose.Schema({
         _id: mongoose.Schema.Types.ObjectId,
         avatar: { type: String, default: 'default.png' },
         name: String,
+        bio:String,
       },
 
       parentId: mongoose.Schema.Types.ObjectId,
@@ -30,7 +31,6 @@ const CommentSchema = new mongoose.Schema({
 
       count: {
         like: { type: Number, default: 0 },
-        bookmark: { type: Number, default: 0 },
         reply: { type: Number, default: 0 },
       },
 
